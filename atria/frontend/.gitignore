@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+modele/
+
+# Build output
+build/
+
+# Temporary files
+*.tmp
+*.temp

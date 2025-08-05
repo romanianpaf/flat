@@ -1,0 +1,45 @@
+[05-Aug-2025 11:55:11 UTC] PHP Fatal error:  Uncaught TypeError: Illuminate\Foundation\Configuration\Middleware::alias(): Argument #1 ($aliases) must be of type array, string given, called in /home/atria/public_html/f1.atria.live/atria/backend/bootstrap/app.php on line 19 and defined in /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php:398
+Stack trace:
+#0 /home/atria/public_html/f1.atria.live/atria/backend/bootstrap/app.php(19): Illuminate\Foundation\Configuration\Middleware->alias('cors', 'Illuminate\\Http...')
+#1 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php(281): {closure}(Object(Illuminate\Foundation\Configuration\Middleware))
+#2 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1521): Illuminate\Foundation\Configuration\ApplicationBuilder->Illuminate\Foundation\Configuration\{closure}(Object(Illuminate\Foundation\Http\Kernel), Object(Illuminate\Foundation\Application))
+#3 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1457): Illuminate\Container\Container->fireCallbackArray(Object(Illuminate\Foundation\Http\Kernel), Array)
+#4 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1443): Illuminate\Container\Container->fireAfterResolvingCallbacks('Illuminate\\Cont...', Object(Illuminate\Foundation\Http\Kernel))
+#5 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(934): Illuminate\Container\Container->fireResolvingCallbacks('Illuminate\\Cont...', Object(Illuminate\Foundation\Http\Kernel))
+#6 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#7 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(847): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#8 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#9 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1217): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#10 /home/atria/public_html/f1.atria.live/atria/backend/public/index.php(20): Illuminate\Foundation\Application->handleRequest(Object(Illuminate\Http\Request))
+#11 {main}
+  thrown in /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php on line 398
+[05-Aug-2025 12:53:12 UTC] PHP Fatal error:  Uncaught TypeError: Illuminate\Foundation\Configuration\Middleware::appendToGroup(): Argument #2 ($middleware) must be of type array|string, Closure given, called in /home/atria/public_html/f1.atria.live/atria/backend/bootstrap/app.php on line 21 and defined in /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php:276
+Stack trace:
+#0 /home/atria/public_html/f1.atria.live/atria/backend/bootstrap/app.php(21): Illuminate\Foundation\Configuration\Middleware->appendToGroup('api', Object(Closure))
+#1 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php(281): {closure}(Object(Illuminate\Foundation\Configuration\Middleware))
+#2 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1521): Illuminate\Foundation\Configuration\ApplicationBuilder->Illuminate\Foundation\Configuration\{closure}(Object(Illuminate\Foundation\Http\Kernel), Object(Illuminate\Foundation\Application))
+#3 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1457): Illuminate\Container\Container->fireCallbackArray(Object(Illuminate\Foundation\Http\Kernel), Array)
+#4 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1443): Illuminate\Container\Container->fireAfterResolvingCallbacks('Illuminate\\Cont...', Object(Illuminate\Foundation\Http\Kernel))
+#5 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(934): Illuminate\Container\Container->fireResolvingCallbacks('Illuminate\\Cont...', Object(Illuminate\Foundation\Http\Kernel))
+#6 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#7 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(847): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#8 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#9 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1217): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#10 /home/atria/public_html/f1.atria.live/atria/backend/public/index.php(20): Illuminate\Foundation\Application->handleRequest(Object(Illuminate\Http\Request))
+#11 {main}
+  thrown in /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php on line 276
+[05-Aug-2025 12:55:07 UTC] PHP Fatal error:  Uncaught TypeError: Illuminate\Foundation\Configuration\Middleware::appendToGroup(): Argument #2 ($middleware) must be of type array|string, Closure given, called in /home/atria/public_html/f1.atria.live/atria/backend/bootstrap/app.php on line 21 and defined in /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php:276
+Stack trace:
+#0 /home/atria/public_html/f1.atria.live/atria/backend/bootstrap/app.php(21): Illuminate\Foundation\Configuration\Middleware->appendToGroup('api', Object(Closure))
+#1 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/ApplicationBuilder.php(281): {closure}(Object(Illuminate\Foundation\Configuration\Middleware))
+#2 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1521): Illuminate\Foundation\Configuration\ApplicationBuilder->Illuminate\Foundation\Configuration\{closure}(Object(Illuminate\Foundation\Http\Kernel), Object(Illuminate\Foundation\Application))
+#3 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1457): Illuminate\Container\Container->fireCallbackArray(Object(Illuminate\Foundation\Http\Kernel), Array)
+#4 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(1443): Illuminate\Container\Container->fireAfterResolvingCallbacks('Illuminate\\Cont...', Object(Illuminate\Foundation\Http\Kernel))
+#5 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(934): Illuminate\Container\Container->fireResolvingCallbacks('Illuminate\\Cont...', Object(Illuminate\Foundation\Http\Kernel))
+#6 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1077): Illuminate\Container\Container->resolve('Illuminate\\Cont...', Array, true)
+#7 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Container/Container.php(847): Illuminate\Foundation\Application->resolve('Illuminate\\Cont...', Array)
+#8 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1057): Illuminate\Container\Container->make('Illuminate\\Cont...', Array)
+#9 /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(1217): Illuminate\Foundation\Application->make('Illuminate\\Cont...')
+#10 /home/atria/public_html/f1.atria.live/atria/backend/public/index.php(20): Illuminate\Foundation\Application->handleRequest(Object(Illuminate\Http\Request))
+#11 {main}
+  thrown in /home/atria/public_html/f1.atria.live/atria/backend/vendor/laravel/framework/src/Illuminate/Foundation/Configuration/Middleware.php on line 276

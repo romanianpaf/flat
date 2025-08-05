@@ -19,6 +19,7 @@ import {
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import axios from '../lib/axios';
+import atriaImage from '../assets/images/atria-faza1-parc.jpeg';
 
 function Home() {
   const [email, setEmail] = useState('');
@@ -33,7 +34,11 @@ function Home() {
     setIsLoading(true);
 
     try {
-      await axios.post('/api/login', { email, password });
+      const response = await axios.post('/api/login', { email, password });
+      
+      // Save token to localStorage
+      localStorage.setItem('access_token', response.data.access_token);
+      
       toast({
         title: 'Autentificare reușită',
         status: 'success',
@@ -58,7 +63,7 @@ function Home() {
     <Box 
       minH="100vh" 
       w="100vw"
-      bgImage="url('/assets/images/atria-faza1-parc.jpeg')"
+      bgImage={`url(${atriaImage})`}
       bgSize="cover"
       bgPosition="center"
       bgRepeat="no-repeat"
