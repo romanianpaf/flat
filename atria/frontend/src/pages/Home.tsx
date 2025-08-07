@@ -7,21 +7,33 @@ import {
   FormLabel,
   Input,
   VStack,
+  HStack,
   Heading,
   Text,
   useToast,
-
   Card,
   CardBody,
   InputGroup,
   InputRightElement,
   IconButton,
+  Container,
+  Grid,
+  Stat,
+  StatLabel,
+  StatNumber,
+  StatHelpText,
+  StatArrow,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
+import { FiUsers, FiShield, FiActivity, FiBarChart } from 'react-icons/fi';
 import axios from '../lib/axios';
 import atriaImage from '../assets/images/atria-faza1-parc.jpeg';
 
-function Home() {
+interface HomeProps {
+  user?: any;
+}
+
+function Home({ user }: HomeProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -37,7 +49,7 @@ function Home() {
       const response = await axios.post('/api/login', { email, password });
       
       // Save token to localStorage
-      localStorage.setItem('access_token', response.data.access_token);
+      localStorage.setItem('token', response.data.access_token);
       
       toast({
         title: 'Autentificare reușită',
@@ -45,7 +57,9 @@ function Home() {
         duration: 3000,
         isClosable: true,
       });
-      navigate('/admin');
+      
+      // Reload page to update user state
+      window.location.reload();
     } catch (error) {
       toast({
         title: 'Eroare la autentificare',
@@ -59,6 +73,160 @@ function Home() {
     }
   };
 
+  // If user is logged in, show dashboard
+  if (user) {
+    return (
+      <Container maxW="7xl" py={8}>
+        <VStack spacing={8} align="stretch">
+          {/* Welcome Section */}
+          <Box textAlign="center">
+            <Heading size="2xl" color="brand.600" mb={4}>
+              Bun venit, {user.name}!
+            </Heading>
+            <Text fontSize="lg" color="gray.600">
+              Panoul de administrare F1 Atria
+            </Text>
+          </Box>
+
+          {/* Quick Stats */}
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }} gap={6}>
+            <Card>
+              <CardBody>
+                <Stat>
+                  <StatLabel>Utilizatori</StatLabel>
+                  <StatNumber>24</StatNumber>
+                  <StatHelpText>
+                    <StatArrow type="increase" />
+                    12.5%
+                  </StatHelpText>
+                </Stat>
+              </CardBody>
+            </Card>
+
+            <Card>
+              <CardBody>
+                <Stat>
+                  <StatLabel>Roluri</StatLabel>
+                  <StatNumber>5</StatNumber>
+                  <StatHelpText>
+                    <StatArrow type="increase" />
+                    2.3%
+                  </StatHelpText>
+                </Stat>
+              </CardBody>
+            </Card>
+
+            <Card>
+              <CardBody>
+                <Stat>
+                  <StatLabel>Logs Astăzi</StatLabel>
+                  <StatNumber>156</StatNumber>
+                  <StatHelpText>
+                    <StatArrow type="increase" />
+                    8.1%
+                  </StatHelpText>
+                </Stat>
+              </CardBody>
+            </Card>
+
+            <Card>
+              <CardBody>
+                <Stat>
+                  <StatLabel>Sesiuni Active</StatLabel>
+                  <StatNumber>3</StatNumber>
+                  <StatHelpText>
+                    <StatArrow type="decrease" />
+                    1.2%
+                  </StatHelpText>
+                </Stat>
+              </CardBody>
+            </Card>
+          </Grid>
+
+          {/* Quick Actions */}
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
+            <Card>
+              <CardBody>
+                <VStack spacing={4} align="stretch">
+                  <Heading size="md" color="brand.600">
+                    Acțiuni Rapide
+                  </Heading>
+                  <VStack spacing={3} align="stretch">
+                    <Button
+                      leftIcon={<FiUsers />}
+                      colorScheme="brand"
+                      variant="outline"
+                      onClick={() => navigate('/admin/users')}
+                      justifyContent="start"
+                    >
+                      Gestionare Utilizatori
+                    </Button>
+                    <Button
+                      leftIcon={<FiShield />}
+                      colorScheme="brand"
+                      variant="outline"
+                      onClick={() => navigate('/admin/roles')}
+                      justifyContent="start"
+                    >
+                      Gestionare Roluri
+                    </Button>
+                    <Button
+                      leftIcon={<FiActivity />}
+                      colorScheme="brand"
+                      variant="outline"
+                      onClick={() => navigate('/admin/logs')}
+                      justifyContent="start"
+                    >
+                      Vizualizare Logs
+                    </Button>
+                    <Button
+                      leftIcon={<FiBarChart />}
+                      colorScheme="brand"
+                      variant="outline"
+                      onClick={() => navigate('/admin')}
+                      justifyContent="start"
+                    >
+                      Dashboard Complet
+                    </Button>
+                  </VStack>
+                </VStack>
+              </CardBody>
+            </Card>
+
+            <Card>
+              <CardBody>
+                <VStack spacing={4} align="stretch">
+                  <Heading size="md" color="brand.600">
+                    Informații Sistem
+                  </Heading>
+                  <VStack spacing={3} align="stretch">
+                    <HStack justify="space-between">
+                      <Text fontWeight="medium">Versiune:</Text>
+                      <Text>1.0.0</Text>
+                    </HStack>
+                    <HStack justify="space-between">
+                      <Text fontWeight="medium">Ultima actualizare:</Text>
+                      <Text>Azi, 14:30</Text>
+                    </HStack>
+                    <HStack justify="space-between">
+                      <Text fontWeight="medium">Status:</Text>
+                      <Text color="green.500">Operațional</Text>
+                    </HStack>
+                    <HStack justify="space-between">
+                      <Text fontWeight="medium">Rol curent:</Text>
+                      <Text color="brand.600">{user.role === 'admin' ? 'Administrator' : 'Utilizator'}</Text>
+                    </HStack>
+                  </VStack>
+                </VStack>
+              </CardBody>
+            </Card>
+          </Grid>
+        </VStack>
+      </Container>
+    );
+  }
+
+  // Login form for non-authenticated users
   return (
     <Box 
       minH="100vh" 
@@ -82,8 +250,17 @@ function Home() {
         bg="blackAlpha.600"
         zIndex="1"
       />
-      <Box position="relative" zIndex="2" w="100%" display="flex" justifyContent="center" alignItems="center">
-        <Card shadow="xl" borderRadius="xl" maxW="md" w="full" mx={4}>
+      <Box 
+        position="relative" 
+        zIndex="2" 
+        w="100%" 
+        maxW="100vw"
+        display="flex" 
+        justifyContent="center" 
+        alignItems="center" 
+        px={4}
+      >
+        <Card shadow="xl" borderRadius="xl" maxW="md" w="full">
           <CardBody p={8}>
             <VStack spacing={6}>
               <Box textAlign="center">

@@ -2,64 +2,102 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Laravel\Passport\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
+        'tenant_id',
+        'role',
+        'status', // 'active', 'inactive', 'suspended'
+        'last_login_at',
+        'settings',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'last_login_at' => 'datetime',
+        'settings' => 'array',
+    ];
+
+    public function tenant()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->belongsTo(Tenant::class);
     }
 
-    public function roles(): BelongsToMany
+    public function roles()
     {
         return $this->belongsToMany(Role::class);
     }
 
-    public function hasRole(string $roleName): bool
+    public function logs()
     {
-        return $this->roles()->where('name', $roleName)->exists();
+        return $this->hasMany(Log::class);
     }
 
-    public function hasAnyRole(array $roleNames): bool
+    public function poolAccessLogs()
     {
-        return $this->roles()->whereIn('name', $roleNames)->exists();
+        return $this->hasMany(PoolAccessLog::class);
+    }
+
+    public function isSysAdmin()
+    {
+        return $this->role === 'sysadmin';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin' || $this->role === 'sysadmin';
+    }
+
+    public function isTenantAdmin()
+    {
+        return $this->role === 'tenantadmin' || $this->role === 'admin' || $this->role === 'sysadmin';
+    }
+
+    public function isActive()
+    {
+        return $this->status === 'active';
+    }
+
+    public function canAccessTenant($tenantId)
+    {
+        // Sysadmin poate accesa orice tenant
+        if ($this->isSysAdmin()) {
+            return true;
+        }
+
+        // Alți utilizatori pot accesa doar tenant-ul lor
+        return $this->tenant_id === $tenantId;
+    }
+
+    public function getSetting($key, $default = null)
+    {
+        return $this->settings[$key] ?? $default;
+    }
+
+    public function setSetting($key, $value)
+    {
+        $settings = $this->settings ?? [];
+        $settings[$key] = $value;
+        $this->update(['settings' => $settings]);
+    }
+
+    public function updateLastLogin()
+    {
+        $this->update(['last_login_at' => now()]);
     }
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  FiUsers, FiSettings, FiBarChart, FiShield, FiLogOut, FiMenu, FiActivity, FiZap, FiHome,
+  FiMenu, FiHome, FiUsers, FiShield, FiBarChart, FiLogOut, FiActivity, FiZap, FiSettings, FiGrid,
 } from 'react-icons/fi';
 import {
-  Box, Flex, VStack, HStack, Text, Heading, Button, useToast, Container, Card, CardBody,
-  Avatar, Menu, MenuButton, MenuList, MenuItem, useDisclosure, Drawer,
-  DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton, IconButton, Divider,
+  Box, Flex, HStack, VStack, Text, Button, IconButton, useDisclosure, useColorModeValue,
+  Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton,
+  Avatar, Menu, MenuButton, MenuList, MenuItem, useToast, Divider,
 } from '@chakra-ui/react';
 
 interface User {
@@ -17,10 +17,9 @@ interface User {
   tenant_id?: number;
 }
 
-interface AdminLayoutProps {
-  children: React.ReactNode;
-  user?: User;
-  onLogout?: () => void;
+interface NavigationProps {
+  user: User | null;
+  onLogout: () => void;
 }
 
 interface NavItemProps {
@@ -28,6 +27,7 @@ interface NavItemProps {
     label: string;
     path: string;
     icon: React.ComponentType;
+    adminOnly?: boolean;
   };
   onClick?: () => void;
 }
@@ -45,8 +45,6 @@ const NavItem: React.FC<NavItemProps> = ({ item, onClick }) => {
         navigate(item.path);
         onClick?.();
       }}
-      w="full"
-      justifyContent="start"
       size="sm"
     >
       {item.label}
@@ -54,15 +52,15 @@ const NavItem: React.FC<NavItemProps> = ({ item, onClick }) => {
   );
 };
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children, user, onLogout }) => {
+const Navigation: React.FC<NavigationProps> = ({ user, onLogout }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const navigate = useNavigate();
   const toast = useToast();
+  const bgColor = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.200', 'gray.700');
 
   const handleLogout = () => {
-    if (onLogout) {
-      onLogout();
-    }
+    onLogout();
     toast({
       title: 'Deconectat',
       description: 'Ai fost deconectat cu succes',
@@ -73,54 +71,61 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, user, onLogout }) =
     navigate('/');
   };
 
-  // Structura de navigație cu categorii pentru AdminLayout
+  // Structura de navigație cu categorii
   const navigationStructure = [
     {
       category: 'Principal',
       items: [
-        { label: 'Acasă', path: '/', icon: FiHome },
+        { label: 'Acasă', path: '/', icon: FiHome, adminOnly: false },
       ]
     },
     {
       category: 'Administrare',
       items: [
-        { label: 'Dashboard', path: '/admin', icon: FiBarChart },
-        { label: 'Utilizatori', path: '/admin/users', icon: FiUsers },
-        { label: 'Roluri', path: '/admin/roles', icon: FiShield },
-        ...(user?.role === 'sysadmin' ? [{ label: 'Tenanți', path: '/admin/tenants', icon: FiHome }] : []),
+        { label: 'Dashboard', path: '/admin', icon: FiBarChart, adminOnly: true },
+        { label: 'Utilizatori', path: '/admin/users', icon: FiUsers, adminOnly: true },
+        { label: 'Roluri', path: '/admin/roles', icon: FiShield, adminOnly: true },
+        ...(user?.role === 'sysadmin' ? [{ label: 'Tenanți', path: '/admin/tenants', icon: FiGrid, adminOnly: true }] : []),
       ]
     },
     {
       category: 'Sisteme',
       items: [
-        { label: 'Automatizări', path: '/admin/automations', icon: FiZap },
-        { label: 'Logs', path: '/admin/logs', icon: FiActivity },
+        { label: 'Automatizări', path: '/admin/automations', icon: FiZap, adminOnly: true },
+        { label: 'Logs', path: '/admin/logs', icon: FiActivity, adminOnly: true },
       ]
     },
   ];
 
-  // Funcții pentru randarea sidebar-ului și navigației mobile
-  const renderSidebarNavigation = () => (
-    <VStack spacing={4} align="stretch">
-      {navigationStructure.map((category) => (
-        <Box key={category.category}>
-          <Text fontSize="sm" fontWeight="bold" color="gray.500" mb={2} px={2}>
-            {category.category}
-          </Text>
-          <VStack spacing={1} align="stretch">
-            {category.items.map((item) => (
-              <NavItem key={item.path} item={item} />
-            ))}
-          </VStack>
-          <Divider my={3} />
-        </Box>
+  // Funcție pentru a filtra elementele de navigație în funcție de rolul utilizatorului
+  const getFilteredNavigation = () => {
+    return navigationStructure.map(category => ({
+      ...category,
+      items: category.items.filter(item => !item.adminOnly || user?.role === 'admin' || user?.role === 'sysadmin')
+    })).filter(category => category.items.length > 0);
+  };
+
+  const filteredNavigation = getFilteredNavigation();
+
+  // Funcții pentru randarea navigației desktop și mobile
+  const renderDesktopNavigation = () => (
+    <HStack spacing={6} display={{ base: 'none', md: 'flex' }}>
+      {filteredNavigation.map((category, categoryIndex) => (
+        <HStack key={category.category} spacing={4}>
+          {category.items.map((item) => (
+            <NavItem key={item.path} item={item} />
+          ))}
+          {categoryIndex < filteredNavigation.length - 1 && (
+            <Divider orientation="vertical" height="20px" />
+          )}
+        </HStack>
       ))}
-    </VStack>
+    </HStack>
   );
 
   const renderMobileNavigation = () => (
     <VStack spacing={4} align="stretch" mt={4}>
-      {navigationStructure.map((category) => (
+      {filteredNavigation.map((category) => (
         <Box key={category.category}>
           <Text fontSize="sm" fontWeight="bold" color="gray.500" mb={2} px={2}>
             {category.category}
@@ -137,53 +142,36 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, user, onLogout }) =
   );
 
   return (
-    <Box minH="100vh" bg="gray.50">
-      {/* Header */}
-      <Box bg="white" borderBottom="1px" borderColor="gray.200" px={6} py={4}>
+    <>
+      {/* Desktop Navigation */}
+      <Box bg={bgColor} borderBottom="1px" borderColor={borderColor} px={6} py={4}>
         <Flex justify="space-between" align="center">
+          <Text fontSize="xl" fontWeight="bold" color="brand.600" cursor="pointer" onClick={() => navigate('/')}>
+            F1 Atria
+          </Text>
+          {renderDesktopNavigation()}
           <HStack spacing={4}>
+            {user ? (
+              <Menu>
+                <MenuButton as={Avatar} size="sm" name={user.name} cursor="pointer" />
+                <MenuList>
+                  <MenuItem icon={<FiSettings />}>Setări</MenuItem>
+                  <MenuItem icon={<FiLogOut />} onClick={handleLogout}>Deconectare</MenuItem>
+                </MenuList>
+              </Menu>
+            ) : (
+              <Button colorScheme="brand" onClick={() => navigate('/')}>Autentificare</Button>
+            )}
             <IconButton 
-              display={{ base: 'flex', lg: 'none' }} 
+              display={{ base: 'flex', md: 'none' }} 
               onClick={onOpen} 
               icon={<FiMenu />} 
               aria-label="Deschide meniul" 
               variant="ghost" 
             />
-            <Heading size="md" color="brand.600">F1 Atria Admin</Heading>
           </HStack>
-          
-          {user && (
-            <Menu>
-              <MenuButton as={Avatar} size="sm" name={user.name} cursor="pointer" />
-              <MenuList>
-                <MenuItem icon={<FiSettings />}>Setări</MenuItem>
-                <MenuItem icon={<FiLogOut />} onClick={handleLogout}>Deconectare</MenuItem>
-              </MenuList>
-            </Menu>
-          )}
         </Flex>
       </Box>
-
-      {/* Main Content */}
-      <Container maxW="7xl" py={8}>
-        <Flex gap={6}>
-          {/* Sidebar */}
-          <Box w="280px" flexShrink={0} display={{ base: 'none', lg: 'block' }}>
-            <VStack spacing={4} align="stretch">
-              <Card>
-                <CardBody>
-                  {renderSidebarNavigation()}
-                </CardBody>
-              </Card>
-            </VStack>
-          </Box>
-
-          {/* Content */}
-          <Box flex={1}>
-            {children}
-          </Box>
-        </Flex>
-      </Container>
 
       {/* Mobile Navigation Drawer */}
       <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
@@ -191,7 +179,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, user, onLogout }) =
         <DrawerContent>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth="1px">
-            <Text fontSize="xl" fontWeight="bold" color="brand.600">F1 Atria Admin</Text>
+            <Text fontSize="xl" fontWeight="bold" color="brand.600">F1 Atria</Text>
           </DrawerHeader>
           <DrawerBody>
             {renderMobileNavigation()}
@@ -218,8 +206,8 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, user, onLogout }) =
           </DrawerBody>
         </DrawerContent>
       </Drawer>
-    </Box>
+    </>
   );
 };
 
-export default AdminLayout; 
+export default Navigation; 

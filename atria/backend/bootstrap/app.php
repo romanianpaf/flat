@@ -12,7 +12,22 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'log.requests' => \App\Http\Middleware\LogRequests::class,
+        ]);
+        
+        // Global middleware
+        $middleware->use([
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+        
+        $middleware->web(append: [
+            \App\Http\Middleware\LogRequests::class,
+        ]);
+        
+        $middleware->api(append: [
+            \App\Http\Middleware\LogRequests::class,
+        ]);
     })
     ->withProviders([
         \Laravel\Passport\PassportServiceProvider::class,

@@ -1,48 +1,68 @@
+import { useState, useEffect } from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { theme } from './theme';
+import Navigation from './components/Navigation';
 import Home from './pages/Home';
 import AdminDashboard from './pages/AdminDashboard';
-import RolesManagement from './pages/RolesManagement';
 import UsersManagement from './pages/UsersManagement';
-import './App.css';
+import RolesManagement from './pages/RolesManagement';
+import LogsPage from './pages/LogsPage';
+import AutomationPage from './pages/AutomationPage';
+import TenantsPage from './pages/TenantsPage';
+import axios from './lib/axios';
 
-const theme = extendTheme({
-  colors: {
-    brand: {
-      50: '#E6F6FF',
-      100: '#BAE3FF',
-      200: '#7CC4FA',
-      300: '#47A3F3',
-      400: '#2186EB',
-      500: '#0967D2',
-      600: '#0552B5',
-      700: '#03449E',
-      800: '#01337D',
-      900: '#002159',
-    },
-  },
-  fonts: {
-    heading: 'Inter, system-ui, sans-serif',
-    body: 'Inter, system-ui, sans-serif',
-  },
-  styles: {
-    global: {
-      body: {
-        bg: 'gray.50',
-      },
-    },
-  },
-});
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  tenant_id?: number;
+}
 
 function App() {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      axios.get('/api/user')
+        .then(response => {
+          setUser(response.data.user);
+        })
+        .catch(() => {
+          localStorage.removeItem('token');
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setUser(null);
+  };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
+        <Navigation user={user} onLogout={handleLogout} />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home user={user} />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/roles" element={<RolesManagement />} />
           <Route path="/admin/users" element={<UsersManagement />} />
+          <Route path="/admin/logs" element={<LogsPage />} />
+          <Route path="/admin/automations" element={<AutomationPage />} />
+          <Route path="/admin/tenants" element={<TenantsPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

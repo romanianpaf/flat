@@ -34,6 +34,7 @@ import {
   InputGroup,
   InputRightElement,
   Avatar,
+  Select,
 } from '@chakra-ui/react';
 import { FiEdit, FiTrash2, FiPlus, FiEye, FiEyeOff } from 'react-icons/fi';
 import axios from '../lib/axios';
@@ -47,6 +48,14 @@ interface Role {
   is_active: boolean;
 }
 
+interface Tenant {
+  id: number;
+  name: string;
+  slug: string;
+  domain: string;
+  status: string;
+}
+
 interface User {
   id: number;
   name: string;
@@ -55,11 +64,16 @@ interface User {
   created_at: string;
   updated_at: string;
   roles: Role[];
+  tenant_id?: number;
+  tenant?: Tenant;
+  role: string;
+  status: string;
 }
 
 function UsersManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
+  const [tenants, setTenants] = useState<Tenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState<{
@@ -67,11 +81,17 @@ function UsersManagement() {
     email: string;
     password: string;
     role_ids: string[];
+    tenant_id?: number;
+    role: string;
+    status: string;
   }>({
     name: '',
     email: '',
     password: '',
     role_ids: [],
+    tenant_id: undefined,
+    role: 'user',
+    status: 'active',
   });
   const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -85,13 +105,15 @@ function UsersManagement() {
 
   const fetchData = async () => {
     try {
-      const [usersResponse, rolesResponse] = await Promise.all([
+      const [usersResponse, rolesResponse, tenantsResponse] = await Promise.all([
         axios.get('/api/users'),
         axios.get('/api/roles'),
+        axios.get('/api/tenants'),
       ]);
       
       setUsers(usersResponse.data.users);
       setRoles(rolesResponse.data.roles);
+      setTenants(tenantsResponse.data.tenants);
     } catch (error) {
       toast({
         title: 'Eroare la încărcarea datelor',
@@ -113,6 +135,14 @@ function UsersManagement() {
         ...formData,
         role_ids: formData.role_ids.map(id => parseInt(id))
       };
+      
+      // Convert tenant_id to number or null
+      if (formData.tenant_id) {
+        submitData.tenant_id = parseInt(formData.tenant_id.toString());
+      } else {
+        submitData.tenant_id = null;
+      }
+      
       if (!submitData.password) {
         delete submitData.password;
       }
@@ -158,6 +188,9 @@ function UsersManagement() {
       email: user.email,
       password: '',
       role_ids: user.roles.map(role => role.id.toString()),
+      tenant_id: user.tenant_id || undefined,
+      role: user.role || 'user',
+      status: user.status || 'active',
     });
     onOpen();
   };
@@ -195,6 +228,9 @@ function UsersManagement() {
       email: '',
       password: '',
       role_ids: [],
+      tenant_id: undefined,
+      role: 'user',
+      status: 'active',
     });
     setShowPassword(false);
     onClose();
@@ -204,7 +240,7 @@ function UsersManagement() {
 
   if (loading) {
     return (
-      <AdminLayout title="Gestionarea Utilizatorilor">
+      <AdminLayout>
         <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
           <Spinner size="xl" />
         </Box>
@@ -213,8 +249,15 @@ function UsersManagement() {
   }
 
   return (
-    <AdminLayout title="Gestionarea Utilizatorilor">
-      <Box>
+    <AdminLayout>
+      <VStack spacing={6} align="stretch">
+        <Box>
+          <Heading size="lg" color="brand.600">Gestionarea Utilizatorilor</Heading>
+          <Text color="gray.600" mt={2}>
+            Administrează utilizatorii și accesul lor la sistem
+          </Text>
+        </Box>
+
       <Flex justify="space-between" align="center" mb={6}>
         <Heading size="lg">Gestionarea Utilizatorilor</Heading>
         <Button
@@ -227,6 +270,9 @@ function UsersManagement() {
               email: '',
               password: '',
               role_ids: [],
+              tenant_id: undefined,
+              role: 'user',
+              status: 'active',
             });
             onOpen();
           }}
@@ -247,6 +293,9 @@ function UsersManagement() {
               <Tr>
                 <Th>Utilizator</Th>
                 <Th>Email</Th>
+                <Th>Tenant</Th>
+                <Th>Rol</Th>
+                <Th>Status</Th>
                 <Th>Roluri</Th>
                 <Th>Data Creării</Th>
                 <Th>Acțiuni</Th>
@@ -267,6 +316,43 @@ function UsersManagement() {
                     </HStack>
                   </Td>
                   <Td>{user.email}</Td>
+                  <Td>
+                    {user.tenant ? (
+                      <Badge colorScheme="blue" variant="subtle">
+                        {user.tenant.name}
+                      </Badge>
+                    ) : (
+                      <Badge colorScheme="gray" variant="subtle">
+                        Sysadmin
+                      </Badge>
+                    )}
+                  </Td>
+                  <Td>
+                    <Badge 
+                      colorScheme={
+                        user.role === 'sysadmin' ? 'red' : 
+                        user.role === 'admin' ? 'purple' : 
+                        user.role === 'tenantadmin' ? 'orange' : 'blue'
+                      }
+                      variant="subtle"
+                    >
+                      {user.role === 'sysadmin' ? 'Sysadmin' :
+                       user.role === 'admin' ? 'Admin' :
+                       user.role === 'tenantadmin' ? 'Tenant Admin' :
+                       user.role === 'cex' ? 'CEx' :
+                       user.role === 'tehnic' ? 'Tehnic' :
+                       user.role === 'locatar' ? 'Locatar' : user.role}
+                    </Badge>
+                  </Td>
+                  <Td>
+                    <Badge 
+                      colorScheme={user.status === 'active' ? 'green' : user.status === 'inactive' ? 'gray' : 'red'}
+                      variant="subtle"
+                    >
+                      {user.status === 'active' ? 'Activ' : 
+                       user.status === 'inactive' ? 'Inactiv' : 'Suspendat'}
+                    </Badge>
+                  </Td>
                   <Td>
                     <HStack spacing={1} wrap="wrap">
                       {user.roles.length > 0 ? (
@@ -370,6 +456,49 @@ function UsersManagement() {
                   </InputGroup>
                 </FormControl>
 
+                <FormControl isRequired>
+                  <FormLabel>Tenant</FormLabel>
+                  <Select
+                    value={formData.tenant_id || ''}
+                    onChange={(e) => setFormData({ ...formData, tenant_id: parseInt(e.target.value) })}
+                  >
+                    <option value="">Selectați un tenant</option>
+                    {tenants.map((tenant) => (
+                      <option key={tenant.id} value={tenant.id}>
+                        {tenant.name}
+                      </option>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel>Rol Principal</FormLabel>
+                  <Select
+                    value={formData.role}
+                    onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                  >
+                    <option value="user">Utilizator</option>
+                    <option value="locatar">Locatar</option>
+                    <option value="tehnic">Tehnic</option>
+                    <option value="cex">CEx</option>
+                    <option value="tenantadmin">Tenant Admin</option>
+                    <option value="admin">Admin</option>
+                    <option value="sysadmin">Sysadmin</option>
+                  </Select>
+                </FormControl>
+
+                <FormControl isRequired>
+                  <FormLabel>Status</FormLabel>
+                  <Select
+                    value={formData.status}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                  >
+                    <option value="active">Activ</option>
+                    <option value="inactive">Inactiv</option>
+                    <option value="suspended">Suspendat</option>
+                  </Select>
+                </FormControl>
+
                 <FormControl>
                   <FormLabel>Roluri</FormLabel>
                   <CheckboxGroup
@@ -410,7 +539,7 @@ function UsersManagement() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      </Box>
+      </VStack>
     </AdminLayout>
   );
 }

@@ -170,7 +170,7 @@ function RolesManagement() {
 
   if (loading) {
     return (
-      <AdminLayout title="Gestionarea Rolurilor">
+      <AdminLayout>
         <Box display="flex" justifyContent="center" alignItems="center" minH="400px">
           <Spinner size="xl" />
         </Box>
@@ -179,8 +179,15 @@ function RolesManagement() {
   }
 
   return (
-    <AdminLayout title="Gestionarea Rolurilor">
-      <Box>
+    <AdminLayout>
+      <VStack spacing={6} align="stretch">
+        <Box>
+          <Heading size="lg" color="brand.600">Gestionarea Rolurilor</Heading>
+          <Text color="gray.600" mt={2}>
+            Administrează rolurile și permisiunile utilizatorilor
+          </Text>
+        </Box>
+
       <Flex justify="space-between" align="center" mb={6}>
         <Heading size="lg">Gestionarea Rolurilor</Heading>
         <Button
@@ -329,7 +336,7 @@ function RolesManagement() {
           </ModalBody>
         </ModalContent>
       </Modal>
-      </Box>
+      </VStack>
     </AdminLayout>
   );
 }

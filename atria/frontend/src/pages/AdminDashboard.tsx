@@ -18,8 +18,14 @@ import AdminLayout from '../components/AdminLayout';
 function AdminDashboard() {
 
   return (
-    <AdminLayout title="Panou de Administrare">
+    <AdminLayout>
       <VStack spacing={6} align="stretch">
+        <Box>
+          <Heading size="lg" color="brand.600">Panou de Administrare</Heading>
+          <Text color="gray.600" mt={2}>
+            Bine ai venit în panoul de administrare F1 Atria
+          </Text>
+        </Box>
             <VStack spacing={6} align="stretch">
               {/* Stats Cards */}
               <Grid templateColumns={{ base: '1fr', md: 'repeat(3, 1fr)' }} gap={6}>
