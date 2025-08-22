@@ -14,7 +14,7 @@ return new class extends Migration
         // Add tenant_id to users table
         Schema::table('users', function (Blueprint $table) {
             $table->foreignId('tenant_id')->nullable()->after('id')->constrained()->onDelete('set null');
-            $table->enum('role', ['sysadmin', 'admin', 'tenantadmin', 'cex', 'tehnic', 'user'])->default('user')->after('password');
+            $table->enum('role', ['sysadmin', 'admin', 'tenantadmin', 'cex', 'tehnic', 'locatar', 'user'])->default('user')->after('password');
             $table->enum('status', ['active', 'inactive', 'suspended'])->default('active')->after('role');
             $table->timestamp('last_login_at')->nullable()->after('status');
             $table->json('settings')->nullable()->after('last_login_at');
@@ -29,6 +29,8 @@ return new class extends Migration
             $table->json('permissions')->nullable()->after('is_active');
             
             $table->index(['tenant_id', 'is_active']);
+            // Unicitate per tenant pentru name
+            $table->unique(['tenant_id', 'name']);
         });
 
         // Add tenant_id to automations table
@@ -88,6 +90,7 @@ return new class extends Migration
         // Remove tenant_id from roles table
         Schema::table('roles', function (Blueprint $table) {
             $table->dropIndex(['tenant_id', 'is_active']);
+            $table->dropUnique(['tenant_id', 'name']);
             $table->dropForeign(['tenant_id']);
             $table->dropColumn(['tenant_id', 'permissions']);
         });

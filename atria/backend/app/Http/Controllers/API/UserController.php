@@ -48,6 +48,8 @@ class UserController extends Controller
      */
     public function store(Request $request): JsonResponse
     {
+        $currentUser = auth()->user();
+        
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
@@ -59,11 +61,18 @@ class UserController extends Controller
             'status' => 'required|string|in:active,inactive,suspended',
         ]);
 
+        // Setează tenant_id automat pentru utilizatorii non-sysadmin
+        $tenantId = $request->tenant_id;
+        if ($currentUser->role !== 'sysadmin') {
+            // Alți utilizatori (admin, tenantadmin) pot crea doar în tenant-ul lor
+            $tenantId = $currentUser->tenant_id;
+        }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'tenant_id' => $request->tenant_id,
+            'tenant_id' => $tenantId,
             'role' => $request->role,
             'status' => $request->status,
         ]);
@@ -118,6 +127,7 @@ class UserController extends Controller
     public function update(Request $request, string $id): JsonResponse
     {
         $user = User::findOrFail($id);
+        $currentUser = auth()->user();
         
         $request->validate([
             'name' => 'required|string|max:255',
@@ -139,10 +149,17 @@ class UserController extends Controller
             'roles' => $user->roles->pluck('id')->toArray()
         ];
 
+        // Setează tenant_id automat pentru utilizatorii non-sysadmin
+        $tenantId = $request->tenant_id;
+        if ($currentUser->role !== 'sysadmin') {
+            // Alți utilizatori (admin, tenantadmin) pot modifica doar în tenant-ul lor
+            $tenantId = $currentUser->tenant_id;
+        }
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'tenant_id' => $request->tenant_id,
+            'tenant_id' => $tenantId,
             'role' => $request->role,
             'status' => $request->status,
         ]);

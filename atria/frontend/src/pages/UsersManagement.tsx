@@ -74,6 +74,7 @@ function UsersManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [roles, setRoles] = useState<Role[]>([]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState<{
@@ -105,15 +106,17 @@ function UsersManagement() {
 
   const fetchData = async () => {
     try {
-      const [usersResponse, rolesResponse, tenantsResponse] = await Promise.all([
+      const [usersResponse, rolesResponse, tenantsResponse, userResponse] = await Promise.all([
         axios.get('/api/users'),
         axios.get('/api/roles'),
         axios.get('/api/tenants'),
+        axios.get('/api/user'),
       ]);
       
       setUsers(usersResponse.data.users);
       setRoles(rolesResponse.data.roles);
       setTenants(tenantsResponse.data.tenants);
+      setCurrentUser(userResponse.data.user);
     } catch (error) {
       toast({
         title: 'Eroare la încărcarea datelor',
@@ -136,11 +139,17 @@ function UsersManagement() {
         role_ids: formData.role_ids.map(id => parseInt(id))
       };
       
-      // Convert tenant_id to number or null
-      if (formData.tenant_id) {
-        submitData.tenant_id = parseInt(formData.tenant_id.toString());
+      // Setează tenant_id automat pentru utilizatorii non-sysadmin
+      if (currentUser?.role === 'sysadmin') {
+        // Sysadmin poate selecta tenant-ul
+        if (formData.tenant_id) {
+          submitData.tenant_id = parseInt(formData.tenant_id.toString());
+        } else {
+          submitData.tenant_id = null;
+        }
       } else {
-        submitData.tenant_id = null;
+        // Alți utilizatori (admin, tenantadmin) pot crea doar în tenant-ul lor
+        submitData.tenant_id = currentUser?.tenant_id;
       }
       
       if (!submitData.password) {
@@ -188,7 +197,7 @@ function UsersManagement() {
       email: user.email,
       password: '',
       role_ids: user.roles.map(role => role.id.toString()),
-      tenant_id: user.tenant_id || undefined,
+      tenant_id: currentUser?.role === 'sysadmin' ? (user.tenant_id || undefined) : undefined,
       role: user.role || 'user',
       status: user.status || 'active',
     });
@@ -228,7 +237,7 @@ function UsersManagement() {
       email: '',
       password: '',
       role_ids: [],
-      tenant_id: undefined,
+      tenant_id: currentUser?.role === 'sysadmin' ? undefined : undefined,
       role: 'user',
       status: 'active',
     });
@@ -270,7 +279,7 @@ function UsersManagement() {
               email: '',
               password: '',
               role_ids: [],
-              tenant_id: undefined,
+              tenant_id: currentUser?.role === 'sysadmin' ? undefined : undefined,
               role: 'user',
               status: 'active',
             });
@@ -456,20 +465,23 @@ function UsersManagement() {
                   </InputGroup>
                 </FormControl>
 
-                <FormControl isRequired>
-                  <FormLabel>Tenant</FormLabel>
-                  <Select
-                    value={formData.tenant_id || ''}
-                    onChange={(e) => setFormData({ ...formData, tenant_id: parseInt(e.target.value) })}
-                  >
-                    <option value="">Selectați un tenant</option>
-                    {tenants.map((tenant) => (
-                      <option key={tenant.id} value={tenant.id}>
-                        {tenant.name}
-                      </option>
-                    ))}
-                  </Select>
-                </FormControl>
+                {/* Câmpul de tenant doar pentru sysadmin */}
+                {currentUser?.role === 'sysadmin' && (
+                  <FormControl isRequired>
+                    <FormLabel>Tenant</FormLabel>
+                    <Select
+                      value={formData.tenant_id || ''}
+                      onChange={(e) => setFormData({ ...formData, tenant_id: parseInt(e.target.value) })}
+                    >
+                      <option value="">Selectați un tenant</option>
+                      {tenants.map((tenant) => (
+                        <option key={tenant.id} value={tenant.id}>
+                          {tenant.name}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
 
                 <FormControl isRequired>
                   <FormLabel>Rol Principal</FormLabel>

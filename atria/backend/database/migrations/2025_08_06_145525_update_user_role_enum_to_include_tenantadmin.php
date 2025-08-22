@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Modificăm enum-ul pentru a include tenantadmin
-        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('sysadmin', 'admin', 'tenantadmin', 'cex', 'tehnic', 'user') DEFAULT 'user'");
+        // Asigură-te că enum-ul include 'tenantadmin' și 'locatar'
+        DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('sysadmin', 'admin', 'tenantadmin', 'cex', 'tehnic', 'locatar', 'user') DEFAULT 'user'");
     }
 
     /**
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Revenim la enum-ul original
+        // Revine la enum fără 'tenantadmin' și 'locatar'
         DB::statement("ALTER TABLE users MODIFY COLUMN role ENUM('sysadmin', 'admin', 'cex', 'tehnic', 'user') DEFAULT 'user'");
     }
 };

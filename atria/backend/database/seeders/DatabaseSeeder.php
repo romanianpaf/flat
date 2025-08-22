@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         // Seed tenants
         $this->call(TenantSeeder::class);
 
-        // Seed users
-        $this->call(UserSeeder::class);
+        // Dezactivat: UserSeeder demo
+        // $this->call(UserSeeder::class);
     }
 }
