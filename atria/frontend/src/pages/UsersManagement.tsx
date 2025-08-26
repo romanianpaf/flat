@@ -107,10 +107,10 @@ function UsersManagement() {
   const fetchData = async () => {
     try {
       const [usersResponse, rolesResponse, tenantsResponse, userResponse] = await Promise.all([
-        axios.get('/api/users'),
-        axios.get('/api/roles'),
-        axios.get('/api/tenants'),
-        axios.get('/api/user'),
+        axios.get('/users'),
+        axios.get('/roles'),
+        axios.get('/tenants'),
+        axios.get('/user'),
       ]);
       
       setUsers(usersResponse.data.users);
@@ -157,7 +157,7 @@ function UsersManagement() {
       }
 
       if (editingUser) {
-        await axios.put(`/api/users/${editingUser.id}`, submitData);
+        await axios.put(`/users/${editingUser.id}`, submitData);
         toast({
           title: 'Utilizator actualizat cu succes',
           status: 'success',
@@ -165,7 +165,7 @@ function UsersManagement() {
           isClosable: true,
         });
       } else {
-        await axios.post('/api/users', submitData);
+        await axios.post('/users', submitData);
         toast({
           title: 'Utilizator creat cu succes',
           status: 'success',
@@ -210,7 +210,7 @@ function UsersManagement() {
     }
 
     try {
-      await axios.delete(`/api/users/${user.id}`);
+      await axios.delete(`/users/${user.id}`);
       toast({
         title: 'Utilizator șters cu succes',
         status: 'success',

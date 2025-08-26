@@ -136,7 +136,7 @@ function AutomationPage() {
 
   const fetchAutomations = async () => {
     try {
-      const response = await axios.get('/api/automations');
+      const response = await axios.get('/automations');
       setAutomations(response.data.automations);
     } catch (error) {
       toast({
@@ -151,7 +151,7 @@ function AutomationPage() {
 
   const fetchStats = async () => {
     try {
-      const response = await axios.get('/api/automations/statistics');
+      const response = await axios.get('/automations/statistics');
       setStats(response.data);
     } catch (error) {
       console.error('Error fetching stats:', error);
@@ -247,7 +247,7 @@ function AutomationPage() {
     try {
       if (selectedAutomation) {
         // Update existing automation
-        await axios.put(`/api/automations/${selectedAutomation.id}`, formData);
+        await axios.put(`/automations/${selectedAutomation.id}`, formData);
         toast({
           title: 'Automatizare actualizată',
           description: 'Automatizarea a fost actualizată cu succes',
@@ -257,7 +257,7 @@ function AutomationPage() {
         });
       } else {
         // Create new automation
-        await axios.post('/api/automations', formData);
+        await axios.post('/automations', formData);
         toast({
           title: 'Automatizare creată',
           description: 'Automatizarea a fost creată cu succes',
@@ -285,7 +285,7 @@ function AutomationPage() {
 
   const handleControlPoolAccess = async (action: 'unlock' | 'lock') => {
     try {
-      const response = await axios.post('/api/automations/pool-access/control', { action });
+      const response = await axios.post('/automations/pool-access/control', { action });
       toast({
         title: 'Control reușit',
         description: response.data.message,
@@ -307,7 +307,7 @@ function AutomationPage() {
 
   const handleTestMqtt = async (automationId: number) => {
     try {
-      const response = await axios.post('/api/automations/mqtt/test', { automation_id: automationId });
+      const response = await axios.post('/automations/mqtt/test', { automation_id: automationId });
       toast({
         title: 'Test MQTT completat',
         description: response.data.message,

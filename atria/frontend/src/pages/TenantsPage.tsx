@@ -91,7 +91,7 @@ function TenantsPage() {
 
   const fetchTenants = async () => {
     try {
-      const response = await axios.get('/api/tenants');
+      const response = await axios.get('/tenants');
       setTenants(response.data.tenants);
     } catch (error) {
       toast({
@@ -204,7 +204,7 @@ function TenantsPage() {
     setIsSubmitting(true);
     try {
       if (selectedTenant) {
-        await axios.put(`/api/tenants/${selectedTenant.id}`, formData);
+        await axios.put(`/tenants/${selectedTenant.id}`, formData);
         toast({
           title: 'Succes',
           description: 'Tenant actualizat cu succes',
@@ -213,7 +213,7 @@ function TenantsPage() {
           isClosable: true,
         });
       } else {
-        await axios.post('/api/tenants', formData);
+        await axios.post('/tenants', formData);
         toast({
           title: 'Succes',
           description: 'Tenant creat cu succes',
@@ -245,7 +245,7 @@ function TenantsPage() {
     }
 
     try {
-      await axios.delete(`/api/tenants/${tenant.id}`);
+      await axios.delete(`/tenants/${tenant.id}`);
       toast({
         title: 'Succes',
         description: 'Tenant șters cu succes',

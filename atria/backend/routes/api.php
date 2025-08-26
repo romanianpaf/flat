@@ -8,6 +8,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\API\AutomationController;
 use App\Http\Controllers\API\TenantController;
+use App\Http\Controllers\API\UserVoiceController;
 
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
@@ -52,4 +53,10 @@ Route::middleware('auth:api')->group(function () {
         Route::delete('/logs/{id}', [LogController::class, 'destroy']);
         Route::delete('/logs', [LogController::class, 'clearOldLogs']);
     });
+
+    // User Voice
+    Route::get('/user-voice', [UserVoiceController::class, 'index']);
+    Route::post('/user-voice', [UserVoiceController::class, 'store']);
+    Route::post('/user-voice/{id}/vote', [UserVoiceController::class, 'vote']);
+    Route::post('/user-voice/{id}/close', [UserVoiceController::class, 'close']);
 });

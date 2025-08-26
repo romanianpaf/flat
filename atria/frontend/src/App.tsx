@@ -10,6 +10,10 @@ import RolesManagement from './pages/RolesManagement';
 import LogsPage from './pages/LogsPage';
 import AutomationPage from './pages/AutomationPage';
 import TenantsPage from './pages/TenantsPage';
+import ProfilePage from './pages/ProfilePage';
+import AnnouncementsPage from './pages/AnnouncementsPage';
+import AccessPage from './pages/AccessPage';
+import UserVoicePage from './pages/UserVoicePage';
 import axios from './lib/axios';
 
 interface User {
@@ -27,7 +31,7 @@ function App() {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      axios.get('/api/user')
+      axios.get('/user')
         .then(response => {
           setUser(response.data.user);
         })
@@ -51,18 +55,35 @@ function App() {
     return <div>Loading...</div>;
   }
 
+  const isAdminLike = (u: User | null) => {
+    const role = u?.role;
+    return role === 'sysadmin' || role === 'admin' || role === 'tenantadmin' || role === 'cex' || role === 'tehnic';
+  };
+  const isSysadmin = (u: User | null) => u?.role === 'sysadmin';
+
   return (
     <ChakraProvider theme={theme}>
       <BrowserRouter>
         <Navigation user={user} onLogout={handleLogout} />
         <Routes>
           <Route path="/" element={<Home user={user} />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/roles" element={<RolesManagement />} />
-          <Route path="/admin/users" element={<UsersManagement />} />
-          <Route path="/admin/logs" element={<LogsPage />} />
-          <Route path="/admin/automations" element={<AutomationPage />} />
-          <Route path="/admin/tenants" element={<TenantsPage />} />
+
+          {/* Pagine accesibile tuturor (după login) */}
+          <Route path="/profil" element={user ? <ProfilePage user={user} /> : <Navigate to="/" />} />
+          <Route path="/anunturi" element={user ? <AnnouncementsPage /> : <Navigate to="/" />} />
+          <Route path="/acces" element={user ? <AccessPage /> : <Navigate to="/" />} />
+          <Route path="/user-voice" element={user ? <UserVoicePage /> : <Navigate to="/" />} />
+
+          {/* Admin-like routes */}
+          <Route path="/admin" element={isAdminLike(user) ? <AdminDashboard /> : <Navigate to="/" />} />
+          <Route path="/admin/roles" element={isAdminLike(user) ? <RolesManagement /> : <Navigate to="/" />} />
+          <Route path="/admin/users" element={isAdminLike(user) ? <UsersManagement /> : <Navigate to="/" />} />
+          <Route path="/admin/logs" element={isAdminLike(user) ? <LogsPage /> : <Navigate to="/" />} />
+          <Route path="/admin/automations" element={isAdminLike(user) ? <AutomationPage /> : <Navigate to="/" />} />
+
+          {/* Sysadmin-only */}
+          <Route path="/admin/tenants" element={isSysadmin(user) ? <TenantsPage /> : <Navigate to="/" />} />
+
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>

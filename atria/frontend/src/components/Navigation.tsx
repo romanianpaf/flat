@@ -77,6 +77,10 @@ const Navigation: React.FC<NavigationProps> = ({ user, onLogout }) => {
       category: 'Principal',
       items: [
         { label: 'Acasă', path: '/', icon: FiHome, adminOnly: false },
+        { label: 'Profil', path: '/profil', icon: FiSettings, adminOnly: false },
+        { label: 'Anunțuri', path: '/anunturi', icon: FiActivity, adminOnly: false },
+        { label: 'Acces', path: '/acces', icon: FiZap, adminOnly: false },
+        { label: 'User Voice', path: '/user-voice', icon: FiActivity, adminOnly: false },
       ]
     },
     {
@@ -97,17 +101,23 @@ const Navigation: React.FC<NavigationProps> = ({ user, onLogout }) => {
     },
   ];
 
-  // Funcție pentru a filtra elementele de navigație în funcție de rolul utilizatorului
+  const isAdminLike = (u: User | null) => {
+    const r = u?.role;
+    return r === 'sysadmin' || r === 'admin' || r === 'tenantadmin' || r === 'cex' || r === 'tehnic';
+  };
+
+  // Filtrare în funcție de rol
   const getFilteredNavigation = () => {
-    return navigationStructure.map(category => ({
-      ...category,
-      items: category.items.filter(item => !item.adminOnly || user?.role === 'admin' || user?.role === 'sysadmin')
-    })).filter(category => category.items.length > 0);
+    return navigationStructure
+      .map(category => ({
+        ...category,
+        items: category.items.filter(item => !item.adminOnly || isAdminLike(user))
+      }))
+      .filter(category => category.items.length > 0);
   };
 
   const filteredNavigation = getFilteredNavigation();
 
-  // Funcții pentru randarea navigației desktop și mobile
   const renderDesktopNavigation = () => (
     <HStack spacing={6} display={{ base: 'none', md: 'flex' }}>
       {filteredNavigation.map((category, categoryIndex) => (

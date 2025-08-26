@@ -67,7 +67,7 @@ function RolesManagement() {
 
   const fetchRoles = async () => {
     try {
-      const response = await axios.get('/api/roles');
+      const response = await axios.get('/roles');
       setRoles(response.data.roles);
     } catch (error) {
       toast({
@@ -87,7 +87,7 @@ function RolesManagement() {
 
     try {
       if (editingRole) {
-        await axios.put(`/api/roles/${editingRole.id}`, formData);
+        await axios.put(`/roles/${editingRole.id}`, formData);
         toast({
           title: 'Rol actualizat cu succes',
           status: 'success',
@@ -95,7 +95,7 @@ function RolesManagement() {
           isClosable: true,
         });
       } else {
-        await axios.post('/api/roles', formData);
+        await axios.post('/roles', formData);
         toast({
           title: 'Rol creat cu succes',
           status: 'success',
@@ -137,7 +137,7 @@ function RolesManagement() {
     }
 
     try {
-      await axios.delete(`/api/roles/${role.id}`);
+      await axios.delete(`/roles/${role.id}`);
       toast({
         title: 'Rol șters cu succes',
         status: 'success',

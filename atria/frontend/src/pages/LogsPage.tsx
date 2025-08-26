@@ -92,7 +92,7 @@ function LogsPage() {
         user: userFilter,
       });
 
-      const response = await axios.get(`/api/admin/logs?${params}`);
+      const response = await axios.get(`/admin/logs?${params}`);
       setLogs(response.data.logs);
       setTotalPages(response.data.total_pages);
     } catch (error) {
@@ -126,7 +126,7 @@ function LogsPage() {
 
   const handleExportLogs = async () => {
     try {
-      const response = await axios.get('/api/admin/logs/export', {
+      const response = await axios.get('/admin/logs/export', {
         responseType: 'blob',
       });
       
