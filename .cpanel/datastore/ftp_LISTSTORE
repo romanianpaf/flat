@@ -1,0 +1,1 @@
+{"statusmsg":"Ran adminbin Cpanel/ftp/LISTSTORE","mode":"simple","status":1,"version":"2.4","exit_code":0,"error":0,"data":[{"type":"main","homedir":"/home/atria","user":"atria"},{"user":"atria_logs","homedir":"/etc/apache2/logs/domlogs/atria","type":"logaccess"}],"timeout":0,"action":"fetch"}

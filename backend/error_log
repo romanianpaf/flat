@@ -1,0 +1,7 @@
+[02-Oct-2025 11:05:26 UTC] PHP Warning:  require(/home/atria/public_html/f1.atria.live/backend/vendor/autoload.php): Failed to open stream: No such file or directory in /home/atria/public_html/f1.atria.live/backend/artisan on line 18
+[02-Oct-2025 11:05:26 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/atria/public_html/f1.atria.live/backend/vendor/autoload.php' (include_path='.:/opt/cpanel/ea-php82/root/usr/share/pear') in /home/atria/public_html/f1.atria.live/backend/artisan:18
+Stack trace:
+#0 {main}
+  thrown in /home/atria/public_html/f1.atria.live/backend/artisan on line 18
+[03-Oct-2025 10:06:32 UTC] PHP Fatal error:  Declaration of App\JsonApi\V2\Users\UserSchema::indexQuery($query, $request) must be compatible with LaravelJsonApi\Eloquent\Schema::indexQuery(?Illuminate\Http\Request $request, Illuminate\Database\Eloquent\Builder $query): Illuminate\Database\Eloquent\Builder in /home/atria/public_html/f1.atria.live/backend/app/JsonApi/V2/Users/UserSchema.php on line 88
+[03-Oct-2025 10:06:57 UTC] PHP Fatal error:  Declaration of App\JsonApi\V2\Users\UserSchema::indexQuery($request, $query) must be compatible with LaravelJsonApi\Eloquent\Schema::indexQuery(?Illuminate\Http\Request $request, Illuminate\Database\Eloquent\Builder $query): Illuminate\Database\Eloquent\Builder in /home/atria/public_html/f1.atria.live/backend/app/JsonApi/V2/Users/UserSchema.php on line 88
