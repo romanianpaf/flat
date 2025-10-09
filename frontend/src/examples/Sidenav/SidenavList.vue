@@ -45,7 +45,7 @@
         <sidenav-collapse
           collapse-ref="userVoice"
           nav-text="User Voice"
-          :class="$route.path.includes('/polls') ? 'active' : ''"
+          :class="$route.path.includes('/polls') || $route.path.includes('/user-voices') ? 'active' : ''"
         >
           <template #icon>
             <CustomerSupport />
@@ -56,6 +56,11 @@
                 :to="{ name: 'Polls' }"
                 mini-icon="📊"
                 text="Sondaje"
+              />
+              <sidenav-item
+                :to="{ name: 'User Voices' }"
+                mini-icon="💡"
+                text="Sugestii"
               />
             </ul>
           </template>
@@ -123,7 +128,7 @@
         <sidenav-collapse
           collapse-ref="apiExamples"
           nav-text="Examples (API)"
-          :class="getRoute() === 'examples' && !$route.path.includes('/tenants') && !$route.path.includes('/roles') && !$route.path.includes('/users') && !$route.path.includes('/automations') ? 'active' : ''"
+          :class="getRoute() === 'examples' && !$route.path.includes('/tenants') && !$route.path.includes('/roles') && !$route.path.includes('/users') && !$route.path.includes('/automations') && !$route.path.includes('/polls') && !$route.path.includes('/user-voices') ? 'active' : ''"
         >
           <template #icon>
             <Vue />

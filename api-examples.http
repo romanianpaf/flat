@@ -1,0 +1,356 @@
+### F1 Atria Live API Examples
+### Base URL: https://f1.atria.live/api/v2
+
+### 1. Authentication
+
+### Login
+POST https://f1.atria.live/api/v2/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "password"
+}
+
+### Register
+POST https://f1.atria.live/api/v2/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+
+### Logout
+POST https://f1.atria.live/api/v2/logout
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+### Refresh Token
+POST https://f1.atria.live/api/v2/oauth/token
+Content-Type: application/json
+
+{
+  "grant_type": "refresh_token",
+  "refresh_token": "YOUR_REFRESH_TOKEN",
+  "client_id": "2",
+  "client_secret": "taFFz2C9Gh0ThmUiBtrumpnt4ijITGOcF7YFML5z"
+}
+
+### Get Current User Profile
+GET https://f1.atria.live/api/v2/me?include=roles
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### 2. Users
+
+### List Users
+GET https://f1.atria.live/api/v2/users?include=roles,tenant&page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Get User
+GET https://f1.atria.live/api/v2/users/1?include=roles,tenant
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Create User
+POST https://f1.atria.live/api/v2/users
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "users",
+    "attributes": {
+      "name": "Jane Doe",
+      "email": "jane@example.com",
+      "password": "password123",
+      "tenant_id": 1
+    }
+  }
+}
+
+### Update User
+PATCH https://f1.atria.live/api/v2/users/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "users",
+    "id": "1",
+    "attributes": {
+      "name": "Jane Smith"
+    }
+  }
+}
+
+### Delete User
+DELETE https://f1.atria.live/api/v2/users/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+### 3. Tenants
+
+### List Tenants
+GET https://f1.atria.live/api/v2/tenants?page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Create Tenant
+POST https://f1.atria.live/api/v2/tenants
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "tenants",
+    "attributes": {
+      "name": "New Company",
+      "address": "123 Main St",
+      "fiscal_code": "12345678",
+      "description": "A new company",
+      "contact_data": {
+        "phone": "+1234567890",
+        "email": "contact@newcompany.com"
+      }
+    }
+  }
+}
+
+### 4. Polls
+
+### List Polls
+GET https://f1.atria.live/api/v2/polls?include=options&page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Get Poll
+GET https://f1.atria.live/api/v2/polls/1?include=options
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Create Poll
+POST https://f1.atria.live/api/v2/polls
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "polls",
+    "attributes": {
+      "title": "What is your favorite color?",
+      "description": "Please choose your favorite color from the options below",
+      "is_active": true,
+      "allow_multiple_votes": false,
+      "start_date": "2025-01-01 00:00:00",
+      "end_date": "2025-12-31 23:59:59",
+      "tenant_id": 1
+    }
+  }
+}
+
+### Create Poll Option
+POST https://f1.atria.live/api/v2/poll-options
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "poll-options",
+    "attributes": {
+      "poll_id": 1,
+      "option_text": "Red",
+      "votes_count": 0,
+      "order": 1
+    }
+  }
+}
+
+### 5. User Voices (Suggestions)
+
+### List User Voices
+GET https://f1.atria.live/api/v2/user-voices?include=user&page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Get User Voice
+GET https://f1.atria.live/api/v2/user-voices/1?include=user
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Create User Voice
+POST https://f1.atria.live/api/v2/user-voices
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "user-voices",
+    "attributes": {
+      "suggestion": "I think we should add dark mode to the application. This would improve user experience especially during night time usage."
+    }
+  }
+}
+
+### Vote on User Voice (Up)
+POST https://f1.atria.live/api/v2/user-voices/1/vote
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "type": "up"
+}
+
+### Vote on User Voice (Down)
+POST https://f1.atria.live/api/v2/user-voices/1/vote
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/json
+
+{
+  "type": "down"
+}
+
+### Update User Voice
+PATCH https://f1.atria.live/api/v2/user-voices/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "user-voices",
+    "id": "1",
+    "attributes": {
+      "suggestion": "Updated suggestion text with more details about the feature request."
+    }
+  }
+}
+
+### Delete User Voice
+DELETE https://f1.atria.live/api/v2/user-voices/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+
+### 6. Roles
+
+### List Roles
+GET https://f1.atria.live/api/v2/roles?include=permissions&page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Create Role
+POST https://f1.atria.live/api/v2/roles
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "roles",
+    "attributes": {
+      "name": "moderator",
+      "tenant_id": 1
+    }
+  }
+}
+
+### 7. Automations
+
+### List Automations
+GET https://f1.atria.live/api/v2/automations?page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### Create Automation
+POST https://f1.atria.live/api/v2/automations
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "automations",
+    "attributes": {
+      "name": "Smart Light Control",
+      "description": "Control smart lights via MQTT",
+      "type": "light",
+      "mqtt_broker_host": "192.168.1.100",
+      "mqtt_broker_port": 1883,
+      "mqtt_broker_username": "mqtt_user",
+      "mqtt_broker_password": "mqtt_pass",
+      "mqtt_topic": "home/lights/living_room",
+      "mqtt_payload_on": "{\"state\": \"ON\"}",
+      "mqtt_payload_off": "{\"state\": \"OFF\"}",
+      "mqtt_qos": 1,
+      "is_active": true,
+      "tenant_id": 1
+    }
+  }
+}
+
+### 8. Categories
+
+### List Categories
+GET https://f1.atria.live/api/v2/categories?page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### 9. Items
+
+### List Items
+GET https://f1.atria.live/api/v2/items?include=category,tags&page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### 10. Tags
+
+### List Tags
+GET https://f1.atria.live/api/v2/tags?page[size]=10&page[number]=1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### 11. Permissions
+
+### List Permissions
+GET https://f1.atria.live/api/v2/permissions
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json
+
+### 12. Error Examples
+
+### 401 Unauthorized
+GET https://f1.atria.live/api/v2/users
+# Missing Authorization header
+
+### 422 Validation Error
+POST https://f1.atria.live/api/v2/user-voices
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Content-Type: application/vnd.api+json
+Accept: application/vnd.api+json
+
+{
+  "data": {
+    "type": "user-voices",
+    "attributes": {
+      "suggestion": "Short"
+    }
+  }
+}
+
+### 403 Forbidden
+DELETE https://f1.atria.live/api/v2/users/1
+Authorization: Bearer YOUR_ACCESS_TOKEN
+# User doesn't have permission to delete users
+
+### 404 Not Found
+GET https://f1.atria.live/api/v2/users/999
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Accept: application/vnd.api+json

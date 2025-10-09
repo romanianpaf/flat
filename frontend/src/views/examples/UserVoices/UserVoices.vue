@@ -6,15 +6,15 @@
           <div class="pb-0 card-header">
             <div class="d-lg-flex">
               <div>
-                <h5 class="mb-0">Listă Sondaje</h5>
-                <p class="mb-0 text-sm">Gestionează sondajele de opinie</p>
+                <h5 class="mb-0">Listă Sugestii</h5>
+                <p class="mb-0 text-sm">Gestionează sugestiile utilizatorilor</p>
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
                   <router-link
-                    to="/examples/polls/new"
+                    to="/examples/user-voices/new"
                     class="mb-0 btn bg-gradient-success btn-sm"
-                    >+ Sondaj Nou</router-link
+                    >+ Sugestie Nouă</router-link
                   >
                 </div>
               </div>
@@ -24,17 +24,17 @@
             <div class="dataTable-search search-block">
               <input
                 class="dataTable-input search-input-table"
-                placeholder="Caută sondaj..."
+                placeholder="Caută sugestie..."
                 type="text"
               />
             </div>
             <div class="table-responsive">
-              <table ref="pollsList" class="table table-flush">
+              <table ref="userVoicesList" class="table table-flush">
                 <thead class="thead-light">
                   <tr>
-                    <th title="title">Titlu</th>
-                    <th data-sortable="false">Status</th>
-                    <th data-sortable="false">Opțiuni</th>
+                    <th title="suggestion">Sugestie</th>
+                    <th data-sortable="false">Autor</th>
+                    <th data-sortable="false">Voturi</th>
                     <th title="created_at">Creat la</th>
                     <th data-sortable="false">Acțiuni</th>
                   </tr>
@@ -86,34 +86,37 @@ let currentPerPage = 5;
 let currentPage = 1;
 let currentSort = "created_at";
 
-async function getPollsList(params) {
-  await this.$store.dispatch("polls/getPolls", {
-    filter: { title: params.query },
+async function getUserVoicesList(params) {
+  await this.$store.dispatch("uservoices/getUserVoices", {
+    filter: { is_active: params.filter?.is_active },
     page: { size: params.perpage, number: params.nr },
     sort: params.sort,
-    include: "options",
+    include: "user",
   });
 }
 
-const getPollsListObj = {
-  methods: { getPollsList },
+const getUserVoicesListObj = {
+  methods: { getUserVoicesList },
 };
 
 export default {
-  name: "Polls",
+  name: "UserVoices",
   data() {
     return {
       pagination: null,
-      pollsAux: [],
+      userVoicesAux: [],
     };
   },
-  mixins: [setNavPills, getPollsListObj, eventTable],
+  mixins: [setNavPills, getUserVoicesListObj, eventTable],
   computed: {
-    pollsList() {
-      return this.$store.getters["polls/polls"]?.data;
+    userVoicesList() {
+      return this.$store.getters["uservoices/uservoices"]?.data;
     },
     metaPage() {
-      return this.$store.getters["polls/polls"]?.meta;
+      return this.$store.getters["uservoices/uservoices"]?.meta;
+    },
+    currentUser() {
+      return this.$store.getters["profile/profile"];
     },
   },
   watch: {
@@ -122,7 +125,7 @@ export default {
       immediate: false,
       deep: true,
     },
-    pollsList: {
+    userVoicesList: {
       handler: "reactiveTable",
       immediate: false,
       deep: true,
@@ -130,19 +133,19 @@ export default {
   },
 
   async mounted() {
-    if (this.$refs.pollsList) {
-      this.tablePolls = new DataTable(this.$refs.pollsList, {
+    if (this.$refs.userVoicesList) {
+      this.tableUserVoices = new DataTable(this.$refs.userVoicesList, {
         fixedHeight: false,
         perPage: 5,
       });
 
       document.querySelector(".dataTable-bottom").remove();
-      this.tablePolls.label = null;
-      this.tablePolls.setMessage(
+      this.tableUserVoices.label = null;
+      this.tableUserVoices.setMessage(
         `<img src="${loading}" width="100" height="100" alt="loading" />`
       );
 
-      await this.getPollsList({
+      await this.getUserVoicesList({
         query: currentQuery,
         perpage: currentPerPage,
         nr: currentPage,
@@ -150,11 +153,11 @@ export default {
       });
 
       const self = this;
-      this.tablePolls.on("datatable.perpage", async function (perpage) {
+      this.tableUserVoices.on("datatable.perpage", async function (perpage) {
         this.setMessage(
           `<img src="${loading}" width="100" height="100" alt="loading" />`
         );
-        await self.getPollsList({
+        await self.getUserVoicesList({
           query: currentQuery,
           perpage: (currentPerPage = perpage),
           nr: (currentPage = 1),
@@ -162,13 +165,13 @@ export default {
         });
       });
 
-      this.tablePolls.on("datatable.sort", async function (column, direction) {
+      this.tableUserVoices.on("datatable.sort", async function (column, direction) {
         this.setMessage(
           `<img src="${loading}" width="100" height="100" alt="loading" />`
         );
         direction = direction == "asc" ? "" : "-";
         column = this.headings[column].title;
-        await self.getPollsList({
+        await self.getUserVoicesList({
           query: currentQuery,
           perpage: currentPerPage,
           nr: currentPage,
@@ -177,11 +180,11 @@ export default {
       });
 
       // eslint-disable-next-line no-unused-vars
-      this.tablePolls.on("datatable.search", async function (query) {
+      this.tableUserVoices.on("datatable.search", async function (query) {
         this.setMessage(
           `<img src="${loading}" width="100" height="100" alt="loading" />`
         );
-        await self.getPollsList({
+        await self.getUserVoicesList({
           query: (currentQuery = query),
           perpage: currentPerPage,
           nr: (currentPage = 1),
@@ -200,7 +203,7 @@ export default {
 
   methods: {
     async getDataFromPage(page) {
-      await this.getPollsList({
+      await this.getUserVoicesList({
         query: currentQuery,
         perpage: currentPerPage,
         nr: (currentPage = page),
@@ -213,47 +216,53 @@ export default {
     },
 
     async reactiveTable() {
-      this.pollsAux = [];
-      if (this.pollsList?.length > 0) {
-        this.pollsList.forEach((row) => {
-          const statusBadge = row.is_active 
-            ? '<span class="badge badge-sm bg-gradient-success">Activ</span>'
-            : '<span class="badge badge-sm bg-gradient-secondary">Inactiv</span>';
+      this.userVoicesAux = [];
+      if (this.userVoicesList?.length > 0) {
+        this.userVoicesList.forEach((row) => {
+          const authorName = row.user?.name || 'Utilizator necunoscut';
+          const votesDisplay = `
+            <div class="d-flex align-items-center gap-2">
+              <span class="badge badge-sm bg-gradient-success">
+                <i class="fas fa-thumbs-up me-1"></i>${row.votes_up || 0}
+              </span>
+              <span class="badge badge-sm bg-gradient-danger">
+                <i class="fas fa-thumbs-down me-1"></i>${row.votes_down || 0}
+              </span>
+            </div>
+          `;
           
-          const optionsCount = row.options?.length || 0;
-          
-          this.pollsAux.push([
-            `<h6 class="my-auto">${row.title}</h6>`,
-            statusBadge,
-            `${optionsCount} opțiuni`,
+          this.userVoicesAux.push([
+            `<div class="text-wrap" style="max-width: 300px;">${row.suggestion}</div>`,
+            authorName,
+            votesDisplay,
             row.created_at,
-            this.actionEditButton(row.id, "Editează sondaj") +
-              this.actionDeleteButton(row.id, "Șterge sondaj"),
+            this.actionEditButton(row.id, "Editează sugestie") +
+              this.actionDeleteButton(row.id, "Șterge sugestie"),
           ]);
         });
-        this.tablePolls.data = [];
-        this.tablePolls.refresh();
+        this.tableUserVoices.data = [];
+        this.tableUserVoices.refresh();
         document.querySelector(".dataTable-input").value = currentQuery;
-        this.tablePolls.insert({ data: this.pollsAux });
+        this.tableUserVoices.insert({ data: this.userVoicesAux });
         this.removeEvent();
         this.eventToCall({
-          table: this.tablePolls,
-          redirectPath: "Edit Poll",
-          deletePath: "polls/deletePoll",
-          getPath: "polls/getPolls",
-          textDelete: "Sondaj șters cu succes!",
-          textDefaultData: "polls",
-          textDeleteError: "A apărut o eroare la ștergerea sondajului.",
+          table: this.tableUserVoices,
+          redirectPath: "Edit User Voice",
+          deletePath: "uservoices/deleteUserVoice",
+          getPath: "uservoices/getUserVoices",
+          textDelete: "Sugestie ștearsă cu succes!",
+          textDefaultData: "uservoices",
+          textDeleteError: "A apărut o eroare la ștergerea sugestiei.",
           params: {
             query: currentQuery,
             perpage: currentPerPage,
             nr: currentPage,
             sort: currentSort,
-            include: "options",
+            include: "user",
           },
         });
       } else {
-        this.tablePolls.setMessage("Nu există rezultate pentru căutarea ta");
+        this.tableUserVoices.setMessage("Nu există rezultate pentru căutarea ta");
       }
     },
   },

@@ -11,6 +11,7 @@ use App\JsonApi\V2\Polls\PollSchema;
 use App\JsonApi\V2\Roles\RoleSchema;
 use App\JsonApi\V2\Tags\TagSchema;
 use App\JsonApi\V2\Tenants\TenantSchema;
+use App\JsonApi\V2\UserVoices\UserVoiceSchema;
 use App\JsonApi\V2\Users\UserSchema;
 use LaravelJsonApi\Core\Document\JsonApi;
 use LaravelJsonApi\Core\Server\Server as BaseServer;
@@ -51,6 +52,7 @@ class Server extends BaseServer
             RoleSchema::class,
             TagSchema::class,
             TenantSchema::class,
+            UserVoiceSchema::class,
             UserSchema::class,
         ];
     }

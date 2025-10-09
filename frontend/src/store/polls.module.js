@@ -7,9 +7,14 @@ export const polls = {
   },
   actions: {
     async getPolls({ commit }, params) {
-      const data = await PollsService.getPolls(params);
-      commit("SET_POLLS", data);
-      return data;
+      try {
+        const data = await PollsService.getPolls(params);
+        commit("SET_POLLS", data);
+        return data;
+      } catch (error) {
+        console.error('Error in polls store:', error);
+        throw error;
+      }
     },
     async getPoll(_, payload) {
       return await PollsService.getPoll(payload);

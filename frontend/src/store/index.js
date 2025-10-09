@@ -11,6 +11,7 @@ import { items } from "./items.module";
 import { tenants } from "./tenants.module";
 import { automations } from "./automations.module";
 import { polls } from "./polls.module";
+import { uservoices } from "./uservoices.module";
 
 export default createStore({
   state: {
@@ -44,6 +45,7 @@ export default createStore({
     tenants,
     automations,
     polls,
+    uservoices,
   },
   mutations: {
     toggleConfigurator(state) {

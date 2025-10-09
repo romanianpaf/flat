@@ -41,8 +41,10 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     $server->resource('roles', JsonApiController::class);
     $server->resource('tags', JsonApiController::class);
     $server->resource('tenants', JsonApiController::class);
+    $server->resource('user-voices', JsonApiController::class);
     $server->resource('users', JsonApiController::class);
     Route::get('me', [MeController::class, 'readProfile']);
     Route::patch('me', [MeController::class, 'updateProfile']);
+    Route::post('user-voices/{userVoice}/vote', [App\Http\Controllers\Api\V2\UserVoiceController::class, 'vote']);
     Route::post('/uploads/{resource}/{id}/{field}', UploadController::class);
 });

@@ -30,7 +30,7 @@ class PollRequest extends ResourceRequest
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after:start_date'],
             'tenant_id' => ['nullable', 'exists:tenants,id'],
-            'options' => ['required', JsonApiRule::toMany(), 'min:2'], // Minimum 2 opțiuni
+            'options' => ['nullable', JsonApiRule::toMany()], // Opțiunile se pot adăuga separat
         ];
     }
 

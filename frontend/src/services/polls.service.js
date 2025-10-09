@@ -7,21 +7,26 @@ const API_URL = process.env.VUE_APP_API_BASE_URL + '/';
 
 export default {
   async getPolls(params) {
-    const response = await axios.get(API_URL + "polls", {
-      headers: authHeader(),
-      params: {
-        ...(params?.filter?.title ? { "filter[title]": params.filter.title } : {}),
-        ...(params?.filter?.is_active ? { "filter[is_active]": params.filter.is_active } : {}),
-        ...(params?.page?.size ? { "page[size]": params.page.size } : {}),
-        ...(params?.page?.number ? { "page[number]": params.page.number } : {}),
-        ...(params?.sort ? { sort: params.sort } : {}),
-        ...(params?.include ? { include: params.include } : {}),
-      },
-    });
-    return {
-      data: dataFormatter.deserialize(response.data),
-      meta: response.data.meta,
-    };
+    try {
+      const response = await axios.get(API_URL + "polls", {
+        headers: authHeader(),
+        params: {
+          ...(params?.filter?.title ? { "filter[title]": params.filter.title } : {}),
+          ...(params?.filter?.is_active ? { "filter[is_active]": params.filter.is_active } : {}),
+          ...(params?.page?.size ? { "page[size]": params.page.size } : {}),
+          ...(params?.page?.number ? { "page[number]": params.page.number } : {}),
+          ...(params?.sort ? { sort: params.sort } : {}),
+          ...(params?.include ? { include: params.include } : {}),
+        },
+      });
+      return {
+        data: dataFormatter.deserialize(response.data),
+        meta: response.data.meta,
+      };
+    } catch (error) {
+      console.error('Error fetching polls:', error);
+      throw error;
+    }
   },
 
   async getPoll(payload) {

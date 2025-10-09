@@ -1,0 +1,539 @@
+{
+  "api_info": {
+    "name": "F1 Atria Live API",
+    "version": "2.0",
+    "base_url": "https://f1.atria.live/api/v2",
+    "authentication": "OAuth2 (Laravel Passport)",
+    "format": "JSON:API"
+  },
+  "authentication": {
+    "login": {
+      "method": "POST",
+      "endpoint": "/login",
+      "body": {
+        "email": "string (required)",
+        "password": "string (required)"
+      },
+      "response": {
+        "access_token": "string",
+        "refresh_token": "string",
+        "token_type": "Bearer",
+        "expires_in": "integer"
+      }
+    },
+    "register": {
+      "method": "POST",
+      "endpoint": "/register",
+      "body": {
+        "name": "string (required)",
+        "email": "string (required)",
+        "password": "string (required)",
+        "password_confirmation": "string (required)"
+      }
+    },
+    "logout": {
+      "method": "POST",
+      "endpoint": "/logout",
+      "headers": {
+        "Authorization": "Bearer {access_token}"
+      }
+    },
+    "refresh_token": {
+      "method": "POST",
+      "endpoint": "/oauth/token",
+      "body": {
+        "grant_type": "refresh_token",
+        "refresh_token": "string (required)",
+        "client_id": "2",
+        "client_secret": "taFFz2C9Gh0ThmUiBtrumpnt4ijITGOcF7YFML5z"
+      }
+    }
+  },
+  "endpoints": {
+    "users": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/users",
+        "auth_required": true,
+        "query_params": {
+          "page[size]": "integer (optional, default: 10)",
+          "page[number]": "integer (optional, default: 1)",
+          "sort": "string (optional, e.g., '-created_at')",
+          "include": "string (optional, e.g., 'roles,tenant')",
+          "filter[name]": "string (optional)"
+        }
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/users/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/users",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "users",
+            "attributes": {
+              "name": "string (required)",
+              "email": "string (required, unique)",
+              "password": "string (required)",
+              "tenant_id": "integer (optional)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/users/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/users/{id}",
+        "auth_required": true
+      }
+    },
+    "tenants": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/tenants",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/tenants/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/tenants",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "tenants",
+            "attributes": {
+              "name": "string (required)",
+              "address": "string (optional)",
+              "fiscal_code": "string (optional, unique)",
+              "description": "string (optional)",
+              "contact_data": "object (optional)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/tenants/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/tenants/{id}",
+        "auth_required": true
+      }
+    },
+    "roles": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/roles",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/roles/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/roles",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "roles",
+            "attributes": {
+              "name": "string (required)",
+              "tenant_id": "integer (optional)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/roles/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/roles/{id}",
+        "auth_required": true
+      }
+    },
+    "polls": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/polls",
+        "auth_required": true,
+        "query_params": {
+          "include": "string (optional, e.g., 'options')",
+          "filter[title]": "string (optional)",
+          "filter[is_active]": "boolean (optional)"
+        }
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/polls/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/polls",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "polls",
+            "attributes": {
+              "title": "string (required)",
+              "description": "string (optional)",
+              "is_active": "boolean (default: true)",
+              "allow_multiple_votes": "boolean (default: false)",
+              "start_date": "datetime (optional)",
+              "end_date": "datetime (optional)",
+              "tenant_id": "integer (optional)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/polls/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/polls/{id}",
+        "auth_required": true
+      }
+    },
+    "poll_options": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/poll-options",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/poll-options/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/poll-options",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "poll-options",
+            "attributes": {
+              "poll_id": "integer (required)",
+              "option_text": "string (required)",
+              "votes_count": "integer (default: 0)",
+              "order": "integer (default: 0)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/poll-options/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/poll-options/{id}",
+        "auth_required": true
+      }
+    },
+    "user_voices": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/user-voices",
+        "auth_required": true,
+        "query_params": {
+          "include": "string (optional, e.g., 'user')",
+          "filter[is_active]": "boolean (optional)"
+        }
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/user-voices/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/user-voices",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "user-voices",
+            "attributes": {
+              "suggestion": "string (required, min: 10 chars)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/user-voices/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/user-voices/{id}",
+        "auth_required": true
+      },
+      "vote": {
+        "method": "POST",
+        "endpoint": "/user-voices/{id}/vote",
+        "auth_required": true,
+        "body": {
+          "type": "up" // or "down"
+        }
+      }
+    },
+    "automations": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/automations",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/automations/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/automations",
+        "auth_required": true,
+        "body": {
+          "data": {
+            "type": "automations",
+            "attributes": {
+              "name": "string (required)",
+              "description": "string (optional)",
+              "type": "enum (switch, sensor, actuator, light, lock)",
+              "mqtt_broker_host": "string (required)",
+              "mqtt_broker_port": "integer (default: 1883)",
+              "mqtt_broker_username": "string (optional)",
+              "mqtt_broker_password": "string (optional)",
+              "mqtt_topic": "string (required)",
+              "mqtt_payload_on": "object (optional)",
+              "mqtt_payload_off": "object (optional)",
+              "mqtt_qos": "integer (default: 0)",
+              "is_active": "boolean (default: true)",
+              "tenant_id": "integer (required)"
+            }
+          }
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/automations/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/automations/{id}",
+        "auth_required": true
+      }
+    },
+    "categories": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/categories",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/categories/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/categories",
+        "auth_required": true
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/categories/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/categories/{id}",
+        "auth_required": true
+      }
+    },
+    "items": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/items",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/items/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/items",
+        "auth_required": true
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/items/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/items/{id}",
+        "auth_required": true
+      }
+    },
+    "tags": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/tags",
+        "auth_required": true
+      },
+      "get": {
+        "method": "GET",
+        "endpoint": "/tags/{id}",
+        "auth_required": true
+      },
+      "create": {
+        "method": "POST",
+        "endpoint": "/tags",
+        "auth_required": true
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/tags/{id}",
+        "auth_required": true
+      },
+      "delete": {
+        "method": "DELETE",
+        "endpoint": "/tags/{id}",
+        "auth_required": true
+      }
+    },
+    "permissions": {
+      "list": {
+        "method": "GET",
+        "endpoint": "/permissions",
+        "auth_required": true
+      }
+    },
+    "profile": {
+      "get": {
+        "method": "GET",
+        "endpoint": "/me",
+        "auth_required": true,
+        "query_params": {
+          "include": "string (optional, e.g., 'roles')"
+        }
+      },
+      "update": {
+        "method": "PATCH",
+        "endpoint": "/me",
+        "auth_required": true
+      }
+    }
+  },
+  "response_format": {
+    "success": {
+      "jsonapi": {
+        "version": "2.0"
+      },
+      "data": {
+        "type": "string",
+        "id": "string",
+        "attributes": "object",
+        "relationships": "object (optional)"
+      },
+      "included": "array (optional)",
+      "meta": {
+        "page": {
+          "current-page": "integer",
+          "per-page": "integer",
+          "total": "integer"
+        }
+      }
+    },
+    "error": {
+      "jsonapi": {
+        "version": "2.0"
+      },
+      "errors": [
+        {
+          "status": "string",
+          "title": "string",
+          "detail": "string",
+          "source": {
+            "pointer": "string"
+          }
+        }
+      ]
+    }
+  },
+  "mobile_app_features": {
+    "authentication": {
+      "login": "Email/password authentication",
+      "token_refresh": "Automatic token refresh on 401",
+      "logout": "Token invalidation"
+    },
+    "core_features": {
+      "polls": {
+        "view": "List and view polls",
+        "create": "Create new polls",
+        "vote": "Vote on poll options",
+        "manage": "Edit/delete own polls"
+      },
+      "user_voices": {
+        "view": "List and view suggestions",
+        "create": "Create new suggestions",
+        "vote": "Vote up/down on suggestions",
+        "manage": "Edit/delete own suggestions"
+      },
+      "profile": {
+        "view": "View user profile",
+        "update": "Update profile information"
+      }
+    },
+    "user_roles": {
+      "admin": "Full access to all features",
+      "creator": "Can create and manage content",
+      "user": "Can view and vote"
+    },
+    "multi_tenancy": {
+      "tenant_switching": "Switch between tenants (admin only)",
+      "tenant_scoping": "All data scoped by tenant",
+      "global_admin": "Access to all tenants"
+    }
+  },
+  "environment_variables": {
+    "api_base_url": "https://f1.atria.live/api/v2",
+    "client_id": "2",
+    "client_secret": "taFFz2C9Gh0ThmUiBtrumpnt4ijITGOcF7YFML5z"
+  },
+  "security": {
+    "authentication": "OAuth2 Bearer tokens",
+    "cors": "Configured for frontend domain",
+    "rate_limiting": "Implemented",
+    "input_validation": "All endpoints validated",
+    "sql_injection": "Protected via Eloquent ORM",
+    "xss": "Protected via proper escaping"
+  }
+}

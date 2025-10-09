@@ -8,6 +8,9 @@ export default {
     const response = await axios.post(API_URL + "login", user);
     if (response.data.access_token) {
       localStorage.setItem("user", JSON.stringify(response.data.access_token));
+      if (response.data.refresh_token) {
+        localStorage.setItem("refresh_token", response.data.refresh_token);
+      }
     }
   },
 
@@ -15,7 +18,8 @@ export default {
     try {
       await axios.post(API_URL + "logout", {}, { headers: authHeader() });
     } finally {
-      localStorage.removeItem("userF");
+      localStorage.removeItem("user");
+      localStorage.removeItem("refresh_token");
     }
   },
 
@@ -23,6 +27,9 @@ export default {
     const response = await axios.post(API_URL + "register", user);
     if (response.data.access_token) {
       localStorage.setItem("user", JSON.stringify(response.data.access_token));
+      if (response.data.refresh_token) {
+        localStorage.setItem("refresh_token", response.data.refresh_token);
+      }
     }
   },
 };

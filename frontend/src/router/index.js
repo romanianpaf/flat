@@ -76,6 +76,9 @@ import EditAutomation from "../views/examples/Automations/EditAutomation.vue";
 import Polls from "../views/examples/Polls/Polls.vue";
 import NewPoll from "../views/examples/Polls/NewPoll.vue";
 import EditPoll from "../views/examples/Polls/EditPoll.vue";
+import UserVoices from "../views/examples/UserVoices/UserVoices.vue";
+import NewUserVoice from "../views/examples/UserVoices/NewUserVoice.vue";
+import EditUserVoice from "../views/examples/UserVoices/EditUserVoice.vue";
 import Categories from "../views/examples/Categories/Categories.vue";
 import NewCategory from "../views/examples/Categories/NewCategory.vue";
 import EditCategory from "../views/examples/Categories/EditCategory.vue";
@@ -540,6 +543,30 @@ const routes = [
     path: "/examples/polls/edit/:id",
     name: "Edit Poll",
     component: EditPoll,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/examples/user-voices/list",
+    name: "User Voices",
+    component: UserVoices,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/examples/user-voices/new",
+    name: "New User Voice",
+    component: NewUserVoice,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/examples/user-voices/edit/:id",
+    name: "Edit User Voice",
+    component: EditUserVoice,
     meta: {
       middleware: [auth],
     },
