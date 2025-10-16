@@ -39,6 +39,10 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     $server->resource('polls', JsonApiController::class);
     $server->resource('poll-options', JsonApiController::class);
     $server->resource('roles', JsonApiController::class);
+    $server->resource('service-categories', JsonApiController::class);
+    $server->resource('service-subcategories', JsonApiController::class);
+    $server->resource('service-providers', JsonApiController::class);
+    $server->resource('service-provider-ratings', JsonApiController::class);
     $server->resource('tags', JsonApiController::class);
     $server->resource('tenants', JsonApiController::class);
     $server->resource('user-voices', JsonApiController::class);

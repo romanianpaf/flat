@@ -43,11 +43,11 @@
               </table>
             </div>
             <div class="d-flex justify-content-center mt-4">
-              <ul class="pagination" v-if="pagination">
+              <ul v-if="pagination" class="pagination">
                 <li
-                  class="page-item"
                   v-for="(page, index) in pagination.links"
                   :key="index"
+                  class="page-item"
                   :class="{
                     disabled: !page.url,
                     active: page.active,
@@ -56,12 +56,12 @@
                   <a
                     class="page-link"
                     href="javascript:;"
-                    @click="getDataFromPage(pagination.links[index].label)"
                     aria-label="pagination.links[index].label"
+                    @click="getDataFromPage(pagination.links[index].label)"
                   >
                     <span
-                      v-html="pagination.links[index].label"
                       aria-hidden="true"
+                      v-html="pagination.links[index].label"
                     ></span>
                   </a>
                 </li>
@@ -101,13 +101,13 @@ const getPollsListObj = {
 
 export default {
   name: "Polls",
+  mixins: [setNavPills, getPollsListObj, eventTable],
   data() {
     return {
       pagination: null,
       pollsAux: [],
     };
   },
-  mixins: [setNavPills, getPollsListObj, eventTable],
   computed: {
     pollsList() {
       return this.$store.getters["polls/polls"]?.data;

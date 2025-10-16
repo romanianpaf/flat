@@ -28,86 +28,97 @@ class PermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // User permissions
-        Permission::create(['name' => 'view users']);
-        Permission::create(['name' => 'create users']);
-        Permission::create(['name' => 'edit users']);
-        Permission::create(['name' => 'delete users']);
+        $permissions = [
+            // User permissions
+            'view users', 'create users', 'edit users', 'delete users',
 
-        // Role permissions
-        Permission::create(['name' => 'view roles']);
-        Permission::create(['name' => 'create roles']);
-        Permission::create(['name' => 'edit roles']);
-        Permission::create(['name' => 'delete roles']);
+            // Role permissions
+            'view roles', 'create roles', 'edit roles', 'delete roles',
 
-        // Permissions permissions
-        Permission::create(['name' => 'view permissions']);
+            // Permissions permissions
+            'view permissions',
 
-        // Category permissions
-        Permission::create(['name' => 'view categories']);
-        Permission::create(['name' => 'create categories']);
-        Permission::create(['name' => 'edit categories']);
-        Permission::create(['name' => 'delete categories']);
+            // Category permissions
+            'view categories', 'create categories', 'edit categories', 'delete categories',
 
-        // Tag permissions
-        Permission::create(['name' => 'view tags']);
-        Permission::create(['name' => 'create tags']);
-        Permission::create(['name' => 'edit tags']);
-        Permission::create(['name' => 'delete tags']);
+            // Tag permissions
+            'view tags', 'create tags', 'edit tags', 'delete tags',
 
-        // Item permissions
-        Permission::create(['name' => 'view items']);
-        Permission::create(['name' => 'create items']);
-        Permission::create(['name' => 'edit items']);
-        Permission::create(['name' => 'delete items']);
+            // Item permissions
+            'view items', 'create items', 'edit items', 'delete items',
 
-        // Tenant permissions
-        Permission::create(['name' => 'view tenants']);
-        Permission::create(['name' => 'create tenants']);
-        Permission::create(['name' => 'edit tenants']);
-        Permission::create(['name' => 'delete tenants']);
+            // Tenant permissions
+            'view tenants', 'create tenants', 'edit tenants', 'delete tenants',
 
-        // Automation permissions
-        Permission::create(['name' => 'view automations']);
-        Permission::create(['name' => 'create automations']);
-        Permission::create(['name' => 'edit automations']);
-        Permission::create(['name' => 'delete automations']);
+            // Automation permissions
+            'view automations', 'create automations', 'edit automations', 'delete automations',
 
-        // Poll permissions
-        Permission::create(['name' => 'view polls']);
-        Permission::create(['name' => 'create polls']);
-        Permission::create(['name' => 'edit polls']);
-        Permission::create(['name' => 'delete polls']);
+            // Poll permissions
+            'view polls', 'create polls', 'edit polls', 'delete polls',
 
-        /** @var \Spatie\Permission\Models\Role $role */
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo(Permission::all());
+            // Service categories
+            'view service categories', 'create service categories', 'edit service categories', 'delete service categories',
 
-        /** @var \Spatie\Permission\Models\Role $role */
-        $role = Role::create(['name' => 'creator']);
-        $role->givePermissionTo([
+            // Service subcategories
+            'view service subcategories', 'create service subcategories', 'edit service subcategories', 'delete service subcategories',
+
+            // Service providers
+            'view service providers', 'create service providers', 'edit service providers', 'delete service providers',
+
+            // Service provider ratings
+            'view service provider ratings', 'create service provider ratings', 'edit service provider ratings', 'delete service provider ratings',
+        ];
+
+        collect($permissions)->each(fn(string $name) => Permission::create(['name' => $name]));
+
+        $allPermissions = Permission::all();
+
+        Role::create(['name' => 'admin'])->givePermissionTo($allPermissions);
+
+        Role::create(['name' => 'cex'])->givePermissionTo([
             'view categories',
-            'create categories',
-            'edit categories',
-            'delete categories',
-
             'view tags',
-            'create tags',
-            'edit tags',
-            'delete tags',
-
             'view items',
-            'create items',
-            'edit items',
-            'delete items',
+
+            'view service categories',
+            'create service categories',
+            'edit service categories',
+            'delete service categories',
+
+            'view service subcategories',
+            'create service subcategories',
+            'edit service subcategories',
+            'delete service subcategories',
+
+            'view service providers',
+            'create service providers',
+            'edit service providers',
+            'delete service providers',
+
+            'view service provider ratings',
+            'delete service provider ratings',
         ]);
 
-        /** @var \Spatie\Permission\Models\Role $role */
-        $role = Role::create(['name' => 'member']);
-        $role->givePermissionTo([
+        Role::create(['name' => 'creator'])->givePermissionTo([
+            'view categories', 'create categories', 'edit categories', 'delete categories',
+            'view tags', 'create tags', 'edit tags', 'delete tags',
+            'view items', 'create items', 'edit items', 'delete items',
+            'view service categories',
+            'view service subcategories',
+            'view service providers',
+            'view service provider ratings',
+        ]);
+
+        Role::create(['name' => 'member'])->givePermissionTo([
             'view categories',
             'view tags',
             'view items',
+            'view service categories',
+            'view service subcategories',
+            'view service providers',
+            'view service provider ratings',
+            'create service providers',
+            'create service provider ratings',
         ]);
     }
 }

@@ -9,6 +9,10 @@ use App\JsonApi\V2\Permissions\PermissionSchema;
 use App\JsonApi\V2\PollOptions\PollOptionSchema;
 use App\JsonApi\V2\Polls\PollSchema;
 use App\JsonApi\V2\Roles\RoleSchema;
+use App\JsonApi\V2\ServiceCategories\ServiceCategorySchema;
+use App\JsonApi\V2\ServiceProviderRatings\ServiceProviderRatingSchema;
+use App\JsonApi\V2\ServiceProviders\ServiceProviderSchema;
+use App\JsonApi\V2\ServiceSubcategories\ServiceSubcategorySchema;
 use App\JsonApi\V2\Tags\TagSchema;
 use App\JsonApi\V2\Tenants\TenantSchema;
 use App\JsonApi\V2\UserVoices\UserVoiceSchema;
@@ -50,6 +54,10 @@ class Server extends BaseServer
             PollSchema::class,
             PollOptionSchema::class,
             RoleSchema::class,
+            ServiceCategorySchema::class,
+            ServiceSubcategorySchema::class,
+            ServiceProviderSchema::class,
+            ServiceProviderRatingSchema::class,
             TagSchema::class,
             TenantSchema::class,
             UserVoiceSchema::class,

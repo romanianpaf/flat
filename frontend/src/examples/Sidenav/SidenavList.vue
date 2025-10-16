@@ -4,7 +4,7 @@
     class="w-auto h-auto collapse navbar-collapse max-height-vh-100 h-100"
   >
     <ul class="navbar-nav">
-      <li class="nav-item" v-if="$store.getters['auth/loggedIn']">
+      <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
         <sidenav-collapse
           collapse-ref="controlPanel"
           nav-text="Panou de control"
@@ -41,7 +41,7 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li class="nav-item" v-if="$store.getters['auth/loggedIn']">
+      <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
         <sidenav-collapse
           collapse-ref="userVoice"
           nav-text="User Voice"
@@ -61,6 +61,38 @@
                 :to="{ name: 'User Voices' }"
                 mini-icon="💡"
                 text="Sugestii"
+              />
+            </ul>
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
+        <sidenav-collapse
+          collapse-ref="services"
+          nav-text="Servicii"
+          :class="$route.path.includes('/examples/services') ? 'active' : ''"
+        >
+          <template #icon>
+            <Shop />
+          </template>
+          <template #list>
+            <ul class="nav ms-4 ps-3">
+              <sidenav-item
+                v-if="requireCreator"
+                :to="{ name: 'Service Categories' }"
+                mini-icon="C"
+                text="Categorii"
+              />
+              <sidenav-item
+                v-if="requireCreator"
+                :to="{ name: 'Service Subcategories' }"
+                mini-icon="S"
+                text="Subcategorii"
+              />
+              <sidenav-item
+                :to="{ name: 'Service Providers' }"
+                mini-icon="F"
+                text="Furnizori"
               />
             </ul>
           </template>
@@ -956,15 +988,15 @@ export default {
     },
     requireAdmin() {
       if (this.$store.getters["auth/loggedIn"] && this.profile && this.profile.roles && this.profile.roles.length > 0) {
-        if (this.profile.roles[0].name == "admin") return true;
+        const roleName = this.profile.roles[0].name;
+        if (["admin", "sysadmin", "cex"].includes(roleName)) return true;
       }
-
       return false;
     },
     requireCreator() {
       if (this.$store.getters["auth/loggedIn"] && this.profile && this.profile.roles && this.profile.roles.length > 0) {
-        const aux = this.profile.roles[0].name;
-        if (aux == "admin" || aux == "creator") return true;
+        const roleName = this.profile.roles[0].name;
+        if (["admin", "sysadmin", "cex", "creator"].includes(roleName)) return true;
       }
       return false;
     },

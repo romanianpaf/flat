@@ -34,10 +34,10 @@
                 <label class="form-label">Status</label>
                 <div class="form-check form-switch">
                   <input
+                    id="is_active"
                     v-model="poll.is_active"
                     class="form-check-input"
                     type="checkbox"
-                    id="is_active"
                   />
                   <label class="form-check-label" for="is_active">
                     {{ poll.is_active ? 'Activ' : 'Inactiv' }}
@@ -82,10 +82,10 @@
               <div class="col-12">
                 <div class="form-check">
                   <input
+                    id="allow_multiple_votes"
                     v-model="poll.allow_multiple_votes"
                     class="form-check-input"
                     type="checkbox"
-                    id="allow_multiple_votes"
                   />
                   <label class="form-check-label" for="allow_multiple_votes">
                     Permite votare multiplă (utilizatorii pot selecta mai multe opțiuni)

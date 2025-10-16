@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriesSeeder::class);
         $this->call(TagsSeeder::class);
         $this->call(ItemsSeeder::class);
+        $this->call(ServiceCategoriesSeeder::class);
+        $this->call(ServiceProvidersSeeder::class);
         $this->command->call('passport:install', ['--force' => true]);
     }
 }

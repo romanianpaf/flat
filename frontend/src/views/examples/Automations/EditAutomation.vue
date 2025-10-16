@@ -151,10 +151,10 @@
                 <label class="form-label">Status</label>
                 <div class="form-check form-switch">
                   <input
+                    id="is_active"
                     v-model="automation.is_active"
                     class="form-check-input"
                     type="checkbox"
-                    id="is_active"
                   />
                   <label class="form-check-label" for="is_active">
                     {{ automation.is_active ? 'Activ' : 'Inactiv' }}

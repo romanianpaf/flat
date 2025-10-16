@@ -12,6 +12,9 @@ import { tenants } from "./tenants.module";
 import { automations } from "./automations.module";
 import { polls } from "./polls.module";
 import { uservoices } from "./uservoices.module";
+import { serviceCategories } from "./serviceCategories.module";
+import { serviceSubcategories } from "./serviceSubcategories.module";
+import { serviceProviders } from "./serviceProviders.module";
 
 export default createStore({
   state: {
@@ -46,6 +49,9 @@ export default createStore({
     automations,
     polls,
     uservoices,
+    serviceCategories,
+    serviceSubcategories,
+    serviceProviders,
   },
   mutations: {
     toggleConfigurator(state) {

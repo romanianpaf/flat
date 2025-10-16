@@ -34,10 +34,10 @@
                 <label class="form-label">Status</label>
                 <div class="form-check form-switch">
                   <input
+                    id="is_active"
                     v-model="poll.is_active"
                     class="form-check-input"
                     type="checkbox"
-                    id="is_active"
                   />
                   <label class="form-check-label" for="is_active">
                     {{ poll.is_active ? 'Activ' : 'Inactiv' }}
@@ -82,10 +82,10 @@
               <div class="col-12">
                 <div class="form-check">
                   <input
+                    id="allow_multiple_votes"
                     v-model="poll.allow_multiple_votes"
                     class="form-check-input"
                     type="checkbox"
-                    id="allow_multiple_votes"
                   />
                   <label class="form-check-label" for="allow_multiple_votes">
                     Permite votare multiplă (utilizatorii pot selecta mai multe opțiuni)
@@ -113,9 +113,9 @@
               <div class="col-md-2 mt-4">
                 <button
                   v-if="poll.options.length > 2"
-                  @click="removeOption(index)"
                   class="btn btn-outline-danger btn-sm w-100"
                   type="button"
+                  @click="removeOption(index)"
                 >
                   <i class="fas fa-trash"></i> Șterge
                 </button>
@@ -125,9 +125,9 @@
             <div class="row mt-3">
               <div class="col-12">
                 <button
-                  @click="addOption"
                   class="btn btn-outline-success btn-sm"
                   type="button"
+                  @click="addOption"
                 >
                   <i class="fas fa-plus"></i> Adaugă opțiune
                 </button>

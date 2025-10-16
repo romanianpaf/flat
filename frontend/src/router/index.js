@@ -85,6 +85,15 @@ import EditCategory from "../views/examples/Categories/EditCategory.vue";
 import Items from "../views/examples/Items/Items.vue";
 import NewItem from "../views/examples/Items/NewItem.vue";
 import EditItem from "../views/examples/Items/EditItem.vue";
+import ServiceCategories from "../views/examples/Services/ServiceCategories.vue";
+import NewServiceCategory from "../views/examples/Services/NewServiceCategory.vue";
+import EditServiceCategory from "../views/examples/Services/EditServiceCategory.vue";
+import ServiceSubcategories from "../views/examples/Services/ServiceSubcategories.vue";
+import NewServiceSubcategory from "../views/examples/Services/NewServiceSubcategory.vue";
+import EditServiceSubcategory from "../views/examples/Services/EditServiceSubcategory.vue";
+import ServiceProviders from "../views/examples/Services/ServiceProviders.vue";
+import NewServiceProvider from "../views/examples/Services/NewServiceProvider.vue";
+import EditServiceProvider from "../views/examples/Services/EditServiceProvider.vue";
 import admin from "../middlewares/admin.js";
 import adminCreator from "../middlewares/admin_creator.js";
 import guest from "../middlewares/guest.js";
@@ -617,6 +626,78 @@ const routes = [
     component: EditItem,
     meta: {
       middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/categories",
+    name: "Service Categories",
+    component: ServiceCategories,
+    meta: {
+      middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/categories/new",
+    name: "New Service Category",
+    component: NewServiceCategory,
+    meta: {
+      middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/categories/edit/:id",
+    name: "Edit Service Category",
+    component: EditServiceCategory,
+    meta: {
+      middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/subcategories",
+    name: "Service Subcategories",
+    component: ServiceSubcategories,
+    meta: {
+      middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/subcategories/new",
+    name: "New Service Subcategory",
+    component: NewServiceSubcategory,
+    meta: {
+      middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/subcategories/edit/:id",
+    name: "Edit Service Subcategory",
+    component: EditServiceSubcategory,
+    meta: {
+      middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/examples/services/providers",
+    name: "Service Providers",
+    component: ServiceProviders,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/examples/services/providers/new",
+    name: "New Service Provider",
+    component: NewServiceProvider,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/examples/services/providers/edit/:id",
+    name: "Edit Service Provider",
+    component: EditServiceProvider,
+    meta: {
+      middleware: [auth],
     },
   },
 ];
