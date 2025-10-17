@@ -46,7 +46,7 @@
               @click="sidebarColor('info')"
             ></span>
             <span
-              class="badge filter bg-gradient-success"
+              class="badge filter bg-gradient-primary"
               data-color="success"
               @click="sidebarColor('success')"
             ></span>
@@ -70,7 +70,7 @@
         <div class="d-flex">
           <button
             id="btn-transparent"
-            class="px-3 mb-2 btn bg-gradient-success w-100"
+            class="px-3 mb-2 btn bg-gradient-primary w-100"
             :class="isTransparent === 'bg-transparent' ? 'active' : ''"
             @click="sidebarType('bg-transparent')"
           >
@@ -78,7 +78,7 @@
           </button>
           <button
             id="btn-white"
-            class="px-3 mb-2 btn bg-gradient-success w-100 ms-2"
+            class="px-3 mb-2 btn bg-gradient-primary w-100 ms-2"
             :class="isTransparent === 'bg-white' ? 'active' : ''"
             @click="sidebarType('bg-white')"
           >
@@ -197,7 +197,7 @@ export default {
     ...mapMutations(["navbarMinimize", "sidebarType", "navbarFixed"]),
     ...mapActions(["toggleSidebarColor", "setCardBackground"]),
 
-    sidebarColor(color = "success") {
+    sidebarColor(color = "primary") {
       document.querySelector("#sidenav-main").setAttribute("data-color", color);
       let mcolor = `card-background-mask-${color}`;
       this.setCardBackground(mcolor);

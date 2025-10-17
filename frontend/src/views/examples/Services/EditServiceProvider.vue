@@ -10,8 +10,8 @@
               </div>
               <div class="ms-lg-auto mt-3 mt-lg-0">
                 <router-link
-                  class="mb-0 btn bg-gradient-success btn-sm"
-                  to="/examples/services/providers"
+                  class="mb-0 btn bg-gradient-primary btn-sm"
+                  to="/service-providers"
                 >
                   &nbsp; Înapoi la listă
                 </router-link>
@@ -233,7 +233,7 @@ export default {
           message: "Nu am putut încărca furnizorul.",
           width: 380,
         });
-        this.$router.push("/examples/services/providers");
+        this.$router.push("/service-providers");
       }
     },
     async loadSubcategories() {
@@ -261,7 +261,7 @@ export default {
           message: "Furnizorul a fost actualizat.",
           width: 350,
         });
-        this.$router.push("/examples/services/providers");
+        this.$router.push("/service-providers");
       } catch (error) {
         if (error.response?.data?.errors) {
           this.setApiValidation(error.response.data.errors);

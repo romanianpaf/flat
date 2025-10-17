@@ -93,7 +93,7 @@
             <button
               type="button"
               name="button"
-              class="m-0 btn bg-gradient-success ms-2"
+              class="m-0 btn bg-gradient-primary ms-2"
             >
               Create Project
             </button>

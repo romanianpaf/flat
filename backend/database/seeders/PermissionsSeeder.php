@@ -73,9 +73,13 @@ class PermissionsSeeder extends Seeder
 
         $allPermissions = Permission::all();
 
-        Role::create(['name' => 'admin'])->givePermissionTo($allPermissions);
+        // Admin și sysadmin roles (global, tenant_id = NULL)
+        Role::create(['name' => 'admin', 'tenant_id' => null])->givePermissionTo($allPermissions);
 
-        Role::create(['name' => 'cex'])->givePermissionTo([
+        Role::create(['name' => 'sysadmin', 'tenant_id' => null])->givePermissionTo($allPermissions);
+
+        // Roluri globale (tenant_id = NULL)
+        Role::create(['name' => 'cex', 'tenant_id' => null])->givePermissionTo([
             'view categories',
             'view tags',
             'view items',
@@ -99,7 +103,7 @@ class PermissionsSeeder extends Seeder
             'delete service provider ratings',
         ]);
 
-        Role::create(['name' => 'creator'])->givePermissionTo([
+        Role::create(['name' => 'creator', 'tenant_id' => null])->givePermissionTo([
             'view categories', 'create categories', 'edit categories', 'delete categories',
             'view tags', 'create tags', 'edit tags', 'delete tags',
             'view items', 'create items', 'edit items', 'delete items',
@@ -109,7 +113,7 @@ class PermissionsSeeder extends Seeder
             'view service provider ratings',
         ]);
 
-        Role::create(['name' => 'member'])->givePermissionTo([
+        Role::create(['name' => 'member', 'tenant_id' => null])->givePermissionTo([
             'view categories',
             'view tags',
             'view items',
@@ -119,6 +123,39 @@ class PermissionsSeeder extends Seeder
             'view service provider ratings',
             'create service providers',
             'create service provider ratings',
+        ]);
+
+        Role::create(['name' => 'locatar', 'tenant_id' => null])->givePermissionTo([
+            'view categories',
+            'view tags',
+            'view items',
+            'view service categories',
+            'view service subcategories',
+            'view service providers',
+            'view service provider ratings',
+            'create service providers',
+            'create service provider ratings',
+        ]);
+
+        Role::create(['name' => 'tehnic', 'tenant_id' => null])->givePermissionTo([
+            'view items',
+            'create items',
+            'edit items',
+            'view automations',
+            'create automations',
+            'edit automations',
+            'view service categories',
+            'view service subcategories',
+            'view service providers',
+        ]);
+
+        Role::create(['name' => 'administrație', 'tenant_id' => null])->givePermissionTo([
+            'view users',
+            'create users',
+            'edit users',
+            'view items',
+            'view categories',
+            'view tags',
         ]);
     }
 }

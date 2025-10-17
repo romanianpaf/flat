@@ -90,7 +90,7 @@ export default {
         type: String,
       },
       default: () => ({
-        color: "text-success",
+        color: "text-primary",
       }),
     },
     icon: {

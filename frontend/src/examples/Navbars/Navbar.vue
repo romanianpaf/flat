@@ -49,7 +49,7 @@
             <input
               type="text"
               class="form-control"
-              :placeholder="isRTL ? 'أكتب هنا...' : 'Type here...'"
+              :placeholder="isRTL ? 'أكتب هنا...' : 'Caută aici...'"
             />
           </div>
         </div>
@@ -74,7 +74,7 @@
             >
               <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-1'"></i>
               <span v-if="isRTL" class="d-sm-inline d-none">تسجيل الخروج</span>
-              <span v-else class="d-sm-inline d-none">Sign Out </span>
+              <span v-else class="d-sm-inline d-none">Deautentificare</span>
             </a>
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">

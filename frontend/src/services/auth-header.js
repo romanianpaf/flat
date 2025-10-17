@@ -1,9 +1,9 @@
 export default function authHeader() {
-  let user = JSON.parse(localStorage.getItem("user"));
+  let token = localStorage.getItem("token");
 
-  if (user) {
+  if (token) {
     return {
-      Authorization: "Bearer " + user,
+      Authorization: "Bearer " + token,
       "Content-Type": "application/vnd.api+json",
       "Accept": "application/vnd.api+json",
     };

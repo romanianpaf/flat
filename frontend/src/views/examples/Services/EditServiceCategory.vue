@@ -10,8 +10,8 @@
               </div>
               <div class="ms-lg-auto mt-3 mt-lg-0">
                 <router-link
-                  class="mb-0 btn bg-gradient-success btn-sm"
-                  to="/examples/services/categories"
+                  class="mb-0 btn bg-gradient-primary btn-sm"
+                  to="/service-categories"
                 >
                   &nbsp; Înapoi la listă
                 </router-link>
@@ -101,7 +101,7 @@ export default {
           message: "Nu am putut încărca categoria.",
           width: 380,
         });
-        this.$router.push("/examples/services/categories");
+        this.$router.push("/service-categories");
       }
     },
     async updateCategory() {
@@ -114,7 +114,7 @@ export default {
           message: "Categoria a fost actualizată.",
           width: 350,
         });
-        this.$router.push("/examples/services/categories");
+        this.$router.push("/service-categories");
       } catch (error) {
         if (error.response?.data?.errors) {
           this.setApiValidation(error.response.data.errors);

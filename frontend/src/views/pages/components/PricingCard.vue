@@ -17,7 +17,7 @@
           class="p-2 d-flex justify-content-lg-start justify-content-center"
         >
           <div
-            class="text-center shadow icon icon-shape icon-xs rounded-circle bg-gradient-success"
+            class="text-center shadow icon icon-shape icon-xs rounded-circle bg-gradient-primary"
           >
             <i
               class="fas"

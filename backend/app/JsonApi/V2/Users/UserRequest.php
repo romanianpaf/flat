@@ -21,6 +21,10 @@ class UserRequest extends ResourceRequest
             return [
                 'name'          => ['sometimes', 'string'],
                 'email'         => ['sometimes', 'email', Rule::unique('users')->ignore($model->id)],
+                'phone'         => ['sometimes', 'nullable', 'string'],
+                'apartment'     => ['sometimes', 'nullable', 'string'],
+                'staircase'     => ['sometimes', 'nullable', 'string'],
+                'floor'         => ['sometimes', 'nullable', 'string'],
                 'profile_image' => ['sometimes', 'nullable', 'url'],
                 'password'      => ['sometimes', 'confirmed', 'string', 'min:8'],
                 'tenant_id'     => ['sometimes', 'nullable', 'exists:tenants,id'],
@@ -31,6 +35,10 @@ class UserRequest extends ResourceRequest
         return [
             'name'          => ['required', 'string'],
             'email'         => ['required', 'email', Rule::unique('users')],
+            'phone'         => ['nullable', 'string'],
+            'apartment'     => ['nullable', 'string'],
+            'staircase'     => ['nullable', 'string'],
+            'floor'         => ['nullable', 'string'],
             'profile_image' => ['nullable', 'url'],
             'password'      => ['required', 'confirmed', 'string', 'min:8'],
             'tenant_id'     => ['nullable', 'exists:tenants,id'],

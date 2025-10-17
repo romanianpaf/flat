@@ -13,7 +13,7 @@
       >
         <button
           type="button"
-          class="mt-2 mb-0 btn bg-gradient-success ms-lg-auto me-lg-0 me-auto mt-lg-0"
+          class="mt-2 mb-0 btn bg-gradient-primary ms-lg-auto me-lg-0 me-auto mt-lg-0"
         >
           Save
         </button>
@@ -35,7 +35,7 @@
               <div class="mt-4 col-12">
                 <div class="d-flex">
                   <button
-                    class="mb-0 btn bg-gradient-success btn-sm me-2"
+                    class="mb-0 btn bg-gradient-primary btn-sm me-2"
                     type="button"
                     name="button"
                   >

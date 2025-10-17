@@ -10,8 +10,8 @@
               </div>
               <div class="ms-lg-auto mt-3 mt-lg-0">
                 <router-link
-                  class="mb-0 btn bg-gradient-success btn-sm"
-                  to="/examples/services/subcategories"
+                  class="mb-0 btn bg-gradient-primary btn-sm"
+                  to="/service-subcategories"
                 >
                   &nbsp; Înapoi la listă
                 </router-link>
@@ -133,7 +133,7 @@ export default {
           message: "Nu am putut încărca subcategoria.",
           width: 380,
         });
-        this.$router.push("/examples/services/subcategories");
+        this.$router.push("/service-subcategories");
       }
     },
     async save() {
@@ -146,7 +146,7 @@ export default {
           message: "Subcategoria a fost actualizată.",
           width: 350,
         });
-        this.$router.push("/examples/services/subcategories");
+        this.$router.push("/service-subcategories");
       } catch (error) {
         if (error.response?.data?.errors) {
           this.setApiValidation(error.response.data.errors);

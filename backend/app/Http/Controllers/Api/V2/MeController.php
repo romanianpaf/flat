@@ -7,6 +7,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use LaravelJsonApi\Core\Document\Error;
 use LaravelJsonApi\Core\Responses\ErrorResponse;
 
@@ -19,42 +21,42 @@ class MeController extends Controller
      */
     public function readProfile(Request $request)
     {
-        $http = new Client(['verify' => false]);
-
-        $headers = $this->parseHeaders($request->header());
- 
-        $headers = [
-            'Accept' => 'application/vnd.api+json',
-            'Authorization' => $headers['authorization']
-        ];
-
-        $input = $request->json()->all();
-        $input['data']['id'] = (string)auth()->id();
-        $input['data']['type'] = 'users';
+        $user = auth()->user();
         
-        $data = [
-            'headers' => $headers,
-            'query' => $request->query()
-        ];
-       
-        try {
-            $response = $http->get(route('v2.users.show', ['user' => auth()->id()]), $data);
-        
-            $responseBody = json_decode((string)$response->getBody(), true);
-            $responseStatus = $response->getStatusCode();
-            $responseHeaders = $this->parseHeaders($response->getHeaders());
-           
-            unset($responseHeaders['Transfer-Encoding']);
-            
-            return response()->json($responseBody, $responseStatus)->withHeaders($responseHeaders);
-            
-        } catch (ClientException $e) {
-            $errors = json_decode($e->getResponse()->getBody()->getContents(), true)['errors'];
-            $errors = collect($errors)->map(function ($error) {
-                return Error::fromArray($error);
-            });
-            return ErrorResponse::make($errors);
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+        // Load roles and tenant relationships
+        $user->load('roles', 'tenant');
+
+        // Returnez user-ul cu roles și tenant ca JSON:API simplificat
+        return response()->json([
+            'data' => [
+                'type' => 'users',
+                'id' => (string)$user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'phone' => $user->phone,
+                'apartment' => $user->apartment,
+                'staircase' => $user->staircase,
+                'floor' => $user->floor,
+                'profile_image' => $user->profile_image,
+                'tenant_id' => $user->tenant_id,
+                'tenant' => $user->tenant ? [
+                    'id' => $user->tenant->id,
+                    'name' => $user->tenant->name,
+                    'address' => $user->tenant->address,
+                    'fiscal_code' => $user->tenant->fiscal_code,
+                ] : null,
+                'roles' => $user->roles->map(function($role) {
+                    return [
+                        'id' => $role->id,
+                        'name' => $role->name,
+                    ];
+                })->toArray(),
+            ],
+        ]);
     }
 
      /**
@@ -98,6 +100,58 @@ class MeController extends Controller
         unset($responseHeaders['Transfer-Encoding']);
 
         return response()->json($responseBody, $responseStatus)->withHeaders($responseHeaders);
+    }
+
+    /**
+     * Change user password
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function changePassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'current_password' => 'required|string',
+            'new_password' => 'required|string|min:8|confirmed',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validare eșuată',
+                'errors' => $validator->errors()
+            ], 400);
+        }
+
+        $user = auth()->user();
+
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'Parola curentă este incorectă'
+            ], 400);
+        }
+
+        // Nu folosim Hash::make() aici pentru că modelul User
+        // are un Attribute mutator care face hash automat
+        \Log::info('Changing password', [
+            'user_id' => $user->id,
+            'old_hash' => $user->password,
+            'new_password_length' => strlen($request->new_password)
+        ]);
+
+        $user->password = $request->new_password;
+        $user->save();
+        
+        // Revoke all tokens pentru a forța re-autentificarea
+        $user->tokens()->delete();
+
+        \Log::info('Password changed successfully', [
+            'user_id' => $user->id,
+            'saved_hash' => $user->fresh()->password
+        ]);
+
+        return response()->json([
+            'message' => 'Parola a fost actualizată cu succes'
+        ], 200);
     }
 
       /**

@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/users/new" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/users/new" class="mb-0 btn bg-gradient-primary btn-sm"
                     >+&nbsp; Utilizator Nou</router-link
                   >
                 </div>
@@ -54,7 +54,7 @@
               </p>
             </div>
             <BasePagination
-              class="pagination-success pagination-md me-3"
+              class="pagination-primary pagination-md me-3"
               :per-page="pagination?.perPage"
               :value="pagination?.currentPage"
               :total="pagination?.total"
@@ -135,7 +135,8 @@ export default {
         perPage: 5,
       });
 
-      document.querySelector(".dataTable-bottom").remove();
+      const bottom = document.querySelector(".dataTable-bottom");
+      if (bottom) bottom.remove();
       this.tableUsers.label = null;
       this.tableUsers.setMessage(
         `<img src="${loading}" width="100" height="100" alt="loading" />`

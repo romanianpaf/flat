@@ -21,7 +21,7 @@
               <div class="text-center card-body">
                 <p class="card-text">Basic example</p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('basic')"
                 >
                   Try me!
@@ -34,7 +34,7 @@
               <div class="text-center card-body">
                 <p class="card-text">A success message</p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('success-message')"
                 >
                   Try me!
@@ -47,7 +47,7 @@
               <div class="text-center card-body">
                 <p class="card-text">Custom HTML description</p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('custom-html')"
                 >
                   Try me!
@@ -62,7 +62,7 @@
               <div class="text-center card-body">
                 <p class="card-text">Gitgub avatar request</p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('input-field')"
                 >
                   Try me!
@@ -75,7 +75,7 @@
               <div class="text-center card-body">
                 <p class="card-text">A title with a text under</p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('title-and-text')"
                 >
                   Try me!
@@ -88,7 +88,7 @@
               <div class="text-center card-body">
                 <p class="card-text">A message with auto close</p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('auto-close')"
                 >
                   Try me!
@@ -106,7 +106,7 @@
                   Button...
                 </p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('warning-message-and-confirmation')"
                 >
                   Try me!
@@ -122,7 +122,7 @@
                   for "Cancel"
                 </p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('warning-message-and-cancel')"
                 >
                   Try me!
@@ -138,7 +138,7 @@
                   RTL languages
                 </p>
                 <button
-                  class="mb-0 btn bg-gradient-success"
+                  class="mb-0 btn bg-gradient-primary"
                   @click="showSwal('rtl-language')"
                 >
                   Try me!
@@ -187,7 +187,7 @@ export default {
           cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
           cancelButtonAriaLabel: "Thumbs down",
           customClass: {
-            confirmButton: "btn bg-gradient-success",
+            confirmButton: "btn bg-gradient-primary",
             cancelButton: "btn bg-gradient-danger",
           },
           buttonsStyling: false,
@@ -203,7 +203,7 @@ export default {
           confirmButtonText: "Look up",
           showLoaderOnConfirm: true,
           customClass: {
-            confirmButton: "btn bg-gradient-success",
+            confirmButton: "btn bg-gradient-primary",
             cancelButton: "btn bg-gradient-danger",
           },
           buttonsStyling: false,
@@ -264,7 +264,7 @@ export default {
           cancelButtonText: "No, cancel!",
           reverseButtons: true,
           customClass: {
-            confirmButton: "btn bg-gradient-success",
+            confirmButton: "btn bg-gradient-primary",
             cancelButton: "btn bg-gradient-danger",
           },
           buttonsStyling: false,
@@ -275,7 +275,7 @@ export default {
               text: "Your file has been deleted.",
               icon: "success",
               customClass: {
-                confirmButton: "btn bg-gradient-success",
+                confirmButton: "btn bg-gradient-primary",
               },
               buttonsStyling: false,
             });
@@ -288,7 +288,7 @@ export default {
               text: "Your imaginary file is safe :)",
               icon: "error",
               customClass: {
-                confirmButton: "btn bg-gradient-success",
+                confirmButton: "btn bg-gradient-primary",
               },
               buttonsStyling: false,
             });
@@ -303,7 +303,7 @@ export default {
           cancelButtonText: "Cancel",
           confirmButtonText: "Yes, delete it!",
           customClass: {
-            confirmButton: "btn bg-gradient-success",
+            confirmButton: "btn bg-gradient-primary",
             cancelButton: "btn bg-gradient-danger",
           },
           buttonsStyling: false,
@@ -314,7 +314,7 @@ export default {
               text: "Your file has been deleted.",
               icon: "success",
               customClass: {
-                confirmButton: "btn bg-gradient-success",
+                confirmButton: "btn bg-gradient-primary",
               },
               buttonsStyling: false,
             });
@@ -335,7 +335,7 @@ export default {
           showCancelButton: true,
           showCloseButton: true,
           customClass: {
-            confirmButton: "btn bg-gradient-success",
+            confirmButton: "btn bg-gradient-primary",
             cancelButton: "btn bg-gradient-danger",
           },
           buttonsStyling: false,

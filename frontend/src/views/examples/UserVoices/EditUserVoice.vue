@@ -9,7 +9,7 @@
           </div>
           <div class="card-body">
             <div v-if="loadingData" class="text-center py-5">
-              <div class="spinner-border text-success" role="status">
+              <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Se încarcă...</span>
               </div>
             </div>
@@ -32,14 +32,14 @@
 
               <div class="d-flex justify-content-end">
                 <router-link
-                  to="/examples/user-voices/list"
+                  to="/user-voices/list"
                   class="btn btn-outline-secondary me-2"
                 >
                   Anulează
                 </router-link>
                 <button
                   type="submit"
-                  class="btn bg-gradient-success"
+                  class="btn bg-gradient-primary"
                   :disabled="loading || (userVoice.suggestion?.length || 0) < 10"
                 >
                   <span v-if="loading">
@@ -90,7 +90,7 @@ export default {
           title: "Eroare",
           text: "Nu s-a putut încărca sugestia.",
         });
-        this.$router.push("/examples/user-voices/list");
+        this.$router.push("/user-voices/list");
       } finally {
         this.loadingData = false;
       }
@@ -113,7 +113,7 @@ export default {
           title: "Succes",
           text: "Sugestia ta a fost actualizată cu succes!",
         });
-        this.$router.push("/examples/user-voices/list");
+        this.$router.push("/user-voices/list");
       } catch (error) {
         console.error("Error updating user voice:", error);
         const errorMessage = error.response?.data?.errors?.[0]?.detail || "Nu s-a putut actualiza sugestia.";

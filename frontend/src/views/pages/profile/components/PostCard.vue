@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="text-end ms-auto">
-        <button type="button" class="mb-0 btn btn-sm bg-gradient-success">
+        <button type="button" class="mb-0 btn btn-sm bg-gradient-primary">
           <i class="fas fa-plus pe-2"></i> Follow
         </button>
       </div>

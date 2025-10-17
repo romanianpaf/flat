@@ -63,7 +63,7 @@
             <td class="text-sm align-middle">
               <div class="mx-auto progress">
                 <div
-                  class="progress-bar bg-gradient-success"
+                  class="progress-bar bg-gradient-primary"
                   role="progressbar"
                   style="width: 80%"
                   aria-valuenow="80"
@@ -106,7 +106,7 @@
             <td class="text-sm align-middle">
               <div class="mx-auto progress">
                 <div
-                  class="progress-bar bg-gradient-success"
+                  class="progress-bar bg-gradient-primary"
                   role="progressbar"
                   style="width: 90%"
                   aria-valuenow="90"

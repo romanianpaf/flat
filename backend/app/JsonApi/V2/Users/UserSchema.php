@@ -48,6 +48,10 @@ class UserSchema extends Schema
             ID::make(),
             Str::make('name')->sortable(),
             Str::make('email')->sortable(),
+            Str::make('phone'),
+            Str::make('apartment'),
+            Str::make('staircase'),
+            Str::make('floor'),
             Str::make('profile_image'),
             Str::make('password')->hidden(),
             Str::make('password_confirmation')->hidden(),
@@ -94,8 +98,8 @@ class UserSchema extends Schema
             return $query;
         }
 
-        // Admin global vede toți utilizatorii
-        if (!$user->tenant_id && $user->hasRole('admin')) {
+        // Admin global și sysadmin văd toți utilizatorii
+        if ($user->hasRole(['admin', 'sysadmin'])) {
             return $query;
         }
 

@@ -11,7 +11,8 @@ export default {
       headers: authHeader(),
       params: { include: "roles" },
     });
-    return dataFormatter.deserialize(response.data);
+    // Returnez direct data simplificată din /me
+    return response.data.data;
   },
 
   async uploadPic(object) {

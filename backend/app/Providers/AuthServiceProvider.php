@@ -6,6 +6,7 @@ use App\Models\Automation;
 use App\Models\Category;
 use App\Models\Item;
 use App\Models\Poll;
+use App\Models\PollOption;
 use App\Models\ServiceCategory;
 use App\Models\ServiceProvider;
 use App\Models\ServiceProviderRating;
@@ -18,6 +19,7 @@ use App\Policies\CategoryPolicy;
 use App\Policies\ItemPolicy;
 use App\Policies\PermissionPolicy;
 use App\Policies\PollPolicy;
+use App\Policies\PollOptionPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\ServiceCategoryPolicy;
 use App\Policies\ServiceProviderPolicy;
@@ -44,6 +46,7 @@ class AuthServiceProvider extends BaseAuthServiceProvider
         Item::class                 => ItemPolicy::class,
         Permission::class           => PermissionPolicy::class,
         Poll::class                 => PollPolicy::class,
+        PollOption::class           => PollOptionPolicy::class,
         Role::class                 => RolePolicy::class,
         ServiceCategory::class      => ServiceCategoryPolicy::class,
         ServiceSubcategory::class   => ServiceSubcategoryPolicy::class,

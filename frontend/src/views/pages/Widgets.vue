@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col-lg-3 col-md-6">
         <mini-statistics-card
-          class="bg-gradient-success p-0"
+          class="bg-gradient-primary p-0"
           :title="{
             text: 'Battery Health',
             color: 'opacity-7 text-white',
@@ -19,7 +19,7 @@
           direction-reverse
         />
         <mini-statistics-card
-          class="bg-gradient-success p-0"
+          class="bg-gradient-primary p-0"
           :title="{
             text: 'Music Volume',
             color: 'opacity-7 text-white',
@@ -210,7 +210,7 @@
       <div class="col-lg-4">
         <timeline-list
           title="Orders overview"
-          description="<i class='fa fa-arrow-up text-success' aria-hidden='true'></i>
+          description="<i class='fa fa-arrow-up text-primary' aria-hidden='true'></i>
         <span class='font-weight-bold'>24%</span> this month"
         >
           <timeline-item

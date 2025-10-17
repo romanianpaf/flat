@@ -49,6 +49,7 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     $server->resource('users', JsonApiController::class);
     Route::get('me', [MeController::class, 'readProfile']);
     Route::patch('me', [MeController::class, 'updateProfile']);
+    Route::post('change-password', [MeController::class, 'changePassword']);
     Route::post('user-voices/{userVoice}/vote', [App\Http\Controllers\Api\V2\UserVoiceController::class, 'vote']);
     Route::post('/uploads/{resource}/{id}/{field}', UploadController::class);
 });

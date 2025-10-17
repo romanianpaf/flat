@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/automations/list" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/automations/list" class="mb-0 btn bg-gradient-primary btn-sm"
                     >&nbsp; Înapoi la listă</router-link
                   >
                 </div>
@@ -225,7 +225,7 @@ export default {
           message: "Automatizare adăugată cu succes!",
           width: 350,
         });
-        this.$router.push("/examples/automations/list");
+        this.$router.push("/automations/list");
       } catch (error) {
         if (error.response?.data?.errors) this.setApiValidation(error.response.data.errors);
         else

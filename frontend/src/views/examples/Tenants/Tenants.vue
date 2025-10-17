@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/tenants/new" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/tenants/new" class="mb-0 btn bg-gradient-primary btn-sm"
                     >+&nbsp; Beneficiar Nou</router-link
                   >
                 </div>
@@ -50,7 +50,7 @@
               </p>
             </div>
             <BasePagination
-              class="pagination-success pagination-md me-3"
+              class="pagination-primary pagination-md me-3"
               :per-page="pagination?.perPage"
               :value="pagination?.currentPage"
               :total="pagination?.total"

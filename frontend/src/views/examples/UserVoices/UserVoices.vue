@@ -12,8 +12,8 @@
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
                   <router-link
-                    to="/examples/user-voices/new"
-                    class="mb-0 btn bg-gradient-success btn-sm"
+                    to="/user-voices/new"
+                    class="mb-0 btn bg-gradient-primary btn-sm"
                     >+ Sugestie Nouă</router-link
                   >
                 </div>
@@ -21,13 +21,6 @@
             </div>
           </div>
           <div class="px-0 pb-0 card-body">
-            <div class="dataTable-search search-block">
-              <input
-                class="dataTable-input search-input-table"
-                placeholder="Caută sugestie..."
-                type="text"
-              />
-            </div>
             <div class="table-responsive">
               <table ref="userVoicesList" class="table table-flush">
                 <thead class="thead-light">
@@ -139,7 +132,8 @@ export default {
         perPage: 5,
       });
 
-      document.querySelector(".dataTable-bottom").remove();
+      const bottom = document.querySelector(".dataTable-bottom");
+      if (bottom) bottom.remove();
       this.tableUserVoices.label = null;
       this.tableUserVoices.setMessage(
         `<img src="${loading}" width="100" height="100" alt="loading" />`
@@ -222,7 +216,7 @@ export default {
           const authorName = row.user?.name || 'Utilizator necunoscut';
           const votesDisplay = `
             <div class="d-flex align-items-center gap-2">
-              <span class="badge badge-sm bg-gradient-success">
+              <span class="badge badge-sm bg-gradient-primary">
                 <i class="fas fa-thumbs-up me-1"></i>${row.votes_up || 0}
               </span>
               <span class="badge badge-sm bg-gradient-danger">

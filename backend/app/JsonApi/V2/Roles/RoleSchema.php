@@ -62,6 +62,27 @@ class RoleSchema extends Schema
         ];
     }
 
+    public function indexQuery(?\Illuminate\Http\Request $request, \Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder
+    {
+        $user = auth()->user();
+
+        if (!$user) {
+            return $query;
+        }
+
+        // Sysadmin și admini văd toți rolurile
+        if ($user->hasRole(['admin', 'sysadmin'])) {
+            return $query;
+        }
+
+        // Utilizatorii cu tenant văd doar rolurile propriului tenant
+        if ($user->tenant_id) {
+            return $query->where('tenant_id', $user->tenant_id);
+        }
+
+        return $query;
+    }
+
     /**
      * Get the resource paginator.
      *

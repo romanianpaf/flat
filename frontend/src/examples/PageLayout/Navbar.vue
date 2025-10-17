@@ -66,7 +66,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center"
                           >
                             <spaceship />
                           </div>
@@ -108,7 +108,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                           >
                             <office />
                           </div>
@@ -135,7 +135,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center"
                           >
                             <shop />
                           </div>
@@ -165,7 +165,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                           >
                             <box3d />
                           </div>
@@ -198,7 +198,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                           >
                             <customer-support />
                           </div>
@@ -234,7 +234,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                           >
                             <document />
                           </div>
@@ -270,7 +270,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center"
                     >
                       <document />
                     </div>
@@ -307,7 +307,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <office />
                     </div>
@@ -327,7 +327,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <shop />
                     </div>
@@ -352,7 +352,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <box3d />
                     </div>
@@ -379,7 +379,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <document />
                     </div>
@@ -411,7 +411,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <spaceship />
                     </div>
@@ -472,7 +472,7 @@
                     "
                   >
                     <div
-                      class="mask bg-gradient-success border-radius-lg"
+                      class="mask bg-gradient-primary border-radius-lg"
                     ></div>
                     <div
                       class="d-flex justify-content-center align-items-center text-center text-white font-weight-bold w-100 z-index-1 flex-column"
@@ -481,7 +481,7 @@
                         class="icon icon-shape rounded-circle bg-white shadow text-center"
                       >
                         <i
-                          class="ni ni-diamond text-success text-gradient text-lg"
+                          class="ni ni-diamond text-primary text-gradient text-lg"
                           aria-hidden="true"
                         ></i>
                       </div>
@@ -881,7 +881,7 @@
                       <div class="d-flex">
                         <div class="h-10 mt-1 icon me-3 d-flex">
                           <i
-                            class="ni ni-single-copy-04 text-gradient text-success"
+                            class="ni ni-single-copy-04 text-gradient text-primary"
                           ></i>
                         </div>
                         <div
@@ -904,7 +904,7 @@
                       <div class="d-flex">
                         <div class="h-10 mt-1 icon me-3 d-flex">
                           <i
-                            class="ni ni-laptop text-gradient text-success"
+                            class="ni ni-laptop text-gradient text-primary"
                           ></i>
                         </div>
                         <div
@@ -926,7 +926,7 @@
                     >
                       <div class="d-flex">
                         <div class="h-10 mt-1 icon me-3 d-flex">
-                          <i class="ni ni-badge text-gradient text-success"></i>
+                          <i class="ni ni-badge text-gradient text-primary"></i>
                         </div>
                         <div
                           class="w-100 d-flex align-items-center justify-content-between"
@@ -950,7 +950,7 @@
                       <div class="d-flex">
                         <div class="h-10 mt-1 icon me-3 d-flex">
                           <i
-                            class="ni ni-notification-70 text-gradient text-success"
+                            class="ni ni-notification-70 text-gradient text-primary"
                           ></i>
                         </div>
                         <div
@@ -977,7 +977,7 @@
                     <div class="d-flex">
                       <div class="h-10 mt-1 icon me-3 d-flex">
                         <i
-                          class="ni ni-single-copy-04 text-gradient text-success"
+                          class="ni ni-single-copy-04 text-gradient text-primary"
                         ></i>
                       </div>
                       <div
@@ -995,7 +995,7 @@
                   >
                     <div class="d-flex">
                       <div class="h-10 mt-1 icon me-3 d-flex">
-                        <i class="ni ni-laptop text-gradient text-success"></i>
+                        <i class="ni ni-laptop text-gradient text-primary"></i>
                       </div>
                       <div
                         class="w-100 d-flex align-items-center justify-content-between"
@@ -1012,7 +1012,7 @@
                   >
                     <div class="d-flex">
                       <div class="h-10 mt-1 icon me-3 d-flex">
-                        <i class="ni ni-badge text-gradient text-success"></i>
+                        <i class="ni ni-badge text-gradient text-primary"></i>
                       </div>
                       <div
                         class="w-100 d-flex align-items-center justify-content-between"
@@ -1032,7 +1032,7 @@
                     <div class="d-flex">
                       <div class="h-10 mt-1 icon me-3 d-flex">
                         <i
-                          class="ni ni-notification-70 text-gradient text-success"
+                          class="ni ni-notification-70 text-gradient text-primary"
                         ></i>
                       </div>
                       <div
@@ -1084,7 +1084,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center"
                           >
                             <svg
                               width="12px"
@@ -1145,7 +1145,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                           >
                             <box3d />
                           </div>
@@ -1172,7 +1172,7 @@
                       >
                         <div class="d-inline-block">
                           <div
-                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center"
+                            class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center"
                           >
                             <shop />
                           </div>
@@ -1214,7 +1214,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center"
                     >
                       <shop />
                     </div>
@@ -1236,7 +1236,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <box3d />
                     </div>
@@ -1258,7 +1258,7 @@
                 >
                   <div class="d-inline-block">
                     <div
-                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-success me-2 d-flex align-items-center justify-content-center ps-0"
+                      class="text-center icon icon-shape icon-xs border-radius-md bg-gradient-primary me-2 d-flex align-items-center justify-content-center ps-0"
                     >
                       <shop />
                     </div>

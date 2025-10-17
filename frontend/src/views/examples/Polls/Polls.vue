@@ -12,8 +12,8 @@
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
                   <router-link
-                    to="/examples/polls/new"
-                    class="mb-0 btn bg-gradient-success btn-sm"
+                    to="/polls/new"
+                    class="mb-0 btn bg-gradient-primary btn-sm"
                     >+ Sondaj Nou</router-link
                   >
                 </div>
@@ -21,13 +21,6 @@
             </div>
           </div>
           <div class="px-0 pb-0 card-body">
-            <div class="dataTable-search search-block">
-              <input
-                class="dataTable-input search-input-table"
-                placeholder="Caută sondaj..."
-                type="text"
-              />
-            </div>
             <div class="table-responsive">
               <table ref="pollsList" class="table table-flush">
                 <thead class="thead-light">
@@ -136,7 +129,8 @@ export default {
         perPage: 5,
       });
 
-      document.querySelector(".dataTable-bottom").remove();
+      const bottom = document.querySelector(".dataTable-bottom");
+      if (bottom) bottom.remove();
       this.tablePolls.label = null;
       this.tablePolls.setMessage(
         `<img src="${loading}" width="100" height="100" alt="loading" />`
@@ -217,7 +211,7 @@ export default {
       if (this.pollsList?.length > 0) {
         this.pollsList.forEach((row) => {
           const statusBadge = row.is_active 
-            ? '<span class="badge badge-sm bg-gradient-success">Activ</span>'
+            ? '<span class="badge badge-sm bg-gradient-primary">Activ</span>'
             : '<span class="badge badge-sm bg-gradient-secondary">Inactiv</span>';
           
           const optionsCount = row.options?.length || 0;

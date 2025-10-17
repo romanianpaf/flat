@@ -58,6 +58,8 @@ import lockBasic from "../views/auth/lock/Basic.vue";
 import lockCover from "../views/auth/lock/Cover.vue";
 import lockIllustration from "../views/auth/lock/Illustration.vue";
 import Profile from "../views/examples/Profile.vue";
+import UserProfile from "../views/Profile.vue";
+import UserSettings from "../views/Settings.vue";
 import Roles from "../views/examples/Roles/Roles.vue";
 import NewRole from "../views/examples/Roles/NewRole.vue";
 import EditRole from "../views/examples/Roles/EditRole.vue";
@@ -413,7 +415,7 @@ const routes = [
     component: Profile,
   },
   {
-    path: "/examples/roles/list",
+    path: "/roles/list",
     name: "Roles",
     component: Roles,
     meta: {
@@ -421,7 +423,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/roles/new",
+    path: "/roles/new",
     name: "New Role",
     component: NewRole,
     meta: {
@@ -429,7 +431,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/roles/edit/:id",
+    path: "/roles/edit/:id",
     name: "Edit Role",
     component: EditRole,
     meta: {
@@ -437,7 +439,23 @@ const routes = [
     },
   },
   {
-    path: "/examples/users/list",
+    path: "/profile",
+    name: "Profilul Utilizatorului",
+    component: UserProfile,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/settings",
+    name: "Configurări Utilizator",
+    component: UserSettings,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/users/list",
     name: "Users",
     component: Users,
     meta: {
@@ -445,7 +463,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/users/new",
+    path: "/users/new",
     name: "New User",
     component: NewUser,
     meta: {
@@ -453,7 +471,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/users/edit/:id",
+    path: "/users/edit/:id",
     name: "Edit User",
     component: EditUser,
     meta: {
@@ -461,7 +479,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/tags/list",
+    path: "/tags/list",
     name: "Tags",
     component: Tags,
     meta: {
@@ -469,7 +487,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/tags/new",
+    path: "/tags/new",
     name: "New Tag",
     component: NewTag,
     meta: {
@@ -477,7 +495,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/tags/edit/:id",
+    path: "/tags/edit/:id",
     name: "Edit Tag",
     component: EditTag,
     meta: {
@@ -485,7 +503,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/tenants/list",
+    path: "/tenants/list",
     name: "Tenants",
     component: Tenants,
     meta: {
@@ -493,7 +511,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/tenants/new",
+    path: "/tenants/new",
     name: "New Tenant",
     component: NewTenant,
     meta: {
@@ -501,7 +519,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/tenants/edit/:id",
+    path: "/tenants/edit/:id",
     name: "Edit Tenant",
     component: EditTenant,
     meta: {
@@ -509,7 +527,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/automations/list",
+    path: "/automations/list",
     name: "Automations",
     component: Automations,
     meta: {
@@ -517,7 +535,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/automations/new",
+    path: "/automations/new",
     name: "New Automation",
     component: NewAutomation,
     meta: {
@@ -525,7 +543,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/automations/edit/:id",
+    path: "/automations/edit/:id",
     name: "Edit Automation",
     component: EditAutomation,
     meta: {
@@ -533,7 +551,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/polls/list",
+    path: "/polls/list",
     name: "Polls",
     component: Polls,
     meta: {
@@ -541,7 +559,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/polls/new",
+    path: "/polls/new",
     name: "New Poll",
     component: NewPoll,
     meta: {
@@ -549,7 +567,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/polls/edit/:id",
+    path: "/polls/edit/:id",
     name: "Edit Poll",
     component: EditPoll,
     meta: {
@@ -557,7 +575,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/user-voices/list",
+    path: "/user-voices/list",
     name: "User Voices",
     component: UserVoices,
     meta: {
@@ -565,7 +583,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/user-voices/new",
+    path: "/user-voices/new",
     name: "New User Voice",
     component: NewUserVoice,
     meta: {
@@ -573,7 +591,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/user-voices/edit/:id",
+    path: "/user-voices/edit/:id",
     name: "Edit User Voice",
     component: EditUserVoice,
     meta: {
@@ -581,7 +599,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/categories/list",
+    path: "/categories/list",
     name: "Categories",
     component: Categories,
     meta: {
@@ -589,7 +607,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/categories/new",
+    path: "/categories/new",
     name: "New Category",
     component: NewCategory,
     meta: {
@@ -597,7 +615,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/categories/edit/:id",
+    path: "/categories/edit/:id",
     name: "Edit Category",
     component: EditCategory,
     meta: {
@@ -605,7 +623,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/items/list",
+    path: "/items/list",
     name: "Items",
     component: Items,
     meta: {
@@ -613,7 +631,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/items/new",
+    path: "/items/new",
     name: "New Item",
     component: NewItem,
     meta: {
@@ -621,7 +639,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/items/edit/:id",
+    path: "/items/edit/:id",
     name: "Edit Item",
     component: EditItem,
     meta: {
@@ -629,7 +647,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/categories",
+    path: "/service-categories/list",
     name: "Service Categories",
     component: ServiceCategories,
     meta: {
@@ -637,7 +655,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/categories/new",
+    path: "/service-categories/new",
     name: "New Service Category",
     component: NewServiceCategory,
     meta: {
@@ -645,7 +663,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/categories/edit/:id",
+    path: "/service-categories/edit/:id",
     name: "Edit Service Category",
     component: EditServiceCategory,
     meta: {
@@ -653,7 +671,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/subcategories",
+    path: "/service-subcategories/list",
     name: "Service Subcategories",
     component: ServiceSubcategories,
     meta: {
@@ -661,7 +679,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/subcategories/new",
+    path: "/service-subcategories/new",
     name: "New Service Subcategory",
     component: NewServiceSubcategory,
     meta: {
@@ -669,7 +687,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/subcategories/edit/:id",
+    path: "/service-subcategories/edit/:id",
     name: "Edit Service Subcategory",
     component: EditServiceSubcategory,
     meta: {
@@ -677,7 +695,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/providers",
+    path: "/service-providers/list",
     name: "Service Providers",
     component: ServiceProviders,
     meta: {
@@ -685,7 +703,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/providers/new",
+    path: "/service-providers/new",
     name: "New Service Provider",
     component: NewServiceProvider,
     meta: {
@@ -693,7 +711,7 @@ const routes = [
     },
   },
   {
-    path: "/examples/services/providers/edit/:id",
+    path: "/service-providers/edit/:id",
     name: "Edit Service Provider",
     component: EditServiceProvider,
     meta: {

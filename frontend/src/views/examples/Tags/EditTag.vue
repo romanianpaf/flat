@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/tags/list" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/tags/list" class="mb-0 btn bg-gradient-primary btn-sm"
                     >&nbsp; Back to list</router-link
                   >
                 </div>
@@ -90,7 +90,7 @@ export default {
           type: "success",
           message: "Tag edited successfully!",
         });
-        this.$router.push("/examples/tags/list");
+        this.$router.push("/tags/list");
       } catch (error) {
         if (error.response.data.errors) this.setApiValidation(error.response.data.errors);
         else

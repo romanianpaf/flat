@@ -4,7 +4,7 @@
       <div class="col-12">
         <navbar
           is-blur="blur blur-rounded my-3 py-2 start-0 end-0 mx-4 shadow"
-          btn-background="bg-gradient-success"
+          btn-background="bg-gradient-primary"
           :dark-mode="true"
         />
       </div>
@@ -64,7 +64,7 @@
                     Don't have an account?
                     <router-link
                       :to="{ name: 'Signup Illustration' }"
-                      class="text-success text-gradient font-weight-bold"
+                      class="text-primary text-gradient font-weight-bold"
                     >
                       Sign up
                     </router-link>
@@ -76,7 +76,7 @@
               class="top-0 my-auto text-center col-6 d-lg-flex d-none h-100 pe-0 position-absolute end-0 justify-content-center flex-column"
             >
               <div
-                class="m-3 position-relative bg-gradient-success h-100 px-7 border-radius-lg d-flex flex-column justify-content-center"
+                class="m-3 position-relative bg-gradient-primary h-100 px-7 border-radius-lg d-flex flex-column justify-content-center"
               >
                 <img
                   src="@/assets/img/shapes/pattern-lines.svg"

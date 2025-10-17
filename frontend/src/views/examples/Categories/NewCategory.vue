@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/categories/list" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/categories/list" class="mb-0 btn bg-gradient-primary btn-sm"
                     >&nbsp; Back to list</router-link
                   >
                 </div>
@@ -85,7 +85,7 @@ export default {
           message: "Category added successfully!",
           width: 350,
         });
-        this.$router.push("/examples/categories/list");
+        this.$router.push("/categories/list");
       } catch (error) {
         if (error.response.data.errors) this.setApiValidation(error.response.data.errors);
         else

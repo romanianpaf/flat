@@ -27,14 +27,14 @@
 
               <div class="d-flex justify-content-end">
                 <router-link
-                  to="/examples/user-voices/list"
+                  to="/user-voices/list"
                   class="btn btn-outline-secondary me-2"
                 >
                   Anulează
                 </router-link>
                 <button
                   type="submit"
-                  class="btn bg-gradient-success"
+                  class="btn bg-gradient-primary"
                   :disabled="loading || userVoice.suggestion.length < 10"
                 >
                   <span v-if="loading">
@@ -82,7 +82,7 @@ export default {
           title: "Succes",
           text: "Sugestia ta a fost salvată cu succes!",
         });
-        this.$router.push("/examples/user-voices/list");
+        this.$router.push("/user-voices/list");
       } catch (error) {
         console.error("Error saving user voice:", error);
         const errorMessage = error.response?.data?.errors?.[0]?.detail || "Nu s-a putut salva sugestia.";

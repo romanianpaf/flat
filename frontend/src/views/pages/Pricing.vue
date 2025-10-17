@@ -1,7 +1,7 @@
 <template>
   <navbar />
   <div
-    class="m-3 page-header bg-gradient-success position-relative border-radius-xl"
+    class="m-3 page-header bg-gradient-primary position-relative border-radius-xl"
   >
     <img
       src="../../assets/img/shapes/waves-white.svg"

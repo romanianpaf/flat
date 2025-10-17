@@ -40,7 +40,7 @@
           value="930"
           :percentage="{
             value: '+55%',
-            color: 'text-success'
+            color: 'text-primary'
           }"
           :icon="{
             component: 'ni ni-circle-08',
@@ -56,7 +56,7 @@
           value="744"
           :percentage="{
             value: '+3%',
-            color: 'text-success'
+            color: 'text-primary'
           }"
           :icon="{
             component: 'ni ni-world',
@@ -88,7 +88,7 @@
           value="1.76"
           :percentage="{
             value: '+5%',
-            color: 'text-success'
+            color: 'text-primary'
           }"
           :icon="{
             component: 'ni ni-image',

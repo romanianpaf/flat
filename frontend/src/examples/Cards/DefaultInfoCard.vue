@@ -3,7 +3,7 @@
     <div class="p-3 mx-4 text-center card-header d-flex justify-content-center">
       <div
         :class="
-          typeof icon === 'object' ? icon.background : 'bg-gradient-success'
+          typeof icon === 'object' ? icon.background : 'bg-gradient-primary'
         "
         class="icon icon-shape icon-lg shadow text-center border-radius-lg"
       >

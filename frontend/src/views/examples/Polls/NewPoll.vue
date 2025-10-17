@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/polls/list" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/polls/list" class="mb-0 btn bg-gradient-primary btn-sm"
                     >&nbsp; Înapoi la listă</router-link
                   >
                 </div>
@@ -235,7 +235,7 @@ export default {
           message: "Sondaj adăugat cu succes!",
           width: 350,
         });
-        this.$router.push("/examples/polls/list");
+        this.$router.push("/polls/list");
       } catch (error) {
         if (error.response?.data?.errors) this.setApiValidation(error.response.data.errors);
         else

@@ -17,7 +17,7 @@
                 <div class="my-auto ms-auto">
                   <a
                     href="./new-product"
-                    class="mb-0 btn bg-gradient-success btn-sm"
+                    class="mb-0 btn bg-gradient-primary btn-sm"
                     target="_blank"
                     >+&nbsp; New Product</a
                   >
@@ -81,7 +81,7 @@
                           </button>
                           <button
                             type="button"
-                            class="btn bg-gradient-success btn-sm"
+                            class="btn bg-gradient-primary btn-sm"
                           >
                             Upload
                           </button>

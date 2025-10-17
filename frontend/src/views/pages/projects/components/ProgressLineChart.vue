@@ -3,7 +3,7 @@
     <div class="p-3 pb-0 card-header">
       <div class="d-flex align-items-center">
         <div
-          class="text-center shadow icon icon-shape border-radius-md bg-gradient-success"
+          class="text-center shadow icon icon-shape border-radius-md bg-gradient-primary"
         >
           <i
             class="text-lg ni opacity-10"

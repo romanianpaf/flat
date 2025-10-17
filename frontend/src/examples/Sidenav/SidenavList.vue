@@ -70,7 +70,7 @@
         <sidenav-collapse
           collapse-ref="services"
           nav-text="Servicii"
-          :class="$route.path.includes('/examples/services') ? 'active' : ''"
+          :class="$route.path.includes('/service-') ? 'active' : ''"
         >
           <template #icon>
             <Shop />
@@ -93,6 +93,31 @@
                 :to="{ name: 'Service Providers' }"
                 mini-icon="F"
                 text="Furnizori"
+              />
+            </ul>
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
+        <sidenav-collapse
+          collapse-ref="administrative"
+          nav-text="Administrativ"
+          :class="$route.path.includes('/profile') || $route.path.includes('/settings') ? 'active' : ''"
+        >
+          <template #icon>
+            <Settings />
+          </template>
+          <template #list>
+            <ul class="nav ms-4 ps-3">
+              <sidenav-item
+                :to="{ name: 'Profilul Utilizatorului' }"
+                mini-icon="👤"
+                text="Profil"
+              />
+              <sidenav-item
+                :to="{ name: 'Configurări Utilizator' }"
+                mini-icon="⚙️"
+                text="Configurări"
               />
             </ul>
           </template>

@@ -192,7 +192,7 @@ export default {
           info: "Refund rate is lower with 97% than other products",
           img:
             "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/blue-shoe.jpg",
-          icon: "bold-down text-success"
+          icon: "bold-down text-primary"
         },
         {
           title: "Business Kit (Mug + Notebook)",
@@ -200,7 +200,7 @@ export default {
           values: ["$80.250", "$4.200", "40"],
           img:
             "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/black-mug.jpg",
-          icon: "bold-down text-success"
+          icon: "bold-down text-primary"
         },
         {
           title: "Black Chair",
@@ -216,7 +216,7 @@ export default {
           values: ["$91.300", "$7.364", "5"],
           img:
             "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-design-system/assets/img/ecommerce/bang-sound.jpg",
-          icon: "bold-down text-success"
+          icon: "bold-down text-primary"
         },
         {
           title: "Mountain Trip Kit (Camera + Backpack)",

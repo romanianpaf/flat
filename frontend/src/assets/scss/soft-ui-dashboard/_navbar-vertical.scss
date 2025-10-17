@@ -168,10 +168,10 @@
 
 .sidenav {
   // Define colors
-  @each $color, $value in $theme-colors {
+  @each $color, $value in $theme-gradient-colors {
     &[data-color="#{$color}"] {
       .navbar-nav > .nav-item > .nav-link.active .icon {
-        @include gradient-directional(nth(#{$value}, 1) 0%, nth(#{$value}, -1) 100%, $deg: 310deg);
+        @include gradient-directional(nth($value, 1) 0%, nth($value, -1) 100%, $deg: 310deg);
       }
     }
   }
@@ -309,7 +309,7 @@
     background-color: $white;
 
     .icon {
-      @include gradient-directional(nth($success, 1) 0%, nth($success, -1) 100%, $deg: 310deg);
+      @include gradient-directional($primary-gradient 0%, $primary-gradient-state 100%, $deg: 310deg);
 
       svg {
         .color-background,

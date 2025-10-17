@@ -233,7 +233,7 @@ It's a separate element, as animating opacity is faster than rgba(). -->
                 <div class="mt-4 row">
                   <div class="col-lg-5">
                     <button
-                      class="mb-0 btn bg-gradient-success mt-lg-auto w-100"
+                      class="mb-0 btn bg-gradient-primary mt-lg-auto w-100"
                       type="button"
                       name="button"
                     >

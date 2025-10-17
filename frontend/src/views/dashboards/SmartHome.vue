@@ -156,7 +156,7 @@
       <div class="mt-4 col-xl-5 ms-auto mt-xl-0">
         <div class="row">
           <div class="col-12">
-            <div class="card bg-gradient-success">
+            <div class="card bg-gradient-primary">
               <div class="p-3 card-body">
                 <div class="row">
                   <div class="my-auto col-8">
@@ -285,7 +285,7 @@
             classCustom: 'mt-2',
             isChecked: 'true'
           }"
-          class="text-white bg-gradient-success"
+          class="text-white bg-gradient-primary"
         >
           <temperature />
         </switch-card>
@@ -324,7 +324,7 @@
             classCustom: 'mt-4',
             isChecked: true
           }"
-          class="text-white bg-gradient-success"
+          class="text-white bg-gradient-primary"
         >
           <wifi />
         </switch-card>

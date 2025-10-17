@@ -4,7 +4,7 @@
       <div class="col-12">
         <navbar
           is-blur="blur blur-rounded my-3 py-2 start-0 end-0 mx-4 shadow"
-          btn-background="bg-gradient-success"
+          btn-background="bg-gradient-primary"
           :dark-mode="true"
         />
       </div>
@@ -18,7 +18,7 @@
             <div class="mx-auto col-xl-4 col-lg-5 col-md-6 d-flex flex-column">
               <div class="mt-8 card card-plain">
                 <div class="pb-0 card-header text-start">
-                  <h3 class="font-weight-bolder text-success text-gradient text-center">
+                  <h3 class="font-weight-bolder text-primary text-gradient text-center">
                     Bun venit înapoi
                   </h3>
                   <br />
@@ -56,7 +56,7 @@
                       <soft-button
                         class="my-4 mb-2"
                         variant="gradient"
-                        color="success"
+                        color="primary"
                         full-width
                         :is-disabled="loading ? true : false"
                       >
@@ -74,7 +74,7 @@
                     Nu ai cont?
                     <router-link
                       :to="{ name: 'Register' }"
-                      class="text-success text-gradient font-weight-bold"
+                      class="text-primary text-gradient font-weight-bold"
                       >Înregistrează-te</router-link
                     >
                   </p>
@@ -84,7 +84,7 @@
                     Ai uitat parola?
                     <router-link
                       :to="{ name: 'SendEmail' }"
-                      class="text-success text-gradient font-weight-bold"
+                      class="text-primary text-gradient font-weight-bold"
                       >Recuperează</router-link
                     >
                   </p>

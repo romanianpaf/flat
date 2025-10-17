@@ -72,7 +72,7 @@ export default {
             title: "All day conference",
             start: "2020-11-29",
             end: "2020-11-29",
-            class: "bg-gradient-success",
+            class: "bg-gradient-primary",
           },
 
           {

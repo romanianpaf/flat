@@ -82,7 +82,7 @@ export default {
         data: {
           type: "poll-options",
           attributes: {
-            poll_id: createdPoll.id,
+            poll_id: parseInt(createdPoll.id),
             option_text: option.option_text,
             order: index,
             votes_count: 0,

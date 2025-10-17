@@ -312,7 +312,7 @@
                   </td>
                   <td class="text-xs font-weight-bold">
                     <div class="d-flex align-items-center">
-                      <div class="avatar avatar-xs me-2 bg-gradient-success">
+                      <div class="avatar avatar-xs me-2 bg-gradient-primary">
                         <span>L</span>
                       </div>
                       <span>Laur Gilbert</span>

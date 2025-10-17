@@ -194,7 +194,7 @@ export default {
           info: "Refund rate is lower with 97% than other products",
           img:
             "https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-1.jpg",
-          icon: "bold-down text-success",
+          icon: "bold-down text-primary",
         },
         {
           title: "John Alura",
@@ -202,7 +202,7 @@ export default {
           values: ["$80.250", "$4.200", "40"],
           img:
             "https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-2.jpg",
-          icon: "bold-down text-success",
+          icon: "bold-down text-primary",
         },
         {
           title: "Andrew Sian",
@@ -218,7 +218,7 @@ export default {
           values: ["$91.300", "$7.364", "5"],
           img:
             "https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-4.jpg",
-          icon: "bold-down text-success",
+          icon: "bold-down text-primary",
         },
 
         {

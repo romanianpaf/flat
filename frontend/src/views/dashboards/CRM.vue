@@ -10,7 +10,7 @@
               <mini-gradient-line-chart
                 id="second-chart"
                 title="Visitors"
-                description='5,927<span class="text-sm text-success font-weight-bolder">+55%</span>'
+                description='5,927<span class="text-sm text-primary font-weight-bolder">+55%</span>'
                 :chart="{
                   labels: [
                     'Apr',
@@ -35,7 +35,7 @@
             <div class="mt-4 col-sm-4 mt-sm-0">
               <mini-gradient-line-chart
                 title="Income"
-                description='$130,832 <span class="text-sm text-success font-weight-bolder">+90%</span>'
+                description='$130,832 <span class="text-sm text-primary font-weight-bolder">+90%</span>'
                 :chart="{
                   labels: [
                     'Apr',

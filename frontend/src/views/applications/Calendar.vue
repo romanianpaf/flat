@@ -133,7 +133,7 @@
                     <h6 class="mb-0 text-white">Productivity</h6>
                     <p class="text-sm text-white">
                       <i
-                        class="fa fa-arrow-up text-success"
+                        class="fa fa-arrow-up text-primary"
                         aria-hidden="true"
                       ></i>
                       <span class="font-weight-bold">4% more</span> in 2021

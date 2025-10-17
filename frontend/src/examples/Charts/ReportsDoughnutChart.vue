@@ -77,7 +77,7 @@
                 <tr>
                   <td>
                     <div class="px-2 py-0 d-flex">
-                      <span class="badge bg-gradient-success me-3">&nbsp;</span>
+                      <span class="badge bg-gradient-primary me-3">&nbsp;</span>
                       <div class="d-flex flex-column justify-content-center">
                         <h6 class="mb-0 text-sm">Garage</h6>
                       </div>

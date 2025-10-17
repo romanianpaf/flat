@@ -29,7 +29,7 @@
               value="9,600"
               :percentage="{
                 value: '+15%',
-                color: 'text-success',
+                color: 'text-primary',
               }"
               :icon="{
                 component: 'ni ni-planet',
@@ -44,7 +44,7 @@
               value="2,300"
               :percentage="{
                 value: '+3%',
-                color: 'text-success',
+                color: 'text-primary',
               }"
               :icon="{
                 component: 'ni ni-world',
@@ -57,7 +57,7 @@
               value="348"
               :percentage="{
                 value: '+12%',
-                color: 'text-success',
+                color: 'text-primary',
               }"
               :icon="{
                 component: 'ni ni-shop',

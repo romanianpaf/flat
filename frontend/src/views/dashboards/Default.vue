@@ -20,7 +20,7 @@
               value="$53,000"
               :percentage="{
                 value: '+55%',
-                color: 'text-success',
+                color: 'text-primary',
               }"
               :icon="{
                 component: 'ni ni-money-coins',
@@ -33,7 +33,7 @@
               value="2,300"
               :percentage="{
                 value: '+3%',
-                color: 'text-success',
+                color: 'text-primary',
               }"
               :icon="{
                 component: 'ni ni-world',
@@ -62,7 +62,7 @@
               value="$103,430"
               :percentage="{
                 value: '+5%',
-                color: 'text-success',
+                color: 'text-primary',
               }"
               :icon="{
                 component: 'ni ni-cart',
@@ -166,7 +166,7 @@
           <gradient-line-chart
             id="chart-line"
             title="Gradient Line Chart"
-            description="<i class='fa fa-arrow-up text-success'></i>
+            description="<i class='fa fa-arrow-up text-primary'></i>
       <span class='font-weight-bold'>4% more</span> in 2021"
             :chart="{
               labels: [
@@ -236,7 +236,7 @@ export default {
       faUsers,
       faCreditCard,
       faScrewdriverWrench,
-      iconBackground: "bg-gradient-success",
+      iconBackground: "bg-gradient-primary",
       US,
       DE,
       BR,

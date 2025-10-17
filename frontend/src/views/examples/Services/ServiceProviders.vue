@@ -39,8 +39,8 @@
                   @input="debouncedSearch"
                 />
                 <router-link
-                  class="btn bg-gradient-success btn-sm"
-                  to="/examples/services/providers/new"
+                  class="btn bg-gradient-primary btn-sm"
+                  to="/service-providers/new"
                 >
                   + Adaugă furnizor
                 </router-link>
@@ -127,7 +127,7 @@
                 Afișează {{ pagination.from }} - {{ pagination.to }} din {{ pagination.total }} înregistrări
               </p>
               <BasePagination
-                class="pagination-success pagination-md"
+                class="pagination-primary pagination-md"
                 :per-page="pagination.perPage"
                 :value="pagination.currentPage"
                 :total="pagination.total"

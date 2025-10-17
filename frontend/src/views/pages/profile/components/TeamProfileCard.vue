@@ -3,7 +3,7 @@
     <div class="pb-0 card-body">
       <div class="mb-3 row align-items-center">
         <div class="col-9">
-          <h5 class="mb-1 text-gradient text-success">
+          <h5 class="mb-1 text-gradient text-primary">
             <a href="javascript:;">{{ title }}</a>
           </h5>
         </div>

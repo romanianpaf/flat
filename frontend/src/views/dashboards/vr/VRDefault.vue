@@ -45,7 +45,7 @@
                             All users
                           </h6>
                           <a
-                            class="mt-1 mb-0 text-sm text-success font-weight-bold icon-move-right ms-4 fadeIn4 fadeInBottom"
+                            class="mt-1 mb-0 text-sm text-primary font-weight-bold icon-move-right ms-4 fadeIn4 fadeInBottom"
                             href="javascript:;"
                           >
                             Read More
@@ -73,11 +73,11 @@
                     value="$53,000"
                     :percentage="{
                       value: '+55%',
-                      color: 'text-success',
+                      color: 'text-primary',
                     }"
                     :icon="{
                       component: 'ni ni-money-coins',
-                      background: 'bg-gradient-success',
+                      background: 'bg-gradient-primary',
                     }"
                     direction-reverse
                   />
@@ -87,11 +87,11 @@
                     value="2,300"
                     :percentage="{
                       value: '+3%',
-                      color: 'text-success',
+                      color: 'text-primary',
                     }"
                     :icon="{
                       component: 'ni ni-world',
-                      background: 'bg-gradient-success',
+                      background: 'bg-gradient-primary',
                     }"
                     direction-reverse
                   />
@@ -107,7 +107,7 @@
                     }"
                     :icon="{
                       component: 'ni ni-paper-diploma',
-                      background: 'bg-gradient-success',
+                      background: 'bg-gradient-primary',
                     }"
                     direction-reverse
                   />
@@ -117,11 +117,11 @@
                     value="$103,430"
                     :percentage="{
                       value: '+5%',
-                      color: 'text-success',
+                      color: 'text-primary',
                     }"
                     :icon="{
                       component: 'ni ni-cart',
-                      background: 'bg-gradient-success',
+                      background: 'bg-gradient-primary',
                     }"
                     direction-reverse
                   />

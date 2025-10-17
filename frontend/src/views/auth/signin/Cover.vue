@@ -4,7 +4,7 @@
       <div class="col-12">
         <navbar
           is-blur="blur blur-rounded my-3 py-2 start-0 end-0 mx-4 shadow"
-          btn-background="bg-gradient-success"
+          btn-background="bg-gradient-primary"
           :dark-mode="true"
         />
       </div>
@@ -18,7 +18,7 @@
             <div class="mx-auto col-xl-4 col-lg-5 col-md-6 d-flex flex-column">
               <div class="mt-8 card card-plain">
                 <div class="pb-0 card-header text-start">
-                  <h3 class="font-weight-bolder text-success text-gradient">
+                  <h3 class="font-weight-bolder text-primary text-gradient">
                     Welcome back
                   </h3>
                   <p class="mb-0">Enter your email and password to sign in</p>
@@ -58,7 +58,7 @@
                     Don't have an account?
                     <router-link
                       :to="{ name: 'Signup Cover' }"
-                      class="text-success text-gradient font-weight-bold"
+                      class="text-primary text-gradient font-weight-bold"
                       >Sign up</router-link
                     >
                   </p>

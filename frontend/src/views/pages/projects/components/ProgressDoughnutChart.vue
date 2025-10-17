@@ -5,7 +5,7 @@
         <div class="col-lg-5">
           <div class="d-flex">
             <div
-              class="text-center shadow icon icon-shape bg-gradient-success border-radius-md"
+              class="text-center shadow icon icon-shape bg-gradient-primary border-radius-md"
             >
               <i
                 class="text-lg ni opacity-10"
@@ -27,7 +27,7 @@
           >
             <i
               :class="
-                isCompleted ? 'bg-gradient-success' : 'bg-gradient-secondary'
+                isCompleted ? 'bg-gradient-primary' : 'bg-gradient-secondary'
               "
             ></i>
             <span class="text-xs text-muted font-weight-bold">{{ label }}</span>

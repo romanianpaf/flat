@@ -282,7 +282,7 @@ export default {
           <textarea class="form-control" rows="2" autofocus></textarea>
           </div>
           <div class="form-group">
-              <button type="submit" class="btn bg-gradient-success btn-sm pull-end">Add</button>
+              <button type="submit" class="btn bg-gradient-primary btn-sm pull-end">Add</button>
               <button type="button" id="kanban-cancel-item" class="btn bg-gradient-light btn-sm pull-end me-2">Cancel</button>
           </div>`;
 
@@ -376,7 +376,7 @@ export default {
                 {
                   id: "_task_run_id",
                   title:
-                    '<span class="mt-2 badge badge-sm bg-gradient-success">In review</span><p class="mt-2 mb-1 text">Change images dimension</p><div class="col"><div class="mb-3 progress progressm w5"><div class="progress-bar bg-gradient-success" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div></div></div><div class="d-flex"><div class="avatar-group ms-auto"><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Jessica Rowland"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-3.jpg" class=""></a></div></div>',
+                    '<span class="mt-2 badge badge-sm bg-gradient-primary">In review</span><p class="mt-2 mb-1 text">Change images dimension</p><div class="col"><div class="mb-3 progress progressm w5"><div class="progress-bar bg-gradient-primary" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div></div></div><div class="d-flex"><div class="avatar-group ms-auto"><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Jessica Rowland"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-3.jpg" class=""></a></div></div>',
                   assignee: "Done Joe",
                   description:
                     "This task's description is for something, but not for anything",
@@ -400,7 +400,7 @@ export default {
                 {
                   id: "_task_all_right_id",
                   title:
-                    '<img src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/home-decor-1.jpg" class="w-100"><span class="mt-3 badge badge-sm bg-gradient-success">Done</span><p class="mt-2 text">Redesign for the home page</p><div class="d-flex"><div> <i class="text-sm fa fa-paperclip me-1"></i><span class="text-sm">8</span></div><div class="avatar-group ms-auto"><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Jessica Rowland"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-5.jpg" class=""></a><a href="javascript:;" class="avatar avatar-xs rounded-circle me-2" data-toggle="tooltip" data-original-title="Audrey Love"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-1.jpg" class="rounded-circle"></a><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Michael Lewis"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-4.jpg" class="rounded-circle"></a></div></div>',
+                    '<img src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/home-decor-1.jpg" class="w-100"><span class="mt-3 badge badge-sm bg-gradient-primary">Done</span><p class="mt-2 text">Redesign for the home page</p><div class="d-flex"><div> <i class="text-sm fa fa-paperclip me-1"></i><span class="text-sm">8</span></div><div class="avatar-group ms-auto"><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Jessica Rowland"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-5.jpg" class=""></a><a href="javascript:;" class="avatar avatar-xs rounded-circle me-2" data-toggle="tooltip" data-original-title="Audrey Love"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-1.jpg" class="rounded-circle"></a><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Michael Lewis"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-4.jpg" class="rounded-circle"></a></div></div>',
                   assignee: "Done Joe",
                   description:
                     "This task's description is for something, but not for anything",
@@ -409,7 +409,7 @@ export default {
                 {
                   id: "_task_ok_id",
                   title:
-                    '<span class="mt-2 badge badge-sm bg-gradient-success">Done</span><p class="mt-2 text">Schedule winter campaign</p><div class="d-flex"><div> <i class="text-sm fa fa-paperclip me-1"></i><span class="text-sm">2</span></div><div class="avatar-group ms-auto"><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Michael Laurence"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-1.jpg" class=""></a><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Michael Lewis"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-4.jpg" class="rounded-circle"></a></div></div>',
+                    '<span class="mt-2 badge badge-sm bg-gradient-primary">Done</span><p class="mt-2 text">Schedule winter campaign</p><div class="d-flex"><div> <i class="text-sm fa fa-paperclip me-1"></i><span class="text-sm">2</span></div><div class="avatar-group ms-auto"><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Michael Laurence"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-1.jpg" class=""></a><a href="javascript:;" class="avatar avatar-xs me-2 rounded-circle" data-toggle="tooltip" data-original-title="Michael Lewis"><img alt="Image placeholder" src="https://demos.creative-tim.com/soft-ui-dashboard-pro/assets/img/team-4.jpg" class="rounded-circle"></a></div></div>',
                   assignee: "Done Joe",
                   description:
                     "This task's description is for something, but not for anything",

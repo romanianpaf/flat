@@ -67,7 +67,7 @@
             <div class="row">
               <div class="col-lg-3 col-sm-6 col-12">
                 <button
-                  class="btn bg-gradient-success w-100 mb-0 toast-btn"
+                  class="btn bg-gradient-primary w-100 mb-0 toast-btn"
                   type="button"
                   data-target="successToast"
                   @click="snackbar = 'success'"

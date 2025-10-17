@@ -111,7 +111,7 @@
                   <div class="timeline-block mb-3">
                     <span class="timeline-step">
                       <i
-                        class="ni ni-check-bold text-success text-gradient"
+                        class="ni ni-check-bold text-primary text-gradient"
                       ></i>
                     </span>
                     <div class="timeline-content">

@@ -23,7 +23,7 @@ export default createStore({
     showConfig: false,
     isTransparent: "",
     isRTL: false,
-    color: "",
+    color: "bg-gradient-primary",
     isNavFixed: false,
     isAbsolute: false,
     showNavs: true,

@@ -10,7 +10,7 @@
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/examples/roles/list" class="mb-0 btn bg-gradient-success btn-sm"
+                  <router-link to="/roles/list" class="mb-0 btn bg-gradient-primary btn-sm"
                     >&nbsp; Înapoi la listă</router-link
                   >
                 </div>
@@ -115,7 +115,7 @@ export default {
           message: "Rol adăugat cu succes!",
           width: 350,
         });
-        this.$router.push("/examples/roles/list");
+        this.$router.push("/roles/list");
       } catch (error) {
         if (error.response.data.errors) this.setApiValidation(error.response.data.errors);
         else
