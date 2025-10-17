@@ -14,7 +14,7 @@ export default {
         localStorage.setItem("refresh_token", response.data.refresh_token);
       }
 
-      // Fetch user profile cu roles
+      // Fetch user profile cu roles și permissions
       const profileResponse = await axios.get(API_URL + "me", {
         headers: authHeader(),
       });
@@ -25,10 +25,12 @@ export default {
         name: profileResponse.data.data.name,
         email: profileResponse.data.data.email,
         roles: profileResponse.data.data.roles || [],
+        permissions: profileResponse.data.data.permissions || [],
       };
       console.log("Saving user to localStorage:", userData);
       localStorage.setItem("user", JSON.stringify(userData));
       console.log("Saved user:", localStorage.getItem("user"));
+      console.log("Permissions count:", userData.permissions.length);
     }
   },
 

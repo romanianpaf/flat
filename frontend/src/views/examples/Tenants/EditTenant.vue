@@ -100,7 +100,8 @@
                     id="contact_phone"
                     v-model="tenant.contact_data.phone"
                     type="text"
-                    placeholder="0740123456"
+                    placeholder="+40 XXX XXX XXX"
+                    @input="tenant.contact_data.phone = formatPhone($event)"
                   />
                   <validation-error :errors="apiValidationErrors['contact_data.phone']" />
                 </div>
@@ -130,6 +131,7 @@ import SoftModelTextarea from "/src/components/SoftModelTextarea.vue";
 import SoftButton from "/src/components/SoftButton.vue";
 import showSwal from "/src/mixins/showSwal.js";
 import formMixin from "/src/mixins/form-mixin.js";
+import phoneFormatter from "/src/mixins/phoneFormatter.js";
 import ValidationError from "@/components/ValidationError.vue";
 
 export default {
@@ -141,7 +143,7 @@ export default {
     SoftButton,
     ValidationError,
   },
-  mixins: [formMixin],
+  mixins: [formMixin, phoneFormatter],
   data() {
     return {
       loading: false,

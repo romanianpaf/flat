@@ -214,7 +214,8 @@ export default {
             `<h6 class="my-auto">${row.name}</h6>`,
             tenantName,
             row.created_at,
-            this.actionEditButton(row.id, "Editează rol") +
+            this.actionPermissionsButton(row.id, "Gestionează permisiuni") +
+              this.actionEditButton(row.id, "Editează rol") +
               this.actionDeleteButton(row.id, "Șterge rol"),
           ]);
         });

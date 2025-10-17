@@ -211,17 +211,76 @@ export default {
       this.pagination = this.metaPage?.page;
     },
 
+    getInitials(name) {
+      // Obține inițialele din nume (max 2 litere)
+      const parts = name.trim().split(' ');
+      if (parts.length >= 2) {
+        return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+      }
+      return name.substring(0, 2).toUpperCase();
+    },
+    
+    getAvatarColor(name) {
+      // Generează o culoare consistentă pe baza numelui
+      const colors = [
+        '#e91e63', // pink
+        '#9c27b0', // purple
+        '#673ab7', // deep purple
+        '#3f51b5', // indigo
+        '#2196f3', // blue
+        '#00bcd4', // cyan
+        '#009688', // teal
+        '#4caf50', // green
+        '#ff9800', // orange
+        '#ff5722', // deep orange
+      ];
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = name.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return colors[Math.abs(hash) % colors.length];
+    },
+    
     async reactiveTable() {
       this.usersAux = [];
       if (this.usersList?.length > 0) {
         this.usersList.forEach((row) => {
           const tenantName = row.tenant?.name || '<span class="badge badge-sm bg-gradient-secondary">Global</span>';
+          
+          // Construiește imaginea de profil sau avatar cu inițiale
+          let profileImageHtml;
+          if (!row.profile_image) {
+            // Generează avatar cu inițiale
+            const initials = this.getInitials(row.name);
+            const bgColor = this.getAvatarColor(row.name);
+            profileImageHtml = `
+              <div style="
+                border-radius: 50%; 
+                width: 55px; 
+                height: 55px; 
+                background: ${bgColor}; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                color: white; 
+                font-weight: 600; 
+                font-size: 20px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+              ">${initials}</div>
+            `;
+          } else {
+            // Construiește URL-ul pentru imagine
+            let profileImageUrl;
+            if (row.profile_image.startsWith('http')) {
+              profileImageUrl = row.profile_image;
+            } else {
+              profileImageUrl = `${process.env.VUE_APP_API_BASE_URL}/storage/${row.profile_image}`;
+            }
+            profileImageHtml = `<img src="${profileImageUrl}" alt="Profile" style="border-radius:50%; width:55px; height:55px; object-fit:cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"/>`;
+          }
+          
           this.usersAux.push([
-            `<img src="${
-              row.profile_image == null
-                ? require("/src/assets/img/placeholder.jpg")
-                : row.profile_image
-            }" alt="Profile" style="border-radius:50%; width:55px; height:55px"/>`,
+            profileImageHtml,
             `<h6 class="my-auto">${row.name}</h6>`,
             row.email,
             tenantName,

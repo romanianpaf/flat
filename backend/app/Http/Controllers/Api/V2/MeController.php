@@ -27,10 +27,13 @@ class MeController extends Controller
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // Load roles and tenant relationships
+        // Load roles, tenant, and permissions
         $user->load('roles', 'tenant');
 
-        // Returnez user-ul cu roles și tenant ca JSON:API simplificat
+        // Get all permissions (direct + inherited from roles)
+        $permissions = $user->getAllPermissions()->pluck('name')->toArray();
+
+        // Returnez user-ul cu roles, tenant și permissions ca JSON:API simplificat
         return response()->json([
             'data' => [
                 'type' => 'users',
@@ -55,6 +58,7 @@ class MeController extends Controller
                         'name' => $role->name,
                     ];
                 })->toArray(),
+                'permissions' => $permissions,
             ],
         ]);
     }

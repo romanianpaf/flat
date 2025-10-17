@@ -18,20 +18,22 @@ class RolePolicy
 
     public function view(User $user, Role $role): Response|bool
     {
-        if ($user->roles->contains($role)) {
-            return true;
-        }
-
+        // Verifică permisiunea de bază
         if (!$user->can('view roles')) {
             return false;
         }
 
-        // Admin global poate vedea toate rolurile
-        if (!$user->tenant_id && $user->hasRole('admin')) {
+        // Utilizatorii pot vedea întotdeauna propriul rol
+        if ($user->roles->contains($role)) {
             return true;
         }
 
-        // Utilizatorii cu tenant pot vedea doar rolurile propriului tenant
+        // Sysadmin (tenant_id = 1 pentru "System") poate vedea toate rolurile
+        if ($user->tenant_id === 1 && $user->can('edit roles') && $user->can('delete roles')) {
+            return true;
+        }
+
+        // Ceilalți utilizatori pot vedea doar rolurile propriului tenant
         return $user->tenant_id === $role->tenant_id;
     }
 
@@ -42,31 +44,33 @@ class RolePolicy
 
     public function update(User $user, Role $role): Response|bool
     {
+        // Verifică permisiunea de bază
         if (!$user->can('edit roles')) {
             return false;
         }
 
-        // Admin global poate edita toate rolurile
-        if (!$user->tenant_id && $user->hasRole('admin')) {
+        // Sysadmin (tenant_id = 1 pentru "System") poate edita toate rolurile
+        if ($user->tenant_id === 1 && $user->can('delete roles')) {
             return true;
         }
 
-        // Utilizatorii cu tenant pot edita doar rolurile propriului tenant
+        // Ceilalți utilizatori pot edita doar rolurile propriului tenant
         return $user->tenant_id === $role->tenant_id;
     }
 
     public function delete(User $user, Role $role): Response|bool
     {
+        // Verifică permisiunea de bază
         if (!$user->can('delete roles')) {
             return false;
         }
 
-        // Admin global poate șterge toate rolurile
-        if (!$user->tenant_id && $user->hasRole('admin')) {
+        // Sysadmin (tenant_id = 1 pentru "System") poate șterge toate rolurile
+        if ($user->tenant_id === 1) {
             return true;
         }
 
-        // Utilizatorii cu tenant pot șterge doar rolurile propriului tenant
+        // Ceilalți utilizatori pot șterge doar rolurile propriului tenant
         return $user->tenant_id === $role->tenant_id;
     }
 }

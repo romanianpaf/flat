@@ -71,6 +71,14 @@ export default {
               );
             }
           });
+        } else if (button.className.includes("permissionsButton")) {
+          button.addEventListener("click", function () {
+            removeTooltip();
+            router.push({
+              name: options.permissionsPath || "Role Permissions",
+              params: { id: this.id },
+            });
+          });
         } else {
           button.addEventListener("click", function () {
             if (this.id <= 3 && (process.env.VUE_APP_IS_DEMO ?? 1) == 1) {
@@ -105,6 +113,14 @@ export default {
                 <i class="fas fa-trash text-secondary"></i>
               </a>`;
       return actionDelete;
+    },
+
+    actionPermissionsButton(roleId, text) {
+      var actionPermissions = `
+              <a id="${roleId}" class="actionButton permissionsButton cursor-pointer me-3" data-bs-toggle="tooltip" title="${text}">
+                <i class="fas fa-shield-alt text-secondary"></i>
+              </a>`;
+      return actionPermissions;
     },
 
     removeEvent() {

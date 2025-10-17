@@ -106,7 +106,8 @@
                   id="phone"
                   v-model="form.phone"
                   type="text"
-                  placeholder="Număr de telefon"
+                  placeholder="+40 XXX XXX XXX"
+                  @input="form.phone = formatPhone($event)"
                 />
                 <validation-error :errors="apiValidationErrors.phone" />
               </div>
@@ -172,6 +173,7 @@ import SoftButton from "/src/components/SoftButton.vue";
 import ValidationError from "/src/components/ValidationError.vue";
 import showSwal from "/src/mixins/showSwal.js";
 import formMixin from "/src/mixins/form-mixin.js";
+import phoneFormatter from "/src/mixins/phoneFormatter.js";
 
 export default {
   name: "EditServiceProvider",
@@ -181,7 +183,7 @@ export default {
     SoftButton,
     ValidationError,
   },
-  mixins: [formMixin],
+  mixins: [formMixin, phoneFormatter],
   data() {
     return {
       form: null,

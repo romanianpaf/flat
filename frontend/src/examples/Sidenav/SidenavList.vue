@@ -1011,19 +1011,13 @@ export default {
     profile() {
       return this.$store.getters["profile/profile"];
     },
+    // DEPRECATED: Folosește v-permission directive sau hasPermission() în schimb
     requireAdmin() {
-      if (this.$store.getters["auth/loggedIn"] && this.profile && this.profile.roles && this.profile.roles.length > 0) {
-        const roleName = this.profile.roles[0].name;
-        if (["admin", "sysadmin", "cex"].includes(roleName)) return true;
-      }
-      return false;
+      return this.hasPermission('view users') && this.hasPermission('view roles');
     },
+    // DEPRECATED: Folosește v-permission directive sau hasPermission() în schimb
     requireCreator() {
-      if (this.$store.getters["auth/loggedIn"] && this.profile && this.profile.roles && this.profile.roles.length > 0) {
-        const roleName = this.profile.roles[0].name;
-        if (["admin", "sysadmin", "cex", "creator"].includes(roleName)) return true;
-      }
-      return false;
+      return this.hasPermission('view categories') || this.hasPermission('view service categories');
     },
   },
   async created() {
@@ -1041,6 +1035,14 @@ export default {
     }
   },
   methods: {
+    hasPermission(permission) {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        return user?.permissions?.includes(permission) || false;
+      } catch (error) {
+        return false;
+      }
+    },
     getRoute() {
       const routeArr = this.$route.path.split("/");
       return routeArr[1];

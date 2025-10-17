@@ -1,0 +1,14 @@
+/* Fix z-index pentru SweetAlert2 overlay și modal */
+.swal2-container {
+  z-index: 9999 !important;
+}
+
+.swal2-backdrop-show {
+  z-index: 9998 !important;
+}
+
+/* Asigură că overlay-ul acoperă sidebar-ul */
+body.swal2-shown > [aria-hidden="true"] {
+  filter: blur(10px);
+}
+

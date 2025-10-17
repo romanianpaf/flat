@@ -1,9 +1,16 @@
-import store from "../store";
+import { hasAnyPermission } from "@/utils/permissions";
 
-export default function admin({ router }) {
-  const userRole = store.getters["profile/profile"]?.roles[0].name;
-  const adminRoles = ["admin", "sysadmin"];
-  if (!adminRoles.includes(userRole)) {
-    return router.push({ name: "Default" });
+/**
+ * Admin middleware
+ * DEPRECATED: Folosește permission() middleware în schimb
+ * 
+ * Verifică dacă utilizatorul are permisiuni administrative de bază
+ */
+export default function admin({ next, router }) {
+  // Verifică dacă are permisiuni de admin (view users + view roles + view tenants)
+  if (hasAnyPermission(['view users', 'view roles', 'view tenants'])) {
+    return next();
   }
+  
+  return router.push({ name: "Dashboard" });
 }

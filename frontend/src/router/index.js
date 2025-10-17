@@ -63,6 +63,7 @@ import UserSettings from "../views/Settings.vue";
 import Roles from "../views/examples/Roles/Roles.vue";
 import NewRole from "../views/examples/Roles/NewRole.vue";
 import EditRole from "../views/examples/Roles/EditRole.vue";
+import RolePermissions from "../views/examples/Roles/RolePermissions.vue";
 import Users from "../views/examples/Users/Users.vue";
 import NewUser from "../views/examples/Users/NewUser.vue";
 import EditUser from "../views/examples/Users/EditUser.vue";
@@ -434,6 +435,14 @@ const routes = [
     path: "/roles/edit/:id",
     name: "Edit Role",
     component: EditRole,
+    meta: {
+      middleware: [auth, admin],
+    },
+  },
+  {
+    path: "/roles/:id/permissions",
+    name: "Role Permissions",
+    component: RolePermissions,
     meta: {
       middleware: [auth, admin],
     },

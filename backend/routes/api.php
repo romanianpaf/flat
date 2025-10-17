@@ -52,4 +52,8 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::post('change-password', [MeController::class, 'changePassword']);
     Route::post('user-voices/{userVoice}/vote', [App\Http\Controllers\Api\V2\UserVoiceController::class, 'vote']);
     Route::post('/uploads/{resource}/{id}/{field}', UploadController::class);
+    
+    // Role permissions management
+    Route::post('roles/{role}/sync-permissions', [App\Http\Controllers\Api\V2\RoleController::class, 'syncPermissions']);
+    Route::get('available-permissions', [App\Http\Controllers\Api\V2\RoleController::class, 'availablePermissions']);
 });

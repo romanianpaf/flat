@@ -21,17 +21,19 @@ export default {
     },
     showSwalConfirmationDelete() {
       const swalDelete = new Swal({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "Ești sigur?",
+        text: "Nu vei putea anula această acțiune!",
         showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
+        confirmButtonText: "Da, șterge!",
+        cancelButtonText: "Nu, anulează!",
         reverseButtons: true,
         customClass: {
           confirmButton: "btn bg-gradient-success",
           cancelButton: "btn bg-gradient-danger",
         },
         buttonsStyling: false,
+        heightAuto: false,
+        backdrop: true,
       });
 
       return swalDelete;
