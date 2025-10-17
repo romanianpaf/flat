@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Default from "../views/dashboards/Default.vue";
 import Automotive from "../views/dashboards/Automotive.vue";
 import SmartHome from "../views/dashboards/SmartHome.vue";
+import Home from "../views/dashboards/Home.vue";
 import VRDefault from "../views/dashboards/vr/VRDefault.vue";
 import VRInfo from "../views/dashboards/vr/VRInfo.vue";
 import CRM from "../views/dashboards/CRM.vue";
@@ -106,7 +107,15 @@ const routes = [
   {
     path: "/",
     name: "/",
-    redirect: "/dashboards/dashboard-default",
+    redirect: "/acasa",
+  },
+  {
+    path: "/acasa",
+    name: "Acasă",
+    component: Home,
+    meta: {
+      middleware: [auth],
+    },
   },
   {
     path: "/dashboards/dashboard-default",

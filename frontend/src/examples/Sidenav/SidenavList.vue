@@ -6,6 +6,26 @@
     <ul class="navbar-nav">
       <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
         <sidenav-collapse
+          collapse-ref="dashboards"
+          nav-text="Panouri"
+          :class="$route.path.includes('/acasa') ? 'active' : ''"
+        >
+          <template #icon>
+            <i class="fas fa-th-large text-primary text-sm opacity-10"></i>
+          </template>
+          <template #list>
+            <ul class="nav ms-4 ps-3">
+              <sidenav-item
+                :to="{ name: 'Acasă' }"
+                mini-icon="🏠"
+                text="Acasă"
+              />
+            </ul>
+          </template>
+        </sidenav-collapse>
+      </li>
+      <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
+        <sidenav-collapse
           collapse-ref="controlPanel"
           nav-text="Panou de control"
           :class="$route.path.includes('/tenants') || $route.path.includes('/roles') || $route.path.includes('/users') || $route.path.includes('/automations') ? 'active' : ''"
