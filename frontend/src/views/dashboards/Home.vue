@@ -131,20 +131,23 @@
                       <p
                         class="mb-0 text-sm text-white text-capitalize font-weight-bold opacity-7"
                       >
-                        Weather today
+                        Vremea acum
                       </p>
                       <h5 class="mb-0 text-white font-weight-bolder">
-                        San Francisco - 29 °C
+                        {{ weather.location }} - {{ weather.temperature }} °C
                       </h5>
+                      <p class="mb-0 text-xs text-white opacity-8">
+                        Resimțită: {{ weather.feelsLike }} °C
+                      </p>
                     </div>
                   </div>
                   <div class="col-4 text-end">
-                    <img
-                      class="w-50"
-                      src="@/assets/img/small-logos/icon-sun-cloud.png"
-                      alt="image sun"
-                    />
-                    <h5 class="mb-0 text-white text-end me-1">Cloudy</h5>
+                    <div style="font-size: 3rem; line-height: 1;">
+                      {{ weather.icon }}
+                    </div>
+                    <h5 class="mb-0 text-white text-end me-1 text-capitalize">
+                      {{ weather.description }}
+                    </h5>
                   </div>
                 </div>
               </div>
@@ -154,157 +157,158 @@
         <div class="mt-4 row">
           <div class="col-md-6">
             <default-counter-card
-              :count="21"
+              :count="weather.temperature"
               suffix=" °C"
-              title="Living Room"
-              description="Temperature"
+              title="Temperatură"
+              description="Exterior"
             />
           </div>
           <div class="mt-4 col-md-6 mt-md-0">
             <default-counter-card
-              :count="44"
+              :count="weather.humidity"
               suffix=" %"
-              title="Outside"
-              description="Humidity"
-            />
-          </div>
-        </div>
-        <div class="mt-4 row">
-          <div class="col-md-6">
-            <default-counter-card
-              :count="87"
-              suffix=" m³"
-              title="Water"
-              description="Consumption"
-            />
-          </div>
-          <div class="mt-4 col-md-6 mt-md-0">
-            <default-counter-card
-              :count="417"
-              suffix=" GB"
-              title="Internet"
-              description="All devices"
+              title="Umiditate"
+              description="Exterior"
             />
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Sondaje și User Voice -->
     <div class="mt-4 row">
-      <div class="col-lg-6 ms-auto">
-        <reports-doughnut-chart />
-      </div>
-      <div class="mt-4 col-lg-6 mt-lg-0">
-        <div class="row">
-          <div class="col-sm-6">
-            <thin-bar-chart
-              title="Consumption per day"
-              :chart="{
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: {
-                  label: 'Watts',
-                  data: [150, 230, 380, 220, 420, 200, 70, 500]
-                }
-              }"
-            />
+      <!-- Widget Sondaj Recent -->
+      <div class="col-lg-6">
+        <div class="card h-100">
+          <div class="pb-0 card-header">
+            <h6 class="mb-0">Sondaj Recent</h6>
           </div>
-          <div class="mt-4 col-sm-6 mt-sm-0">
-            <div class="card h-100">
-              <div
-                class="p-3 text-center card-body d-flex flex-column align-items-center"
-              >
-                <h6 class="text-start">Device limit</h6>
-                <div id="slider"></div>
-                <h4 class="font-weight-bold mt-n7">
-                  <span id="value" class="text-dark">21</span
-                  ><span class="text-body">°C</span>
-                </h4>
-                <p class="mt-n2 mb-0 ps-1">
-                  <span class="text-xs">16°C</span
-                  ><span class="px-3">Temperature</span
-                  ><span class="text-xs">38°C</span>
-                </p>
+          <div class="p-3 card-body">
+            <div v-if="latestPoll">
+              <h6 class="mb-3 font-weight-bold">{{ latestPoll.title }}</h6>
+              <p class="mb-3 text-sm">{{ latestPoll.description }}</p>
+              
+              <div v-if="latestPoll.options && latestPoll.options.length > 0" class="mt-3">
+                <div 
+                  v-for="option in latestPoll.options" 
+                  :key="option.id"
+                  class="mb-3"
+                >
+                  <div class="d-flex align-items-center mb-2">
+                    <div class="form-check" @click="voteOnPollOption(option)" style="cursor: pointer;">
+                      <input 
+                        class="form-check-input" 
+                        :type="latestPoll.allow_multiple_votes ? 'checkbox' : 'radio'"
+                        :name="'poll-' + latestPoll.id"
+                        :id="'option-' + option.id"
+                        :value="option.id"
+                        v-model="selectedOptions"
+                        @change="voteOnPollOption(option)"
+                      >
+                      <label 
+                        class="form-check-label" 
+                        :for="'option-' + option.id"
+                        style="cursor: pointer;"
+                      >
+                        {{ option.option_text }}
+                      </label>
+                    </div>
+                    <span class="ms-auto text-sm font-weight-bold text-secondary">
+                      {{ option.votes_count || 0 }} voturi
+                    </span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div 
+                      class="progress-bar bg-gradient-primary" 
+                      role="progressbar" 
+                      :style="{ width: getVotePercentage(option) + '%' }"
+                      :aria-valuenow="getVotePercentage(option)"
+                      aria-valuemin="0" 
+                      aria-valuemax="100"
+                    >
+                    </div>
+                  </div>
+                </div>
               </div>
+              
+              <div class="mt-3 text-sm text-secondary">
+                <i class="fas fa-calendar me-1"></i>
+                Creat: {{ formatDate(latestPoll.created_at) }}
+              </div>
+            </div>
+            <div v-else class="text-center py-5">
+              <i class="fas fa-poll fa-3x text-secondary opacity-6 mb-3"></i>
+              <p class="text-secondary">Nu există sondaje active</p>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <hr class="my-5 horizontal dark" />
-    <div class="row">
-      <div class="col-lg-2 col-sm-6">
-        <switch-card
-          :item="{
-            state: 'Off',
-            label: 'Humidity',
-            description: 'Inactive since: 2 days',
-            classCustom: 'mt-4'
-          }"
-        >
-          <humidity />
-        </switch-card>
-      </div>
-      <div class="mt-4 col-lg-2 col-sm-6 mt-lg-0">
-        <switch-card
-          :item="{
-            state: 'On',
-            label: 'Temperature',
-            description: 'Active',
-            classCustom: 'mt-2',
-            isChecked: 'true'
-          }"
-          class="text-white bg-gradient-primary"
-        >
-          <temperature />
-        </switch-card>
-      </div>
-      <div class="mt-4 col-lg-2 col-sm-6 mt-lg-0">
-        <switch-card
-          :item="{
-            state: 'Off',
-            label: 'Air Conditioner',
-            description: 'Inactive since: 1 hour',
-            classCustom: 'mt-4',
-            isChecked: true
-          }"
-        >
-          <air />
-        </switch-card>
-      </div>
-      <div class="mt-4 col-lg-2 col-sm-6 mt-lg-0">
-        <switch-card
-          :item="{
-            state: 'Off',
-            label: 'Lights',
-            description: 'Inactive since: 27 min',
-            classCustom: 'mt-4'
-          }"
-        >
-          <lights />
-        </switch-card>
-      </div>
-      <div class="mt-4 col-lg-2 col-sm-6 mt-lg-0">
-        <switch-card
-          :item="{
-            state: 'On',
-            label: 'Wi-fi',
-            description: 'Active',
-            classCustom: 'mt-4',
-            isChecked: true
-          }"
-          class="text-white bg-gradient-primary"
-        >
-          <wifi />
-        </switch-card>
-      </div>
-      <div class="mt-4 col-lg-2 col-sm-6 mt-sm-0">
+
+      <!-- Widget User Voice -->
+      <div class="col-lg-6 mt-4 mt-lg-0">
         <div class="card h-100">
-          <div
-            class="text-center card-body d-flex flex-column justify-content-center"
-          >
-            <a href="javascript:;">
-              <i class="mb-3 fa fa-plus text-secondary" aria-hidden="true"></i>
-              <h5 class="text-secondary">New device</h5>
-            </a>
+          <div class="pb-0 card-header">
+            <h6 class="mb-0">Propuneri Recente</h6>
+          </div>
+          <div class="p-3 card-body">
+            <div v-if="recentUserVoices.length > 0">
+              <div 
+                v-for="voice in recentUserVoices" 
+                :key="voice.id"
+                class="mb-3 pb-3 border-bottom"
+              >
+                <div class="d-flex align-items-start">
+                  <div class="flex-grow-1">
+                    <h6 class="mb-1 text-sm font-weight-bold">{{ voice.title || voice.suggestion }}</h6>
+                    <p class="mb-2 text-xs text-secondary">
+                      {{ truncate(voice.description || voice.suggestion, 100) }}
+                    </p>
+                    <div class="d-flex align-items-center">
+                      <span class="badge badge-sm" :class="getStatusBadgeClass(voice.status)">
+                        {{ getStatusText(voice.status) }}
+                      </span>
+                      <div class="ms-3 d-flex align-items-center gap-3">
+                        <!-- Thumbs Up Button -->
+                        <div class="d-flex flex-column align-items-center">
+                          <button 
+                            class="vote-button vote-button-up"
+                            @click="voteOnUserVoice(voice, 'up')"
+                            :title="'Votează PRO pentru: ' + (voice.title || voice.suggestion)"
+                          >
+                            <i class="fas fa-thumbs-up"></i>
+                          </button>
+                          <span class="vote-count text-success font-weight-bold">
+                            {{ voice.votes_up || 0 }}
+                          </span>
+                        </div>
+                        
+                        <!-- Thumbs Down Button -->
+                        <div class="d-flex flex-column align-items-center">
+                          <button 
+                            class="vote-button vote-button-down"
+                            @click="voteOnUserVoice(voice, 'down')"
+                            :title="'Votează CONTRA pentru: ' + (voice.title || voice.suggestion)"
+                          >
+                            <i class="fas fa-thumbs-down"></i>
+                          </button>
+                          <span class="vote-count text-danger font-weight-bold">
+                            {{ voice.votes_down || 0 }}
+                          </span>
+                        </div>
+                      </div>
+                      <span class="ms-auto text-xs text-secondary">
+                        <i class="fas fa-calendar me-1"></i>
+                        {{ formatDate(voice.created_at) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div v-else class="text-center py-5">
+              <i class="fas fa-lightbulb fa-3x text-secondary opacity-6 mb-3"></i>
+              <p class="text-secondary">Nu există propuneri</p>
+            </div>
           </div>
         </div>
       </div>
@@ -313,96 +317,312 @@
 </template>
 
 <script>
-import ReportsDoughnutChart from "@/examples/Charts/ReportsDoughnutChart.vue";
-import ThinBarChart from "@/examples/Charts/ThinBarChart.vue";
 import DefaultCounterCard from "@/examples/Cards/DefaultCounterCard.vue";
-import SwitchCard from "@/examples/Cards/SwitchCard.vue";
 
 import setNavPills from "@/assets/js/nav-pills.js";
 import setTooltip from "@/assets/js/tooltip.js";
-import Temperature from "../../components/Icon/Temperature.vue";
-import Air from "../../components/Icon/Air.vue";
-import Lights from "../../components/Icon/Lights.vue";
-import Wifi from "../../components/Icon/Wifi.vue";
-import Humidity from "../../components/Icon/Humidity.vue";
-import roundSlider from "round-slider";
+import WeatherService from "@/services/weather.service.js";
+import PollsService from "@/services/polls.service.js";
+import UserVoicesService from "@/services/user-voices.service.js";
 
-import $ from "jquery";
 export default {
   name: "Home",
   components: {
-    // eslint-disable-next-line vue/no-unused-components
-    roundSlider,
     DefaultCounterCard,
-    ReportsDoughnutChart,
-    ThinBarChart,
-    SwitchCard,
-    Temperature,
-    Air,
-    Lights,
-    Wifi,
-    Humidity
   },
   data() {
     return {
-      showMenu: false
+      showMenu: false,
+      weather: {
+        location: "București, Chitilei",
+        temperature: 22,
+        feelsLike: 20,
+        description: "Se încarcă...",
+        icon: "⛅",
+        humidity: 65,
+        pressure: 1013,
+        windSpeed: 3.5,
+        cloudiness: 40,
+      },
+      latestPoll: null,
+      recentUserVoices: [],
+      selectedOptions: [], // Pentru multiple votes (checkbox)
     };
   },
-  mounted() {
+  async mounted() {
+    // Încarcă vremea
+    await this.loadWeather();
+    
+    // Încarcă sondajul recent
+    await this.loadLatestPoll();
+    
+    // Încarcă propuneri recente
+    await this.loadRecentUserVoices();
+    
+    // Reîncarcă vremea la fiecare 10 minute
+    this.weatherInterval = setInterval(() => {
+      this.loadWeather();
+    }, 10 * 60 * 1000);
+
     setNavPills();
     setTooltip(this.$store.state.bootstrap);
-
-    let jq = document.createElement("script");
-    jq.setAttribute("src", "https://code.jquery.com/jquery-3.2.1.js");
-    document.head.appendChild(jq);
-
-    let recaptchaScript = document.createElement("script");
-    recaptchaScript.setAttribute(
-      "src",
-      "https://cdn.jsdelivr.net/npm/round-slider@1.6.1/dist/roundslider.min.js"
-    );
-    document.head.appendChild(recaptchaScript);
-
-    $("#slider").roundSlider({
-      width: 22,
-      radius: 100,
-      value: 45,
-      readOnly: true,
-      circleShape: "half-top",
-      sliderType: "min-range",
-      lineCap: "round",
-      min: 16,
-      max: 38
-    });
-    // Rounded slider
-    const setValue = function (value, active) {
-      document.querySelectorAll("round-slider").forEach(function (el) {
-        if (el.value === undefined) return;
-        el.value = value;
-      });
-      const span = document.querySelector("#value");
-      span.innerHTML = value;
-      if (active) span.style.color = "red";
-      else span.style.color = "black";
-    };
-
-    document.querySelectorAll("round-slider").forEach(function (el) {
-      el.addEventListener("value-changed", function (ev) {
-        if (ev.detail.value !== undefined) setValue(ev.detail.value, false);
-        // eslint-disable-next-line no-undef
-        else if (ev.detail.low !== undefined) setLow(ev.detail.low, false);
-        // eslint-disable-next-line no-undef
-        else if (ev.detail.high !== undefined) setHigh(ev.detail.high, false);
-      });
-
-      el.addEventListener("value-changing", function (ev) {
-        if (ev.detail.value !== undefined) setValue(ev.detail.value, true);
-        // eslint-disable-next-line no-undef
-        else if (ev.detail.low !== undefined) setLow(ev.detail.low, true);
-        // eslint-disable-next-line no-undef
-        else if (ev.detail.high !== undefined) setHigh(ev.detail.high, true);
-      });
-    });
+  },
+  methods: {
+    async loadWeather() {
+      try {
+        const weatherData = await WeatherService.getCurrentWeather();
+        this.weather = weatherData;
+      } catch (error) {
+        console.error("Nu s-a putut încărca vremea:", error);
+      }
+    },
+    async loadLatestPoll() {
+      try {
+        // Încarcă direct prin serviciu, sortate descrescător
+        const response = await PollsService.getPolls({
+          sort: '-created_at',
+          page: { size: 1 },
+          include: 'options'
+        });
+        
+        if (response.data && response.data.length > 0) {
+          this.latestPoll = response.data[0];
+          console.log('✅ Sondaj încărcat:', this.latestPoll);
+        } else {
+          console.log('ℹ️ Nu există sondaje');
+        }
+      } catch (error) {
+        console.error("❌ Eroare la încărcarea sondajului:", error);
+      }
+    },
+    async loadRecentUserVoices() {
+      try {
+        // Încarcă direct prin serviciu, sortate descrescător
+        const response = await UserVoicesService.getUserVoices({
+          sort: '-created_at',
+          page: { size: 3 }
+        });
+        
+        if (response.data && response.data.length > 0) {
+          this.recentUserVoices = response.data;
+          console.log('✅ Propuneri încărcate:', this.recentUserVoices.length);
+        } else {
+          console.log('ℹ️ Nu există propuneri');
+        }
+      } catch (error) {
+        console.error("❌ Eroare la încărcarea propunerilor:", error);
+      }
+    },
+    getVotePercentage(option) {
+      if (!this.latestPoll || !this.latestPoll.options) return 0;
+      
+      const totalVotes = this.latestPoll.options.reduce(
+        (sum, opt) => sum + (opt.votes_count || 0), 
+        0
+      );
+      
+      if (totalVotes === 0) return 0;
+      
+      return Math.round(((option.votes_count || 0) / totalVotes) * 100);
+    },
+    formatDate(dateString) {
+      if (!dateString) return '';
+      const date = new Date(dateString);
+      const now = new Date();
+      const diffTime = Math.abs(now - date);
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) return 'Astăzi';
+      if (diffDays === 1) return 'Ieri';
+      if (diffDays < 7) return `${diffDays} zile`;
+      if (diffDays < 30) return `${Math.floor(diffDays / 7)} săptămâni`;
+      return date.toLocaleDateString('ro-RO');
+    },
+    truncate(text, length) {
+      if (!text) return '';
+      if (text.length <= length) return text;
+      return text.substring(0, length) + '...';
+    },
+    getStatusText(status) {
+      const statusMap = {
+        'open': 'Deschis',
+        'in_progress': 'În lucru',
+        'completed': 'Finalizat',
+        'rejected': 'Respins',
+      };
+      return statusMap[status] || status;
+    },
+    getStatusBadgeClass(status) {
+      const classMap = {
+        'open': 'bg-gradient-info',
+        'in_progress': 'bg-gradient-warning',
+        'completed': 'bg-gradient-success',
+        'rejected': 'bg-gradient-danger',
+      };
+      return classMap[status] || 'bg-gradient-secondary';
+    },
+    async voteOnPollOption(option) {
+      try {
+        await PollsService.voteOnOption(option.id);
+        
+        this.$swal({
+          icon: 'success',
+          title: 'Votat!',
+          text: `Ai votat pentru: "${option.option_text}"`,
+          timer: 2000,
+          heightAuto: false,
+          backdrop: true,
+        });
+        
+        // Reîncarcă sondajul pentru a actualiza numerele
+        await this.loadLatestPoll();
+      } catch (error) {
+        console.error('Eroare la votare:', error);
+        
+        let errorMessage = 'Nu s-a putut înregistra votul. Te rugăm să încerci din nou.';
+        if (error.response?.status === 409) {
+          errorMessage = 'Ai votat deja la acest sondaj!';
+        }
+        
+        this.$swal({
+          icon: 'error',
+          title: 'Eroare!',
+          text: errorMessage,
+          heightAuto: false,
+          backdrop: true,
+        });
+      }
+    },
+    async voteOnUserVoice(voice, type) {
+      try {
+        await UserVoicesService.voteUserVoice(voice.id, type);
+        
+        const voteText = type === 'up' ? '👍 PRO' : '👎 CONTRA';
+        const voiceTitle = voice.title || voice.suggestion;
+        this.$swal({
+          icon: 'success',
+          title: 'Votat!',
+          text: `Ai votat ${voteText} pentru: "${voiceTitle}"`,
+          timer: 2000,
+          heightAuto: false,
+          backdrop: true,
+        });
+        
+        // Reîncarcă propunerile pentru a actualiza numerele
+        await this.loadRecentUserVoices();
+      } catch (error) {
+        console.error('Eroare la votare:', error);
+        
+        let errorMessage = 'Nu s-a putut înregistra votul. Te rugăm să încerci din nou.';
+        if (error.response?.status === 409) {
+          errorMessage = 'Ai votat deja pentru această propunere!';
+        } else if (error.response?.status === 422) {
+          errorMessage = 'Date invalide pentru votare.';
+        }
+        
+        this.$swal({
+          icon: 'error',
+          title: 'Eroare!',
+          text: errorMessage,
+          heightAuto: false,
+          backdrop: true,
+        });
+      }
+    },
+  },
+  beforeUnmount() {
+    // Curăță intervalul când componenta este distrusă
+    if (this.weatherInterval) {
+      clearInterval(this.weatherInterval);
+    }
   }
 };
 </script>
+
+<style scoped>
+/* Vote Buttons - Stil similar cu pagina de referral */
+.vote-button {
+  width: 50px;
+  height: 50px;
+  border: none;
+  border-radius: 16px; /* Rounded corners ca în imagine */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.vote-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 16px;
+  pointer-events: none;
+}
+
+.vote-button-up {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%); /* Verde gradient */
+}
+
+.vote-button-down {
+  background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%); /* Roșu gradient */
+}
+
+.vote-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.vote-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.vote-button i {
+  color: white;
+  font-size: 20px;
+  z-index: 1;
+  position: relative;
+}
+
+.vote-count {
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Hover effects pentru butoane */
+.vote-button-up:hover {
+  background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+}
+
+.vote-button-down:hover {
+  background: linear-gradient(135deg, #c82333 0%, #e55a00 100%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .vote-button {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .vote-button i {
+    font-size: 18px;
+  }
+  
+  .vote-count {
+    font-size: 11px;
+  }
+}
+</style>

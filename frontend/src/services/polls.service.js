@@ -128,5 +128,15 @@ export default {
       }
     );
   },
+
+  async voteOnOption(optionId) {
+    return await axios.post(
+      API_URL + `poll-options/${optionId}/vote`,
+      {},
+      {
+        headers: authHeader(),
+      }
+    );
+  },
 };
 

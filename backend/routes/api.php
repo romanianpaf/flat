@@ -29,6 +29,9 @@ Route::prefix('v2')->middleware('json.api')->group(function () {
     Route::post('/logout', LogoutController::class)->middleware('auth:api');
     Route::post('/password-forgot', ForgotPasswordController::class);
     Route::post('/password-reset', ResetPasswordController::class)->name('password.reset');
+    
+    // Weather API (public, cu cache backend)
+    Route::get('weather/current', [App\Http\Controllers\Api\V2\WeatherController::class, 'getCurrentWeather']);
 });
 
 JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar $server) {
@@ -51,7 +54,11 @@ JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar 
     Route::patch('me', [MeController::class, 'updateProfile']);
     Route::post('change-password', [MeController::class, 'changePassword']);
     Route::post('user-voices/{userVoice}/vote', [App\Http\Controllers\Api\V2\UserVoiceController::class, 'vote']);
+    Route::post('poll-options/{pollOption}/vote', [App\Http\Controllers\Api\V2\PollOptionController::class, 'vote']);
     Route::post('/uploads/{resource}/{id}/{field}', UploadController::class);
+    
+    // Weather cache management (authenticated)
+    Route::post('weather/clear-cache', [App\Http\Controllers\Api\V2\WeatherController::class, 'clearCache']);
     
     // Role permissions management
     Route::post('roles/{role}/sync-permissions', [App\Http\Controllers\Api\V2\RoleController::class, 'syncPermissions']);
