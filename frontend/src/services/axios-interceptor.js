@@ -19,8 +19,8 @@ axios.interceptors.response.use(
           const response = await axios.post('https://f1.atria.live/oauth/token', {
             grant_type: 'refresh_token',
             refresh_token: refreshToken,
-            client_id: process.env.VUE_APP_CLIENT_ID,
-            client_secret: process.env.VUE_APP_CLIENT_SECRET,
+            client_id: import.meta.env.VITE_CLIENT_ID,
+            client_secret: import.meta.env.VITE_CLIENT_SECRET,
           });
 
           const { access_token, refresh_token: newRefreshToken } = response.data;
@@ -45,12 +45,9 @@ axios.interceptors.response.use(
       }
     }
 
-    // Pentru erori 403 (Forbidden), șterge token-urile și redirectează
-    if (error.response?.status === 403) {
-      localStorage.removeItem('user');
-      localStorage.removeItem('refresh_token');
-      window.location.href = '/login';
-    }
+    // 403 (Forbidden) = autentificat dar nu ai permisiune pentru acțiune
+    // NU facem logout, doar lăsăm eroarea să ajungă la componentă
+    // pentru a afișa mesaj de eroare corespunzător
 
     return Promise.reject(error);
   }

@@ -80,8 +80,7 @@
                 role="tabpanel"
                 aria-labelledby="cam1"
                 :style="{
-                  backgroundImage:
-                    'url(' + require('@/assets/img/bg-smart-home-1.jpg') + ')',
+                  backgroundImage: 'url(' + bgSmartHome1 + ')',
                   backgroundSize: 'cover'
                 }"
               >
@@ -101,8 +100,7 @@
                 role="tabpanel"
                 aria-labelledby="cam2"
                 :style="{
-                  backgroundImage:
-                    'url(' + require('@/assets/img/bg-smart-home-2.jpg') + ')',
+                  backgroundImage: 'url(' + bgSmartHome2 + ')',
                   backgroundSize: 'cover'
                 }"
               >
@@ -324,6 +322,10 @@ import setTooltip from "@/assets/js/tooltip.js";
 import WeatherService from "@/services/weather.service.js";
 import PollsService from "@/services/polls.service.js";
 import UserVoicesService from "@/services/user-voices.service.js";
+
+// Importuri pentru imagini (Vite)
+import bgSmartHome1 from "@/assets/img/bg-smart-home-1.jpg";
+import bgSmartHome2 from "@/assets/img/bg-smart-home-2.jpg";
 
 export default {
   name: "Home",

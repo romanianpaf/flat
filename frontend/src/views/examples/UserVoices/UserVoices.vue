@@ -72,7 +72,8 @@ import { DataTable } from "simple-datatables";
 import setNavPills from "@/assets/js/nav-pills.js";
 import eventTable from "/src/mixins/eventTable.js";
 
-var loading = require("/src/assets/img/loading.gif");
+import loadingImg from "@/assets/img/loading.gif";
+var loading = loadingImg;
 
 let currentQuery = "";
 let currentPerPage = 5;
@@ -213,7 +214,7 @@ export default {
       this.userVoicesAux = [];
       if (this.userVoicesList?.length > 0) {
         this.userVoicesList.forEach((row) => {
-          const authorName = row.user?.name || 'Utilizator necunoscut';
+          const authorName = [row.user?.first_name, row.user?.last_name].filter(Boolean).join(' ') || row.user?.name || 'Utilizator necunoscut';
           const votesDisplay = `
             <div class="d-flex align-items-center gap-2">
               <span class="badge badge-sm bg-gradient-primary">

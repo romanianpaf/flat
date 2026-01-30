@@ -44,15 +44,23 @@
             >
             <validation-error :errors="apiValidationErrors.profile_image" />
 
-            <label class="form-label mt-2 row mt-4">Nume</label>
-
+            <label class="form-label mt-2 row mt-4">Prenume</label>
             <soft-model-input
-              id="name"
-              v-model="user.name"
+              id="first_name"
+              v-model="user.first_name"
               type="text"
-              placeholder="Numele tău"
+              placeholder="Prenumele"
             />
-            <validation-error :errors="apiValidationErrors.name" />
+            <validation-error :errors="apiValidationErrors.first_name" />
+
+            <label class="form-label mt-2 row mt-4">Nume</label>
+            <soft-model-input
+              id="last_name"
+              v-model="user.last_name"
+              type="text"
+              placeholder="Numele de familie"
+            />
+            <validation-error :errors="apiValidationErrors.last_name" />
 
             <label class="form-label mt-2 row mt-4">Email</label>
             <soft-model-input

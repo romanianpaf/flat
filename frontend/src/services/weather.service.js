@@ -12,7 +12,7 @@ import axios from "axios";
  * IMPORTANT: Endpoint-ul este PUBLIC (nu necesită autentificare)
  */
 
-const API_URL = process.env.VUE_APP_API_BASE_URL + "/weather/";
+const API_URL = import.meta.env.VITE_API_BASE_URL + "/weather/";
 
 class WeatherService {
   /**

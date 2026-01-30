@@ -3,8 +3,7 @@
     <div
       class="mt-4 page-header min-height-300 border-radius-xl"
       :style="{
-        backgroundImage:
-          'url(' + require('@/assets/img/curved-images/curved14.jpg') + ')',
+        backgroundImage: 'url(' + curved14Img + ')',
         backgroundPositionY: '50%'
       }"
     >
@@ -35,7 +34,7 @@
         </div>
         <div class="col-auto my-auto">
           <div class="h-100">
-            <h5 class="mb-1">{{ profile.name }}</h5>
+            <h5 class="mb-1">{{ fullName }}</h5>
             <p class="mb-0 text-sm font-weight-bold">{{ profile.email }}</p>
             <p v-if="profile.tenant" class="mb-0 text-sm">{{ profile.tenant.name }}</p>
           </div>
@@ -53,12 +52,20 @@
           <div class="p-3 card-body">
             <form @submit.prevent="updateProfile">
               <div class="row">
-                <div class="col-12">
+                <div class="col-12 col-md-6">
+                  <label class="form-label">Prenume</label>
+                  <soft-input
+                    v-model="form.first_name"
+                    type="text"
+                    placeholder="Prenume"
+                  />
+                </div>
+                <div class="col-12 col-md-6 mt-3 mt-md-0">
                   <label class="form-label">Nume</label>
                   <soft-input
-                    v-model="form.name"
+                    v-model="form.last_name"
                     type="text"
-                    placeholder="Nume complet"
+                    placeholder="Nume de familie"
                   />
                 </div>
               </div>
@@ -86,27 +93,23 @@
               <div class="row mt-3">
                 <div class="col-12 col-md-4">
                   <label class="form-label">Apartament</label>
-                  <soft-input
-                    v-model="form.apartment"
-                    type="text"
-                    placeholder="ex: 12"
-                  />
+                  <select class="form-select" v-model="selectedApartmentId" @change="onApartmentSelect">
+                    <option value="">-- Alege --</option>
+                    <option v-for="apt in buildingOptions.apartments" :key="apt.id" :value="apt.id">
+                      {{ apt.number }}{{ apt.staircase ? ' (Scara ' + apt.staircase + ')' : '' }}
+                    </option>
+                  </select>
+                  <small class="text-muted" v-if="!buildingOptions.apartments.length">
+                    Nu există apartamente configurate
+                  </small>
                 </div>
                 <div class="col-12 col-md-4 mt-3 mt-md-0">
                   <label class="form-label">Scara</label>
-                  <soft-input
-                    v-model="form.staircase"
-                    type="text"
-                    placeholder="ex: A"
-                  />
+                  <input class="form-control" v-model="form.staircase" readonly disabled />
                 </div>
                 <div class="col-12 col-md-4 mt-3 mt-md-0">
                   <label class="form-label">Etaj</label>
-                  <soft-input
-                    v-model="form.floor"
-                    type="text"
-                    placeholder="ex: 3"
-                  />
+                  <input class="form-control" v-model="form.floor" readonly disabled />
                 </div>
               </div>
               <div class="mt-4">
@@ -223,8 +226,11 @@ import showSwal from "/src/mixins/showSwal.js";
 import { mapGetters } from "vuex";
 import axios from "axios";
 import authHeader from "@/services/auth-header";
+import carteImobilService from "@/services/carte-imobil.service.js";
+import curved14Img from "@/assets/img/curved-images/curved14.jpg";
+import defaultAvatarImg from "@/assets/img/bruce-mars.jpg";
 
-const API_URL = process.env.VUE_APP_API_BASE_URL + "/";
+const API_URL = import.meta.env.VITE_API_BASE_URL + "/";
 
 export default {
   name: "Profile",
@@ -238,7 +244,8 @@ export default {
       loading: false,
       loadingPassword: false,
       form: {
-        name: "",
+        first_name: "",
+        last_name: "",
         email: "",
         phone: "",
         apartment: "",
@@ -250,6 +257,12 @@ export default {
         new_password: "",
         new_password_confirmation: "",
       },
+      buildingOptions: {
+        staircases: [],
+        apartments: [],
+        floors: [],
+      },
+      selectedApartmentId: "",
     };
   },
   computed: {
@@ -257,7 +270,10 @@ export default {
       profile: "profile/profile",
     }),
     profileImage() {
-      return this.profile?.profile_image || require("@/assets/img/bruce-mars.jpg");
+      return this.profile?.profile_image || defaultAvatarImg;
+    },
+    fullName() {
+      return [this.profile?.first_name, this.profile?.last_name].filter(Boolean).join(' ') || '-';
     },
   },
   mounted() {
@@ -270,17 +286,53 @@ export default {
   methods: {
     async loadProfile() {
       try {
-        await this.$store.dispatch("profile/getProfile");
+        // Load profile and building options in parallel
+        const [, optionsRes] = await Promise.all([
+          this.$store.dispatch("profile/getProfile"),
+          carteImobilService.getBuildingOptions().catch(() => ({ data: { apartments: [], staircases: [], floors: [] } })),
+        ]);
+        
+        this.buildingOptions = {
+          staircases: optionsRes?.data?.staircases || [],
+          apartments: optionsRes?.data?.apartments || [],
+          floors: optionsRes?.data?.floors || [],
+        };
+        
         // Așteaptă următorul tick pentru ca store-ul să fie actualizat
         await this.$nextTick();
-        this.form.name = this.profile.name || "";
+        this.form.first_name = this.profile.first_name || "";
+        this.form.last_name = this.profile.last_name || "";
         this.form.email = this.profile.email || "";
         this.form.phone = this.profile.phone || "";
         this.form.apartment = this.profile.apartment || "";
         this.form.staircase = this.profile.staircase || "";
         this.form.floor = this.profile.floor || "";
+        
+        // Find and select the matching apartment
+        if (this.form.apartment && this.buildingOptions.apartments.length > 0) {
+          const match = this.buildingOptions.apartments.find(
+            (a) => a.number === this.form.apartment && a.staircase === this.form.staircase
+          );
+          if (match) {
+            this.selectedApartmentId = match.id;
+          }
+        }
       } catch (error) {
         console.error("Error loading profile:", error);
+      }
+    },
+    onApartmentSelect() {
+      if (!this.selectedApartmentId) {
+        this.form.apartment = "";
+        this.form.staircase = "";
+        this.form.floor = "";
+        return;
+      }
+      const apt = this.buildingOptions.apartments.find((a) => a.id === parseInt(this.selectedApartmentId));
+      if (apt) {
+        this.form.apartment = apt.number;
+        this.form.staircase = apt.staircase || "";
+        this.form.floor = apt.floor || "";
       }
     },
     async updateProfile() {
@@ -291,7 +343,8 @@ export default {
             type: "users",
             id: this.profile.id,
             attributes: {
-              name: this.form.name,
+              first_name: this.form.first_name,
+              last_name: this.form.last_name,
               email: this.form.email,
               phone: this.form.phone,
               apartment: this.form.apartment,
@@ -310,7 +363,8 @@ export default {
         
         // Update local storage
         const user = JSON.parse(localStorage.getItem("user"));
-        user.name = this.form.name;
+        user.first_name = this.form.first_name;
+        user.last_name = this.form.last_name;
         user.email = this.form.email;
         localStorage.setItem("user", JSON.stringify(user));
         
@@ -432,7 +486,7 @@ export default {
       try {
         // Get token for upload (don't use authHeader as it sets JSON API headers)
         const token = localStorage.getItem("token");
-        const baseUrl = process.env.VUE_APP_API_BASE_URL;
+        const baseUrl = import.meta.env.VITE_API_BASE_URL;
         
         const uploadResponse = await axios.post(
           `${baseUrl}/uploads/users/${this.profile.id}/profile-image`,

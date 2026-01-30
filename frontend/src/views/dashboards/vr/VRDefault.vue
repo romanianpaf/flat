@@ -177,7 +177,7 @@
 </template>
 
 <script>
-import Sidenav from "@/examples/Sidenav";
+import Sidenav from "@/examples/Sidenav/index.vue";
 import AppFooter from "@/examples/Footer.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import MiniStatisticsCard from "@/examples/Cards/MiniStatisticsCard.vue";

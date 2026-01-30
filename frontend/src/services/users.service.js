@@ -3,7 +3,7 @@ import authHeader from "./auth-header";
 import Jsona from "jsona";
 const dataFormatter = new Jsona();
 
-const API_URL = process.env.VUE_APP_API_BASE_URL + '/';
+const API_URL = import.meta.env.VITE_API_BASE_URL + '/';
 
 export default {
   async getUsers(params) {
@@ -40,28 +40,80 @@ export default {
   },
 
   async addUser(user) {
-    user.type = "users";
-    user.relationshipNames = ["roles"];
-    const editedUser = dataFormatter.serialize({
-      stuff: user,
-      includeNames: ["roles"],
-    });
-    return await axios.post(API_URL + "users", editedUser, {
+    const payload = {
+      data: {
+        type: "users",
+        attributes: {
+          first_name: user.first_name,
+          last_name: user.last_name,
+          email: user.email,
+          password: user.password,
+          password_confirmation: user.password_confirmation,
+          phone: user.phone || null,
+          tenant_id: user.tenant_id || null,
+        },
+        relationships: {},
+      },
+    };
+
+    // Adăugăm roluri dacă există
+    if (user.roles && user.roles.length > 0) {
+      payload.data.relationships.roles = {
+        data: user.roles.map(role => ({
+          type: "roles",
+          id: String(role.id),
+        })),
+      };
+    }
+
+    return await axios.post(API_URL + "users", payload, {
       headers: authHeader(),
     });
   },
 
   async editUser(user) {
-    user.type = "users";
-    user.relationshipNames = ["roles"];
-    const editedUser = dataFormatter.serialize({
-      stuff: user,
-      includeNames: ["roles"],
-    });
-    delete editedUser.data.attributes.links;
+    // Construim payload-ul manual pentru a ne asigura că toate câmpurile sunt incluse
+    const payload = {
+      data: {
+        type: "users",
+        id: String(user.id),
+        attributes: {
+          first_name: user.first_name || null,
+          last_name: user.last_name || null,
+          email: user.email,
+          phone: user.phone || null,
+          apartment: user.apartment || null,
+          staircase: user.staircase || null,
+          floor: user.floor || null,
+        },
+        relationships: {},
+      },
+    };
+
+    // Adăugăm parola doar dacă este setată
+    if (user.password) {
+      payload.data.attributes.password = user.password;
+      payload.data.attributes.password_confirmation = user.password_confirmation;
+    }
+
+    // Adăugăm profile_image dacă există
+    if (user.profile_image) {
+      payload.data.attributes.profile_image = user.profile_image;
+    }
+
+    // Adăugăm roluri dacă există
+    if (user.roles && user.roles.length > 0) {
+      payload.data.relationships.roles = {
+        data: user.roles.map(role => ({
+          type: "roles",
+          id: String(role.id),
+        })),
+      };
+    }
+
     return await axios.patch(
-      API_URL + "users/" + editedUser.data.id,
-      editedUser,
+      API_URL + "users/" + user.id,
+      payload,
       {
         headers: authHeader(),
       }

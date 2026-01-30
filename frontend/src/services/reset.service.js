@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const API_URL = process.env.VUE_APP_API_BASE_URL + '/';
+const API_URL = import.meta.env.VITE_API_BASE_URL + '/';
 
 export default {
   async sendEmail(email) {
     await axios.post(API_URL + "password-forgot", {
       email: email,
-      redirect_url: process.env.VUE_APP_BASE_URL + "password/reset/",
+      redirect_url: import.meta.env.VITE_BASE_URL + "password/reset/",
     });
   },
 

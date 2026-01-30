@@ -134,7 +134,7 @@ export default {
 
     async handleSendEmail() {
       this.loading = true;
-      if ((process.env.VUE_APP_IS_DEMO ?? 1) == 1) {
+      if ((import.meta.env.VITE_IS_DEMO ?? 1) == 1) {
         showSwal.methods.showSwal({
           type: "error",
           message: "Password reset is disabled in the demo",

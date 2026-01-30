@@ -78,7 +78,8 @@ var currentQuery = "";
 var currentPerPage = 5;
 var currentPage = 1;
 var currentSort = "created_at";
-var loading = require("/src/assets/img/loading.gif");
+import loadingImg from "@/assets/img/loading.gif";
+var loading = loadingImg;
 
 const getUsersList = _.debounce(async function (params) {
   await store.dispatch("users/getUsers", {
@@ -247,12 +248,15 @@ export default {
         this.usersList.forEach((row) => {
           const tenantName = row.tenant?.name || '<span class="badge badge-sm bg-gradient-secondary">Global</span>';
           
+          // Construiește numele complet din first_name și last_name
+          const fullName = [row.first_name, row.last_name].filter(Boolean).join(' ') || '-';
+          
           // Construiește imaginea de profil sau avatar cu inițiale
           let profileImageHtml;
           if (!row.profile_image) {
             // Generează avatar cu inițiale
-            const initials = this.getInitials(row.name);
-            const bgColor = this.getAvatarColor(row.name);
+            const initials = this.getInitials(fullName);
+            const bgColor = this.getAvatarColor(fullName);
             profileImageHtml = `
               <div style="
                 border-radius: 50%; 
@@ -274,14 +278,14 @@ export default {
             if (row.profile_image.startsWith('http')) {
               profileImageUrl = row.profile_image;
             } else {
-              profileImageUrl = `${process.env.VUE_APP_API_BASE_URL}/storage/${row.profile_image}`;
+              profileImageUrl = `${import.meta.env.VITE_API_BASE_URL}/storage/${row.profile_image}`;
             }
             profileImageHtml = `<img src="${profileImageUrl}" alt="Profile" style="border-radius:50%; width:55px; height:55px; object-fit:cover; box-shadow: 0 2px 4px rgba(0,0,0,0.1);"/>`;
           }
           
           this.usersAux.push([
             profileImageHtml,
-            `<h6 class="my-auto">${row.name}</h6>`,
+            `<h6 class="my-auto">${fullName}</h6>`,
             row.email,
             tenantName,
             row.roles[0].name,

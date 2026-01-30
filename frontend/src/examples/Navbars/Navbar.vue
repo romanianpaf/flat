@@ -65,17 +65,63 @@
               <span v-if="isRTL" class="d-sm-inline d-none">يسجل دخول</span>
               <span v-else class="d-sm-inline d-none">Sign In </span>
             </router-link>
-
+          </li>
+          <li
+            v-if="loggedIn"
+            class="nav-item dropdown d-flex align-items-center"
+            :class="isRTL ? 'ps-2' : 'pe-2'"
+          >
             <a
-              v-else
-              class="px-0 nav-link font-weight-bold"
-              :class="textWhite ? textWhite : 'text-body'"
-              @click="logoutUser"
+              id="dropdownMenuProfile"
+              href="#"
+              class="p-0 nav-link d-flex align-items-center"
+              :class="[
+                textWhite ? textWhite : 'text-body',
+                showProfileMenu ? 'show' : '',
+              ]"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+              @click="showProfileMenu = !showProfileMenu"
             >
-              <i class="fa fa-user" :class="isRTL ? 'ms-sm-2' : 'me-sm-1'"></i>
-              <span v-if="isRTL" class="d-sm-inline d-none">تسجيل الخروج</span>
-              <span v-else class="d-sm-inline d-none">Deautentificare</span>
+              <img
+                :src="profileImage"
+                class="avatar avatar-sm rounded-circle"
+                alt="profil"
+              />
+              <span class="d-sm-inline d-none ms-2 font-weight-bold">{{ profileName }} <b class="caret"></b></span>
             </a>
+            <ul
+              class="px-2 py-3 dropdown-menu dropdown-menu-end me-sm-n4"
+              :class="showProfileMenu ? 'show' : ''"
+              aria-labelledby="dropdownMenuProfile"
+            >
+              <li>
+                <router-link
+                  :to="{ name: 'Profilul Utilizatorului' }"
+                  class="dropdown-item border-radius-md"
+                  @click="showProfileMenu = false"
+                >
+                  <div class="py-1 d-flex align-items-center">
+                    <i class="fa fa-user me-2 text-secondary"></i>
+                    <span>Profil</span>
+                  </div>
+                </router-link>
+              </li>
+              <li>
+                <hr class="dropdown-divider" />
+              </li>
+              <li>
+                <a
+                  class="dropdown-item border-radius-md cursor-pointer"
+                  @click="logoutUser"
+                >
+                  <div class="py-1 d-flex align-items-center">
+                    <i class="fa fa-sign-out-alt me-2 text-secondary"></i>
+                    <span>Deautentificare</span>
+                  </div>
+                </a>
+              </li>
+            </ul>
           </li>
           <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
             <a
@@ -89,15 +135,6 @@
                 <i class="sidenav-toggler-line"></i>
                 <i class="sidenav-toggler-line"></i>
               </div>
-            </a>
-          </li>
-          <li class="px-3 nav-item d-flex align-items-center">
-            <a
-              class="p-0 nav-link"
-              :class="textWhite ? textWhite : 'text-body'"
-              @click="toggleConfigurator"
-            >
-              <i class="cursor-pointer fa fa-cog fixed-plugin-button-nav"></i>
             </a>
           </li>
           <li
@@ -233,7 +270,8 @@
 </template>
 <script>
 import Breadcrumbs from "../Breadcrumbs.vue";
-import { mapMutations, mapActions, mapState } from "vuex";
+import { mapMutations, mapActions, mapState, mapGetters } from "vuex";
+import defaultAvatarImg from "@/assets/img/bruce-mars.jpg";
 
 export default {
   name: "Navbar",
@@ -253,10 +291,14 @@ export default {
   data() {
     return {
       showMenu: false,
+      showProfileMenu: false,
     };
   },
   computed: {
     ...mapState(["isRTL"]),
+    ...mapGetters({
+      profile: "profile/profile",
+    }),
     currentRouteName() {
       return this.$route.name;
     },
@@ -267,10 +309,22 @@ export default {
     loggedIn() {
       return this.$store.getters["auth/loggedIn"];
     },
+    profileImage() {
+      return this.profile?.profile_image || defaultAvatarImg;
+    },
+    profileName() {
+      if (this.profile?.first_name || this.profile?.last_name) {
+        return [this.profile.first_name, this.profile.last_name].filter(Boolean).join(" ");
+      }
+      return this.profile?.email?.split("@")[0] || "";
+    },
   },
 
   created() {
     this.minNav;
+    if (this.loggedIn) {
+      this.$store.dispatch("profile/getProfile");
+    }
   },
   methods: {
     ...mapMutations(["navbarMinimize", "toggleConfigurator"]),
@@ -282,6 +336,7 @@ export default {
     },
 
     async logoutUser() {
+      this.showProfileMenu = false;
       try {
         await this.$store.dispatch("auth/logout");
       } finally {

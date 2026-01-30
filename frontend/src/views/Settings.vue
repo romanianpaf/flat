@@ -213,7 +213,7 @@ import showSwal from "/src/mixins/showSwal.js";
 import axios from "axios";
 import authHeader from "@/services/auth-header";
 
-const API_URL = process.env.VUE_APP_API_BASE_URL + "/api/";
+const API_URL = import.meta.env.VITE_API_BASE_URL + "/api/";
 
 export default {
   name: "Settings",

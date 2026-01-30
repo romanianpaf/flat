@@ -72,7 +72,8 @@ import { DataTable } from "simple-datatables";
 import setNavPills from "@/assets/js/nav-pills.js";
 import eventTable from "/src/mixins/eventTable.js";
 
-var loading = require("/src/assets/img/loading.gif");
+import loadingImg from "@/assets/img/loading.gif";
+var loading = loadingImg;
 
 let currentQuery = "";
 let currentPerPage = 5;

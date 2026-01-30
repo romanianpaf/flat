@@ -54,7 +54,7 @@ export default {
       buttons.forEach(function (button) {
         if (button.className == "actionButton deleteButton cursor-pointer") {
           button.addEventListener("click", function () {
-            if (this.id <= 3 && (process.env.VUE_APP_IS_DEMO ?? 1) == 1) {
+            if (this.id <= 3 && (import.meta.env.VITE_IS_DEMO ?? 1) == 1) {
               showSwal.methods.showSwal({
                 type: "error",
                 message: `You are not allowed to change data of default ${options.textDefaultData}.`,
@@ -81,7 +81,7 @@ export default {
           });
         } else {
           button.addEventListener("click", function () {
-            if (this.id <= 3 && (process.env.VUE_APP_IS_DEMO ?? 1) == 1) {
+            if (this.id <= 3 && (import.meta.env.VITE_IS_DEMO ?? 1) == 1) {
               showSwal.methods.showSwal({
                 type: "error",
                 message: `You are not allowed to change data of default ${options.textDefaultData}.`,

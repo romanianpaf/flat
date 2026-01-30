@@ -77,7 +77,8 @@ var currentQuery = "";
 var currentPerPage = 5;
 var currentPage = 1;
 var currentSort = "created_at";
-var loading = require("/src/assets/img/loading.gif");
+import loadingImg from "@/assets/img/loading.gif";
+var loading = loadingImg;
 
 const getItemsList = _.debounce(async function (params) {
   await store.dispatch("items/getItems", {

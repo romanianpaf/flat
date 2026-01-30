@@ -13,7 +13,7 @@
         </div>
         <div class="col-sm-auto col-8 my-auto">
           <div class="h-100">
-            <h5 class="mb-1 font-weight-bolder">{{ profile.name }}</h5>
+            <h5 class="mb-1 font-weight-bolder">{{ [profile.first_name, profile.last_name].filter(Boolean).join(' ') || '-' }}</h5>
             <p class="mb-0 font-weight-bold text-sm">{{ profile.email }}</p>
           </div>
         </div>
@@ -71,14 +71,26 @@
             <validation-error :errors="apiValidationErrors.profile_image" />
 
             <div class="row mb-3 mt-4">
-              <label class="form-label">Name</label>
-              <soft-model-input
-                id="name"
-                v-model="profileChange.name"
-                type="text"
-                placeholder="Alec"
-              />
-              <validation-error :errors="apiValidationErrors.name" />
+              <div class="col-6">
+                <label class="form-label">Prenume</label>
+                <soft-model-input
+                  id="first_name"
+                  v-model="profileChange.first_name"
+                  type="text"
+                  placeholder="Prenume"
+                />
+                <validation-error :errors="apiValidationErrors.first_name" />
+              </div>
+              <div class="col-6">
+                <label class="form-label">Nume</label>
+                <soft-model-input
+                  id="last_name"
+                  v-model="profileChange.last_name"
+                  type="text"
+                  placeholder="Nume"
+                />
+                <validation-error :errors="apiValidationErrors.last_name" />
+              </div>
             </div>
 
             <div class="row mb-3">
@@ -257,7 +269,7 @@ export default {
     },
 
     async handleProfileChange() {
-      if (this.profile.id <= 3 && (process.env.VUE_APP_IS_DEMO ?? 1) == 1) {
+      if (this.profile.id <= 3 && (import.meta.env.VITE_IS_DEMO ?? 1) == 1) {
         showSwal.methods.showSwal({
           type: "error",
           message: "You cannot change data of default users!",

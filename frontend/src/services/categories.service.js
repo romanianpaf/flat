@@ -3,7 +3,7 @@ import authHeader from "./auth-header";
 import Jsona from "jsona";
 const dataFormatter = new Jsona();
 
-const API_URL = process.env.VUE_APP_API_BASE_URL + '/';
+const API_URL = import.meta.env.VITE_API_BASE_URL + '/';
 
 export default {
   async getCategories(params) {

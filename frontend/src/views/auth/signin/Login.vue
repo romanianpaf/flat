@@ -73,9 +73,9 @@
                   <p class="mx-auto mb-0 text-sm">
                     Nu ai cont?
                     <router-link
-                      :to="{ name: 'Register' }"
+                      :to="{ name: 'RegistrationRequest' }"
                       class="text-primary text-gradient font-weight-bold"
-                      >Înregistrează-te</router-link
+                      >Vreau cont</router-link
                     >
                   </p>
                 </div>
@@ -96,8 +96,7 @@
                 <div
                   class="bg-cover oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
                   :style="{
-                    backgroundImage:
-                      'url(' + require('@/assets/img/curved-images/atria-fundal.jpeg') + ')',
+                    backgroundImage: 'url(' + atriaFundalImg + ')',
                   }"
                 ></div>
               </div>
@@ -117,6 +116,7 @@ import SoftField from "@/components/SoftField.vue";
 import SoftSwitch from "@/components/SoftSwitch.vue";
 import SoftButton from "@/components/SoftButton.vue";
 import showSwal from "/src/mixins/showSwal.js";
+import atriaFundalImg from "@/assets/img/curved-images/atria-fundal.jpeg";
 const body = document.getElementsByTagName("body")[0];
 import { mapMutations } from "vuex";
 import { Form } from "vee-validate";
@@ -169,7 +169,7 @@ export default {
       this.loading = true;
       try {
         await this.$store.dispatch("auth/login", this.user);
-        this.$router.push("/dashboards/dashboard-default");
+        this.$router.push("/acasa");
       } catch (error) {
         showSwal.methods.showSwal({
           type: "error",

@@ -27,9 +27,9 @@ import NewProduct from "../views/ecommerce/products/NewProduct.vue";
 import EditProduct from "../views/ecommerce/EditProduct.vue";
 import ProductPage from "../views/ecommerce/ProductPage.vue";
 import ProductsList from "../views/ecommerce/ProductsList.vue";
-import OrderDetails from "../views/ecommerce/Orders/OrderDetails";
-import OrderList from "../views/ecommerce/Orders/OrderList";
-import Referral from "../views/ecommerce/Referral";
+import OrderDetails from "../views/ecommerce/Orders/OrderDetails.vue";
+import OrderList from "../views/ecommerce/Orders/OrderList.vue";
+import Referral from "../views/ecommerce/Referral.vue";
 import Reports from "../views/pages/Users/Reports.vue";
 import NewUserCT from "../views/pages/Users/NewUserCT.vue";
 import Settings from "../views/pages/Account/Settings.vue";
@@ -98,8 +98,14 @@ import EditServiceSubcategory from "../views/examples/Services/EditServiceSubcat
 import ServiceProviders from "../views/examples/Services/ServiceProviders.vue";
 import NewServiceProvider from "../views/examples/Services/NewServiceProvider.vue";
 import EditServiceProvider from "../views/examples/Services/EditServiceProvider.vue";
+import CarteImobil from "../views/carte-imobil/CarteImobil.vue";
+import CarteImobilAdmin from "../views/carte-imobil/CarteImobilAdmin.vue";
+import TenantBuilding from "../views/carte-imobil/TenantBuilding.vue";
+import RegistrationRequest from "../views/auth/registration-request/RegistrationRequest.vue";
+import RegistrationRequests from "../views/admin/RegistrationRequests.vue";
 import admin from "../middlewares/admin.js";
 import adminCreator from "../middlewares/admin_creator.js";
+import carteImobilAdmin from "../middlewares/carte_imobil_admin.js";
 import guest from "../middlewares/guest.js";
 import auth from "../middlewares/auth.js";
 
@@ -115,6 +121,46 @@ const routes = [
     component: Home,
     meta: {
       middleware: [auth],
+    },
+  },
+  {
+    path: "/carte-imobil",
+    name: "Carte de imobil",
+    component: CarteImobil,
+    meta: {
+      middleware: [auth],
+    },
+  },
+  {
+    path: "/admin/carte-imobil",
+    name: "Administrare Carte de imobil",
+    component: CarteImobilAdmin,
+    meta: {
+      middleware: [auth, carteImobilAdmin],
+    },
+  },
+  {
+    path: "/admin/configurare-imobil",
+    name: "Configurare imobil",
+    component: TenantBuilding,
+    meta: {
+      middleware: [auth, carteImobilAdmin],
+    },
+  },
+  {
+    path: "/admin/cereri-inregistrare",
+    name: "Cereri de înregistrare",
+    component: RegistrationRequests,
+    meta: {
+      middleware: [auth, carteImobilAdmin],
+    },
+  },
+  {
+    path: "/vreau-cont",
+    name: "RegistrationRequest",
+    component: RegistrationRequest,
+    meta: {
+      middleware: [guest],
     },
   },
   {
@@ -739,7 +785,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
   linkActiveClass: "active",
 });
