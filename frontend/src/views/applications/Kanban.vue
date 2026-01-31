@@ -222,7 +222,7 @@
 
 <script>
 /* eslint-disable */
-import "jkanban/dist/jkanban.min.js";
+import jKanban from "jkanban";
 import "jkanban/dist/jkanban.min.css";
 
 export default {
