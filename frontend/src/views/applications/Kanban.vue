@@ -222,13 +222,14 @@
 
 <script>
 /* eslint-disable */
-import jKanban from "jkanban";
-import "jkanban/dist/jkanban.min.css";
+// jKanban este încărcat global din CDN (vezi index.html)
+// Nu mai importăm aici pentru compatibilitate ES modules
 
 export default {
   name: "Kanban",
   mounted() {
     const bootstrap = this.$store.state.bootstrap;
+    const jKanban = window.jKanban; // Folosim variabila globală
 
     (function () {
       if (document.getElementById("myKanban")) {

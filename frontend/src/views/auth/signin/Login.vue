@@ -149,6 +149,7 @@ export default {
       loading: false,
       user,
       schema,
+      atriaFundalImg,  // Expunem imaginea în template
     };
   },
 

@@ -20,8 +20,8 @@
 </template>
 
 <script>
-import { Calendar } from "@fullcalendar/core";
-import dayGridPlugin from "@fullcalendar/daygrid";
+// FullCalendar este încărcat global din CDN (vezi index.html)
+// Folosim window.FullCalendar pentru compatibilitate ES modules
 let calendar;
 export default {
   name: "Calendar",
@@ -136,9 +136,12 @@ export default {
     },
   },
   mounted() {
-    calendar = new Calendar(document.getElementById(this.id), {
+    // FullCalendar este încărcat global din CDN (bundle complet cu toate plugin-urile)
+    const FullCalendar = window.FullCalendar;
+    
+    calendar = new FullCalendar.Calendar(document.getElementById(this.id), {
       contentHeight: "auto",
-      plugins: [dayGridPlugin],
+      // Plugin-urile sunt incluse în bundle-ul complet
       initialView: this.initialView,
       selectable: this.selectable,
       editable: this.editable,

@@ -1538,7 +1538,7 @@
         <ul class="navbar-nav d-lg-block d-none">
           <li class="nav-item">
             <router-link
-              to="/register"
+              to="/vreau-cont"
               class="mb-0 btn btn-sm btn-round me-1"
               :class="btnBackground ? btnBackground : 'bg-white'"
               >Vreau cont</router-link

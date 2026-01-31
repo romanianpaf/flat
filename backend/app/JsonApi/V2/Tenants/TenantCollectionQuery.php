@@ -42,7 +42,7 @@ class TenantCollectionQuery extends ResourceQuery
             ],
             'page.size' => [
                 'integer',
-                'between:1,100',
+                'between:1,1000',
             ],
             'sort' => [
                 'nullable',

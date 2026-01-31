@@ -70,17 +70,21 @@ class RoleSchema extends Schema
             return $query;
         }
 
-        // Sysadmin și admini văd toți rolurile
+        // Sysadmin și admini văd toate rolurile
         if ($user->hasRole(['admin', 'sysadmin'])) {
             return $query;
         }
 
-        // Utilizatorii cu tenant văd doar rolurile propriului tenant
+        // Utilizatorii cu tenant văd rolurile globale + ale propriului tenant
         if ($user->tenant_id) {
-            return $query->where('tenant_id', $user->tenant_id);
+            return $query->where(function ($q) use ($user) {
+                $q->whereNull('tenant_id')
+                  ->orWhere('tenant_id', $user->tenant_id);
+            });
         }
 
-        return $query;
+        // Utilizatorii globali văd doar rolurile globale
+        return $query->whereNull('tenant_id');
     }
 
     /**

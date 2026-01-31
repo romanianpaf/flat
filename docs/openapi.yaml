@@ -1,0 +1,342 @@
+openapi: 3.0.3
+info:
+  title: F1 Atria Live API
+  version: "2.0"
+  description: |
+    API JSON:API pentru platforma F1 Atria Live. Autentificare cu OAuth2 (Laravel Passport).
+servers:
+  - url: https://f1.atria.live/api/v2
+    description: Producție
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    JsonApiResource:
+      type: object
+      properties:
+        type:
+          type: string
+        id:
+          type: string
+        attributes:
+          type: object
+        relationships:
+          type: object
+    ErrorResponse:
+      type: object
+      properties:
+        jsonapi:
+          type: object
+          properties:
+            version:
+              type: string
+              example: "2.0"
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              status:
+                type: string
+              title:
+                type: string
+              detail:
+                type: string
+              source:
+                type: object
+                properties:
+                  pointer:
+                    type: string
+paths:
+  /login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required: [email, password]
+      responses:
+        "200":
+          description: Token primit
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  refresh_token: { type: string }
+                  token_type: { type: string, example: Bearer }
+                  expires_in: { type: integer }
+        "401": { description: Credențiale invalide }
+  /register:
+    post:
+      tags: [Auth]
+      summary: Înregistrare
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+              required: [name, email, password, password_confirmation]
+      responses:
+        "201": { description: Utilizator creat }
+        "422": { description: Date invalide, vezi format erori }
+  /logout:
+    post:
+      tags: [Auth]
+      summary: Logout
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "204": { description: Deconectat }
+  /password-forgot:
+    post:
+      tags: [Auth]
+      summary: Inițiază resetarea parolei
+      responses:
+        "200": { description: Email trimis dacă există cont }
+  /password-reset:
+    post:
+      tags: [Auth]
+      summary: Resetează parola
+      responses:
+        "200": { description: Parolă resetată }
+  /me:
+    get:
+      tags: [Profile]
+      summary: Profilul utilizatorului curent
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200":
+          description: Profil
+          content:
+            application/vnd.api+json:
+              schema:
+                $ref: '#/components/schemas/JsonApiResource'
+    patch:
+      tags: [Profile]
+      summary: Actualizează profilul curent
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200": { description: Profil actualizat }
+  /change-password:
+    post:
+      tags: [Profile]
+      summary: Schimbă parola
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200": { description: Parolă schimbată }
+  /user-voices/{id}/vote:
+    post:
+      tags: [User Voices]
+      summary: Votează o sugestie
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string }
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [up, down]
+              required: [type]
+      responses:
+        "200": { description: Vot înregistrat }
+  /poll-options/{id}/vote:
+    post:
+      tags: [Polls]
+      summary: Votează o opțiune de sondaj
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: id
+          schema: { type: string }
+          required: true
+      responses:
+        "200": { description: Vot înregistrat }
+  /uploads/{resource}/{id}/{field}:
+    post:
+      tags: [Uploads]
+      summary: Încărcare fișier pentru o resursă
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: resource
+          schema: { type: string }
+          required: true
+        - in: path
+          name: id
+          schema: { type: string }
+          required: true
+        - in: path
+          name: field
+          schema: { type: string }
+          required: true
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200": { description: Încărcat }
+  /weather/current:
+    get:
+      tags: [Weather]
+      summary: Meteo curent
+      responses:
+        "200": { description: Date meteo curente }
+  /weather/clear-cache:
+    post:
+      tags: [Weather]
+      summary: Curăță cache meteo
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200": { description: Cache curățat }
+  /available-permissions:
+    get:
+      tags: [Roles]
+      summary: Permisiuni disponibile
+      security: [ { bearerAuth: [] } ]
+      responses:
+        "200": { description: Listă de permisiuni }
+  /roles/{role}/sync-permissions:
+    post:
+      tags: [Roles]
+      summary: Sincronizează permisiuni pe rol
+      security: [ { bearerAuth: [] } ]
+      parameters:
+        - in: path
+          name: role
+          schema: { type: string }
+          required: true
+      responses:
+        "200": { description: Permisiuni sincronizate }
+
+  /categories:
+    get: { tags: [Categories], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Categories], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /categories/{id}:
+    get: { tags: [Categories], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Categories], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Categories], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /items:
+    get: { tags: [Items], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Items], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /items/{id}:
+    get: { tags: [Items], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Items], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Items], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /roles:
+    get: { tags: [Roles], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Roles], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /roles/{id}:
+    get: { tags: [Roles], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Roles], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Roles], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /polls:
+    get: { tags: [Polls], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Polls], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /polls/{id}:
+    get: { tags: [Polls], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Polls], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Polls], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /poll-options:
+    get: { tags: [Polls], summary: Listare opțiuni, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Polls], summary: Creare opțiune, security: [ { bearerAuth: [] } ] }
+  /poll-options/{id}:
+    get: { tags: [Polls], summary: Detalii opțiune, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Polls], summary: Actualizare opțiune, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Polls], summary: Ștergere opțiune, security: [ { bearerAuth: [] } ] }
+
+  /user-voices:
+    get: { tags: [User Voices], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [User Voices], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /user-voices/{id}:
+    get: { tags: [User Voices], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [User Voices], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [User Voices], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /service-categories:
+    get: { tags: [Services], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Services], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /service-categories/{id}:
+    get: { tags: [Services], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Services], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Services], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /service-subcategories:
+    get: { tags: [Services], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Services], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /service-subcategories/{id}:
+    get: { tags: [Services], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Services], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Services], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /service-providers:
+    get: { tags: [Services], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Services], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /service-providers/{id}:
+    get: { tags: [Services], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Services], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Services], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /service-provider-ratings:
+    get: { tags: [Services], summary: Listare ratinguri, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Services], summary: Creare rating, security: [ { bearerAuth: [] } ] }
+  /service-provider-ratings/{id}:
+    get: { tags: [Services], summary: Detalii rating, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Services], summary: Actualizare rating, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Services], summary: Ștergere rating, security: [ { bearerAuth: [] } ] }
+
+  /tags:
+    get: { tags: [Tags], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Tags], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /tags/{id}:
+    get: { tags: [Tags], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Tags], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Tags], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+  /tenants:
+    get: { tags: [Tenants], summary: Listare, security: [ { bearerAuth: [] } ] }
+    post: { tags: [Tenants], summary: Creare, security: [ { bearerAuth: [] } ] }
+  /tenants/{id}:
+    get: { tags: [Tenants], summary: Detalii, security: [ { bearerAuth: [] } ] }
+    patch: { tags: [Tenants], summary: Actualizare, security: [ { bearerAuth: [] } ] }
+    delete: { tags: [Tenants], summary: Ștergere, security: [ { bearerAuth: [] } ] }
+
+

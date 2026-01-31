@@ -28,8 +28,13 @@ class RolePolicy
             return true;
         }
 
-        // Sysadmin (tenant_id = 1 pentru "System") poate vedea toate rolurile
-        if ($user->tenant_id === 1 && $user->can('edit roles') && $user->can('delete roles')) {
+        // Sysadmin poate vedea toate rolurile
+        if ($user->hasRole('sysadmin')) {
+            return true;
+        }
+
+        // Rolurile globale (tenant_id = NULL) pot fi văzute de toți cu permisiune
+        if ($role->tenant_id === null) {
             return true;
         }
 

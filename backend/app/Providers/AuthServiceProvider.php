@@ -3,9 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Automation;
+use App\Models\Apartment;
 use App\Models\Category;
 use App\Models\Item;
+use App\Models\Occupant;
 use App\Models\Poll;
+use App\Models\RegistrationRequest;
 use App\Models\PollOption;
 use App\Models\ServiceCategory;
 use App\Models\ServiceProvider;
@@ -15,9 +18,12 @@ use App\Models\Tag;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Policies\AutomationPolicy;
+use App\Policies\ApartmentPolicy;
 use App\Policies\CategoryPolicy;
 use App\Policies\ItemPolicy;
+use App\Policies\OccupantPolicy;
 use App\Policies\PermissionPolicy;
+use App\Policies\RegistrationRequestPolicy;
 use App\Policies\PollPolicy;
 use App\Policies\PollOptionPolicy;
 use App\Policies\RolePolicy;
@@ -42,9 +48,12 @@ class AuthServiceProvider extends BaseAuthServiceProvider
      */
     protected $policies = [
         Automation::class           => AutomationPolicy::class,
+        Apartment::class            => ApartmentPolicy::class,
         Category::class             => CategoryPolicy::class,
         Item::class                 => ItemPolicy::class,
+        Occupant::class             => OccupantPolicy::class,
         Permission::class           => PermissionPolicy::class,
+        RegistrationRequest::class  => RegistrationRequestPolicy::class,
         Poll::class                 => PollPolicy::class,
         PollOption::class           => PollOptionPolicy::class,
         Role::class                 => RolePolicy::class,

@@ -19,7 +19,8 @@ class UserRequest extends ResourceRequest
         /** @var \App\Models\User|null $model */
         if ($model = $this->model()) {
             return [
-                'name'          => ['sometimes', 'string'],
+                'first_name'    => ['sometimes', 'string', 'max:255'],
+                'last_name'     => ['sometimes', 'string', 'max:255'],
                 'email'         => ['sometimes', 'email', Rule::unique('users')->ignore($model->id)],
                 'phone'         => ['sometimes', 'nullable', 'string'],
                 'apartment'     => ['sometimes', 'nullable', 'string'],
@@ -33,7 +34,8 @@ class UserRequest extends ResourceRequest
         }
 
         return [
-            'name'          => ['required', 'string'],
+            'first_name'    => ['required', 'string', 'max:255'],
+            'last_name'     => ['required', 'string', 'max:255'],
             'email'         => ['required', 'email', Rule::unique('users')],
             'phone'         => ['nullable', 'string'],
             'apartment'     => ['nullable', 'string'],
@@ -54,7 +56,10 @@ class UserRequest extends ResourceRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Numele este obligatoriu.',
+            'first_name.required' => 'Prenumele este obligatoriu.',
+            'first_name.max' => 'Prenumele nu poate depăși 255 caractere.',
+            'last_name.required' => 'Numele este obligatoriu.',
+            'last_name.max' => 'Numele nu poate depăși 255 caractere.',
             'email.required' => 'Email-ul este obligatoriu.',
             'email.email' => 'Email-ul trebuie să fie valid.',
             'email.unique' => 'Acest email este deja folosit.',

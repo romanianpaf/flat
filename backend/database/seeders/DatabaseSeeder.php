@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TenantsSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(UsersSeeder::class);
+        $this->call(CarteiImobilSeeder::class);
         $this->call(CategoriesSeeder::class);
         $this->call(TagsSeeder::class);
         $this->call(ItemsSeeder::class);

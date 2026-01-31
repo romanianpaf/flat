@@ -10,7 +10,6 @@
 
 <script>
 import * as THREE from "three";
-
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
 export default {
@@ -62,38 +61,40 @@ export default {
           antialias: true,
         });
         renderer.setSize(width, height);
-        // 4. Add points to canvas
-        // - Single geometry to contain all points.
-        const mergedGeometry = new THREE.Geometry();
-        // - Material that the dots will be made of.
-        const pointGeometry = new THREE.SphereGeometry(0.5, 1, 1);
+        
+        // 4. Add points to canvas using InstancedMesh (Three.js modern API)
+        const pointGeometry = new THREE.SphereGeometry(0.5, 4, 4);
         const pointMaterial = new THREE.MeshBasicMaterial({
           color: "#989db5",
         });
 
-        for (let point of points) {
-          const { x, y, z } = convertFlatCoordsToSphereCoords(
-            point.x,
-            point.y,
-            width,
-            height
-          );
+        // Filter valid points first
+        const validPoints = points.filter(point => {
+          const { x, y, z } = convertFlatCoordsToSphereCoords(point.x, point.y);
+          return x && y && z;
+        });
 
-          if (x && y && z) {
-            pointGeometry.translate(x, y, z);
-            mergedGeometry.merge(pointGeometry);
-            pointGeometry.translate(-x, -y, -z);
-          }
-        }
+        // Create InstancedMesh for better performance
+        const instancedMesh = new THREE.InstancedMesh(
+          pointGeometry,
+          pointMaterial,
+          validPoints.length
+        );
 
-        const globeShape = new THREE.Mesh(mergedGeometry, pointMaterial);
-        scene.add(globeShape);
+        const matrix = new THREE.Matrix4();
+        validPoints.forEach((point, i) => {
+          const { x, y, z } = convertFlatCoordsToSphereCoords(point.x, point.y);
+          matrix.setPosition(x, y, z);
+          instancedMesh.setMatrixAt(i, matrix);
+        });
+
+        instancedMesh.instanceMatrix.needsUpdate = true;
+        scene.add(instancedMesh);
 
         container.classList.add("peekaboo");
 
         // Setup orbital controls
         camera.orbitControls = new OrbitControls(camera, canvas);
-        camera.orbitControls.enableKeys = false;
         camera.orbitControls.enablePan = false;
         camera.orbitControls.enableZoom = false;
         camera.orbitControls.enableDamping = false;
@@ -102,8 +103,6 @@ export default {
         camera.position.z = -265;
 
         function animate() {
-          // orbitControls.autoRotate is enabled so orbitControls.update
-          // must be called inside animation loop.
           camera.orbitControls.update();
           requestAnimationFrame(animate);
           renderer.render(scene, camera);
@@ -123,7 +122,6 @@ export default {
 
       function init() {
         if (hasWebGL()) {
-          window;
           window
             .fetch(
               "https://raw.githubusercontent.com/creativetimofficial/public-assets/master/soft-ui-dashboard-pro/assets/js/points.json"

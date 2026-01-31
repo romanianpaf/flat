@@ -76,6 +76,7 @@
               <!-- Grupează permisiunile pe module -->
               <div v-for="(permissions, module) in groupedPermissions" :key="module" class="mb-4">
                 <h6 class="text-uppercase text-xs font-weight-bolder opacity-7 mb-2">
+                  <i :class="moduleIcons[module] || 'fas fa-cog'" class="me-2"></i>
                   {{ module }}
                   <span class="badge bg-gradient-info badge-sm ms-2">
                     {{ permissions.length }} permisiuni
@@ -159,6 +160,28 @@ export default {
     };
   },
   computed: {
+    /**
+     * Icoane pentru fiecare modul de permisiuni
+     */
+    moduleIcons() {
+      return {
+        'Users': 'fas fa-users',
+        'Roles': 'fas fa-user-shield',
+        'Categories': 'fas fa-folder',
+        'Tags': 'fas fa-tags',
+        'Items': 'fas fa-box',
+        'Tenants': 'fas fa-building',
+        'Carte imobil': 'fas fa-book',
+        'Apartments': 'fas fa-home',
+        'Registration requests': 'fas fa-user-plus',
+        'Service providers': 'fas fa-tools',
+        'Service provider ratings': 'fas fa-star',
+        'Polls': 'fas fa-poll',
+        'Automations': 'fas fa-robot',
+        'User voices': 'fas fa-comments',
+        'General': 'fas fa-cog',
+      };
+    },
     /**
      * Grupează permisiunile pe module (users, roles, categories, etc.)
      */

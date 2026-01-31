@@ -12,6 +12,16 @@ export default defineConfig({
     vue(),
     viteCommonjs()  // Suport pentru require() în migrare
   ],
+  optimizeDeps: {
+    exclude: [
+      'jkanban', 
+      'dragula',
+      '@fullcalendar/core',
+      '@fullcalendar/daygrid',
+      '@fullcalendar/interaction',
+      '@fullcalendar/timegrid'
+    ],  // Excludem bibliotecile problematice din pre-bundling
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
@@ -20,14 +30,23 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // Silențiază deprecation warnings din sass
-        silenceDeprecations: ['legacy-js-api'],
+        // Silențiază deprecation warnings din sass (Bootstrap/template folosesc sintaxă veche)
+        silenceDeprecations: [
+          'legacy-js-api',
+          'import',           // @import deprecated, trebuie @use
+          'global-builtin',   // mix(), map-merge(), unit() etc.
+          'color-functions',  // darken(), lighten(), fade-in()
+          'function-units',   // passing numbers without units
+          'if-function',      // if() syntax
+          'abs-percent',      // abs() with percentage
+        ],
       }
     }
   },
   build: {
     outDir: 'dist',
     assetsDir: '',
+    chunkSizeWarningLimit: 1000, // Crește limita la 1MB pentru warning
     rollupOptions: {
       output: {
         // Structură similară cu Vue CLI pentru compatibilitate cu rebuild.sh
@@ -44,6 +63,13 @@ export default defineConfig({
             return 'fonts/[name].[hash][extname]'
           }
           return '[name].[hash][extname]'
+        },
+        // Code splitting pentru biblioteci mari
+        manualChunks: {
+          'vendor-vue': ['vue', 'vue-router', 'vuex'],
+          'vendor-ui': ['bootstrap', 'sweetalert2', 'chart.js'],
+          'vendor-forms': ['vee-validate', 'yup', 'choices.js', 'quill'],
+          'vendor-utils': ['axios', 'jsona', 'three'],
         }
       }
     }

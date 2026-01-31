@@ -13,9 +13,12 @@ use App\Notifications\Auth\ResetPasswordNotification;
 use Laravel\Passport\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int                                                         $id
+ * @property string                                                      $first_name
+ * @property string                                                      $last_name
  * @property string                                                      $name
  * @property string                                                      $email
  *
@@ -28,7 +31,8 @@ class User extends Authenticatable
     use HasApiTokens, HasRoles, Notifiable;
 
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'password',
         'phone',
@@ -38,6 +42,8 @@ class User extends Authenticatable
         'staircase',
         'floor'
     ];
+
+    protected $appends = ['full_name'];
 
     protected $hidden = [
         'password',
@@ -56,10 +62,25 @@ class User extends Authenticatable
         return $this->hasMany(Item::class);
     }
 
+    public function apartments(): BelongsToMany
+    {
+        return $this->belongsToMany(Apartment::class)->withTimestamps();
+    }
+
     public function password(): Attribute
     {
         return Attribute::make(
             set: fn(string $value) => Hash::make($value)
+        );
+    }
+
+    /**
+     * Get the user's full name.
+     */
+    public function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => trim(($this->first_name ?? '') . ' ' . ($this->last_name ?? '')) ?: $this->name
         );
     }
 
@@ -76,7 +97,11 @@ class User extends Authenticatable
 
     public function scopeName(Builder $query, string $value): Builder
     {
-        return $query->where('users.name', 'LIKE', "%{$value}%", 'or');
+        return $query->where(function ($q) use ($value) {
+            $q->where('users.first_name', 'LIKE', "%{$value}%")
+              ->orWhere('users.last_name', 'LIKE', "%{$value}%")
+              ->orWhereRaw("CONCAT(users.first_name, ' ', users.last_name) LIKE ?", ["%{$value}%"]);
+        });
     }
 
     public function scopeEmail(Builder $query, string $value): Builder

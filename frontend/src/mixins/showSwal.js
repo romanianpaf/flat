@@ -3,6 +3,27 @@ import Swal from "sweetalert2";
 export default {
   methods: {
     showSwal(options) {
+      // If showCancelButton is true, show a confirmation dialog instead of toast
+      if (options.showCancelButton) {
+        return Swal.fire({
+          title: options.title || "Confirmare",
+          text: options.message,
+          icon: options.type || "warning",
+          showCancelButton: true,
+          confirmButtonText: options.confirmButtonText || "Da",
+          cancelButtonText: options.cancelButtonText || "Anulează",
+          reverseButtons: true,
+          customClass: {
+            confirmButton: "btn bg-gradient-success",
+            cancelButton: "btn bg-gradient-danger",
+          },
+          buttonsStyling: false,
+          heightAuto: false,
+          backdrop: true,
+        });
+      }
+
+      // Otherwise show a toast notification
       new Swal({
         toast: true,
         position: "top-right",

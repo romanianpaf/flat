@@ -1,0 +1,52 @@
+{
+  "info": {
+    "name": "F1 Atria Live API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Colecție Postman pentru API-ul F1 Atria Live (JSON:API)"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://f1.atria.live/api/v2" },
+    { "key": "access_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth / Login",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "url": { "raw": "{{base_url}}/login", "host": ["{{base_url}}"], "path": ["login"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"secret\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Profile / Me",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" },
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/me", "host": ["{{base_url}}"], "path": ["me"] }
+      }
+    },
+    {
+      "name": "Users / List",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" },
+          { "key": "Authorization", "value": "Bearer {{access_token}}" }
+        ],
+        "url": { "raw": "{{base_url}}/users?page[size]=10&page[number]=1", "host": ["{{base_url}}"], "path": ["users"], "query": [
+          {"key": "page[size]", "value": "10"},
+          {"key": "page[number]", "value": "1"}
+        ] }
+      }
+    }
+  ]
+}
+
+

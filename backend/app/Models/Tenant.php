@@ -17,6 +17,7 @@ class Tenant extends Model
      */
     protected $fillable = [
         'name',
+        'registration_instructions',
         'address',
         'fiscal_code',
         'description',
@@ -62,5 +63,21 @@ class Tenant extends Model
     public function polls()
     {
         return $this->hasMany(Poll::class);
+    }
+
+    /**
+     * Get the registration requests for the tenant.
+     */
+    public function registrationRequests()
+    {
+        return $this->hasMany(RegistrationRequest::class);
+    }
+
+    /**
+     * Get the apartments for the tenant.
+     */
+    public function apartments()
+    {
+        return $this->hasMany(Apartment::class);
     }
 }

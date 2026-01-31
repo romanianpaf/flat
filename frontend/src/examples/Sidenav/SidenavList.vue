@@ -41,6 +41,18 @@
                 text="Beneficiari"
               />
               <sidenav-item
+                v-if="requireCarteImobilConfig"
+                :to="{ name: 'Configurare imobil' }"
+                mini-icon="🏢"
+                text="Configurare imobil"
+              />
+              <sidenav-item
+                v-if="requireCarteImobilConfig"
+                :to="{ name: 'Cereri de înregistrare' }"
+                mini-icon="📝"
+                text="Cereri de cont"
+              />
+              <sidenav-item
                 :to="{ name: 'Automations' }"
                 mini-icon="🤖"
                 text="Automatizări"
@@ -122,7 +134,7 @@
         <sidenav-collapse
           collapse-ref="administrative"
           nav-text="Administrativ"
-          :class="$route.path.includes('/profile') || $route.path.includes('/settings') ? 'active' : ''"
+          :class="$route.path.includes('/profile') || $route.path.includes('/settings') || $route.path.includes('/carte-imobil') ? 'active' : ''"
         >
           <template #icon>
             <Settings />
@@ -138,6 +150,11 @@
                 :to="{ name: 'Configurări Utilizator' }"
                 mini-icon="⚙️"
                 text="Configurări"
+              />
+              <sidenav-item
+                :to="{ name: 'Carte de imobil' }"
+                mini-icon="📘"
+                text="Carte de imobil"
               />
             </ul>
           </template>
@@ -1038,6 +1055,9 @@ export default {
     // DEPRECATED: Folosește v-permission directive sau hasPermission() în schimb
     requireCreator() {
       return this.hasPermission('view categories') || this.hasPermission('view service categories');
+    },
+    requireCarteImobilConfig() {
+      return this.hasPermission('configure apartments') || this.hasPermission('approve carte imobil');
     },
   },
   async created() {

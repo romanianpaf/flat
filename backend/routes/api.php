@@ -32,6 +32,46 @@ Route::prefix('v2')->middleware('json.api')->group(function () {
     
     // Weather API (public, cu cache backend)
     Route::get('weather/current', [App\Http\Controllers\Api\V2\WeatherController::class, 'getCurrentWeather']);
+
+    // Registration requests (public endpoints)
+    Route::get('tenants/public', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'publicTenants']);
+    Route::get('tenants/{tenant}/apartments/public', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'publicApartments']);
+    Route::post('registration-requests', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'store'])
+        ->middleware('throttle:10,1'); // Rate limit: 10 requests per minute
+
+    // Carte de imobil (custom REST, JSON simplu)
+    Route::middleware(['auth:api', 'throttle:api'])->group(function () {
+        Route::get('my-apartments', [App\Http\Controllers\Api\V2\CarteiImobil\MyApartmentsController::class, 'index']);
+        Route::get('occupants/submissions', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantSubmissionsController::class, 'index']);
+
+        // Config imobil (admin/cex/sysadmin)
+        Route::get('tenant-building', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'show']);
+        Route::get('tenant-building/tenants', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'tenants']);
+        Route::get('tenant-building/options', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'options']);
+        Route::get('tenant-building/apartments', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'apartmentsList']);
+        Route::post('tenant-building/staircases', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'storeStaircase']);
+        Route::put('tenant-building/staircases/{staircase}', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'updateStaircase']);
+        Route::delete('tenant-building/staircases/{staircase}', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'destroyStaircase']);
+        Route::post('tenant-building/staircases/{staircase}/apartments/sync', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'syncApartments']);
+        Route::put('tenant-building/apartments/{apartment}/floor', [App\Http\Controllers\Api\V2\CarteiImobil\TenantBuildingController::class, 'updateApartmentFloor']);
+
+        Route::get('apartments/{apartment}/occupants', [App\Http\Controllers\Api\V2\CarteiImobil\ApartmentOccupantsController::class, 'index']);
+        Route::post('apartments/{apartment}/occupants', [App\Http\Controllers\Api\V2\CarteiImobil\ApartmentOccupantsController::class, 'store']);
+        Route::post('apartments/{apartment}/occupants/submit', [App\Http\Controllers\Api\V2\CarteiImobil\ApartmentOccupantsController::class, 'submit']);
+        Route::post('apartments/{apartment}/occupants/approve', [App\Http\Controllers\Api\V2\CarteiImobil\ApartmentOccupantsController::class, 'approve']);
+        Route::post('apartments/{apartment}/occupants/reject', [App\Http\Controllers\Api\V2\CarteiImobil\ApartmentOccupantsController::class, 'reject']);
+        Route::get('apartments/{apartment}/occupants/export.pdf', [App\Http\Controllers\Api\V2\CarteiImobil\ApartmentOccupantsController::class, 'exportPdf']);
+
+        Route::put('occupants/{occupant}', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantController::class, 'update']);
+        Route::delete('occupants/{occupant}', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantController::class, 'destroy']);
+
+        // Registration requests management (admin/cex)
+        Route::get('registration-requests', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'index']);
+        Route::get('registration-requests/{registrationRequest}', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'show']);
+        Route::get('registration-requests/{registrationRequest}/document', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'downloadDocument']);
+        Route::post('registration-requests/{registrationRequest}/approve', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'approve']);
+        Route::post('registration-requests/{registrationRequest}/reject', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'reject']);
+    });
 });
 
 JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar $server) {

@@ -46,7 +46,8 @@ class UserSchema extends Schema
     {
         return [
             ID::make(),
-            Str::make('name')->sortable(),
+            Str::make('first_name')->sortable(),
+            Str::make('last_name')->sortable(),
             Str::make('email')->sortable(),
             Str::make('phone'),
             Str::make('apartment'),
@@ -55,7 +56,7 @@ class UserSchema extends Schema
             Str::make('profile_image'),
             Str::make('password')->hidden(),
             Str::make('password_confirmation')->hidden(),
-            Number::make('tenant_id')->sortable(),
+            Number::make('tenant_id')->sortable()->acceptStrings(),
             BelongsTo::make('tenant')->type('tenants')->readOnly(),
             BelongsToMany::make('roles'),
             DateTime::make('created_at')
