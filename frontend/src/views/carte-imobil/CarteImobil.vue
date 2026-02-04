@@ -96,7 +96,7 @@
 
               <div class="mt-3">
                 <small class="text-muted">
-                  Date sensibile: CNP/CI sunt mascate pentru locatar (conform configurării). Exportul PDF este disponibil doar după aprobare.
+                  Date sensibile: CNP/CI sunt mascate pentru membri (conform configurării). Exportul PDF este disponibil doar după aprobare.
                 </small>
               </div>
             </div>

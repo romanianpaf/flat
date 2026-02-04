@@ -104,13 +104,23 @@ class UserSchema extends Schema
             return $query;
         }
 
+        // Verifică permisiunile
+        $canViewUsers = $user->can('view users');
+        $canViewMembers = $user->can('view members');
+
         // Utilizatorii cu tenant văd doar utilizatorii propriului tenant
         if ($user->tenant_id) {
             return $query->where('tenant_id', $user->tenant_id);
         }
 
-        // Utilizatorii globali (non-admin) văd doar utilizatorii globali
-        return $query->whereNull('tenant_id');
+        // Utilizatorii cu "view users" fără tenant pot vedea toți utilizatorii fără tenant
+        if ($canViewUsers) {
+            return $query->whereNull('tenant_id');
+        }
+
+        // Utilizatorii cu doar "view members" fără tenant nu pot vedea pe nimeni
+        // (trebuie să aibă un tenant pentru a vedea membri)
+        return $query->whereRaw('1 = 0');
     }
 
     public function sortables(): iterable

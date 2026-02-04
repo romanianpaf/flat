@@ -22,6 +22,13 @@ class Tenant extends Model
         'fiscal_code',
         'description',
         'contact_data',
+        // MQTT mTLS configuration
+        'mqtt_host',
+        'mqtt_port',
+        'mqtt_ca_path',
+        'mqtt_client_cert_path',
+        'mqtt_client_key_path',
+        'mqtt_topic_prefix',
     ];
 
     /**
@@ -31,6 +38,7 @@ class Tenant extends Model
      */
     protected $casts = [
         'contact_data' => 'array',
+        'mqtt_port' => 'integer',
     ];
 
     /**
@@ -79,5 +87,65 @@ class Tenant extends Model
     public function apartments()
     {
         return $this->hasMany(Apartment::class);
+    }
+
+    /**
+     * Get the staircases for the tenant.
+     */
+    public function staircases()
+    {
+        return $this->hasMany(Staircase::class);
+    }
+
+    /**
+     * Check if MQTT is configured for this tenant.
+     */
+    public function hasMqttConfigured(): bool
+    {
+        return !empty($this->mqtt_host) 
+            && !empty($this->mqtt_ca_path)
+            && !empty($this->mqtt_client_cert_path)
+            && !empty($this->mqtt_client_key_path);
+    }
+
+    /**
+     * Get the MQTT configuration for this tenant.
+     * Returns null if MQTT is not configured.
+     */
+    public function getMqttConfig(): ?array
+    {
+        if (!$this->hasMqttConfigured()) {
+            return null;
+        }
+
+        return [
+            'host' => $this->mqtt_host,
+            'port' => $this->mqtt_port ?? 8883,
+            'ca_path' => $this->mqtt_ca_path,
+            'cert_path' => $this->mqtt_client_cert_path,
+            'key_path' => $this->mqtt_client_key_path,
+            'topic_prefix' => $this->mqtt_topic_prefix ?? $this->getSlug(),
+        ];
+    }
+
+    /**
+     * Get the slug for this tenant (used as topic prefix if not set).
+     */
+    public function getSlug(): string
+    {
+        return \Illuminate\Support\Str::slug($this->name);
+    }
+
+    /**
+     * Build a full MQTT topic for this tenant.
+     * 
+     * @param string $category One of: cmd, state, evt
+     * @param string $device Device identifier
+     * @param string $action Action or property name
+     */
+    public function buildMqttTopic(string $category, string $device, string $action): string
+    {
+        $prefix = $this->mqtt_topic_prefix ?? $this->getSlug();
+        return "{$prefix}/{$category}/{$device}/{$action}";
     }
 }

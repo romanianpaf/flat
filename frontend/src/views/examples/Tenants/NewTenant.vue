@@ -26,7 +26,7 @@
                   id="name"
                   v-model="tenant.name"
                   type="text"
-                  placeholder="Numele rezidentului"
+                  placeholder="Numele beneficiarului"
                 />
                 <validation-error :errors="apiValidationErrors.name" />
               </div>
@@ -62,7 +62,7 @@
                 <soft-model-textarea
                   id="description"
                   v-model="tenant.description"
-                  placeholder="Descrierea rezidentului"
+                  placeholder="Descrierea beneficiarului"
                   rows="3"
                 />
                 <validation-error :errors="apiValidationErrors.description" />

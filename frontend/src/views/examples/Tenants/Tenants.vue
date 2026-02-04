@@ -6,11 +6,14 @@
           <div class="pb-0 card-header">
             <div class="d-lg-flex">
               <div>
-                <h5 class="mb-0">Listă Rezidenți</h5>
+                <h5 class="mb-0">Listă Beneficiari</h5>
               </div>
               <div class="my-auto mt-4 ms-auto mt-lg-0">
                 <div class="my-auto ms-auto">
-                  <router-link to="/tenants/new" class="mb-0 btn bg-gradient-primary btn-sm"
+                  <router-link 
+                    v-permission="'create tenants'" 
+                    to="/tenants/new" 
+                    class="mb-0 btn bg-gradient-primary btn-sm"
                     >+&nbsp; Beneficiar Nou</router-link
                   >
                 </div>
@@ -212,8 +215,8 @@ export default {
             row.fiscal_code || "—",
             contact,
             row.created_at,
-            this.actionEditButton(row.id, "Editează rezident") +
-              this.actionDeleteButton(row.id, "Șterge rezident"),
+            this.actionEditButton(row.id, "Editează beneficiar") +
+              this.actionDeleteButton(row.id, "Șterge beneficiar"),
           ]);
         });
         this.tableTenants.data = [];
@@ -228,7 +231,7 @@ export default {
           getPath: "tenants/getTenants",
           textDelete: "Beneficiar șters cu succes!",
           textDefaultData: "beneficiari",
-          textDeleteError: "A apărut o eroare la ștergerea rezidentului.",
+          textDeleteError: "A apărut o eroare la ștergerea beneficiarului.",
           params: {
             query: currentQuery,
             perpage: currentPerPage,

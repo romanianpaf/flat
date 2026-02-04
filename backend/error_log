@@ -8,3 +8,29 @@ Stack trace:
 [15-Oct-2025 11:01:45 UTC] PHP Fatal error:  Cannot use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider because the name is already in use in /home/atria/public_html/f1.atria.live/backend/app/Providers/AuthServiceProvider.php on line 29
 [15-Oct-2025 11:02:17 UTC] PHP Fatal error:  Type of App\JsonApi\V2\ServiceCategories\ServiceCategorySchema::$defaultSort must not be defined (as in class LaravelJsonApi\Eloquent\Schema) in /home/atria/public_html/f1.atria.live/backend/app/JsonApi/V2/ServiceCategories/ServiceCategorySchema.php on line 17
 [15-Oct-2025 11:03:38 UTC] PHP Fatal error:  Type of App\JsonApi\V2\ServiceSubcategories\ServiceSubcategorySchema::$defaultSort must not be defined (as in class LaravelJsonApi\Eloquent\Schema) in /home/atria/public_html/f1.atria.live/backend/app/JsonApi/V2/ServiceSubcategories/ServiceSubcategorySchema.php on line 17
+[03-Feb-2026 10:42:38 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'type' at row 1 in /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:596
+Stack trace:
+#0 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(596): PDOStatement->execute()
+#1 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(800): Illuminate\Database\Connection->Illuminate\Database\{closure}('update `automat...', Array)
+#2 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(767): Illuminate\Database\Connection->runQueryCallback('update `automat...', Array, Object(Closure))
+#3 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(584): Illuminate\Database\Connection->run('update `automat...', Array, Object(Closure))
+#4 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(536): Illuminate\Database\Connection->affectingStatement('update `automat...', Array)
+#5 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3722): Illuminate\Database\Connection->update('update `automat...', Array)
+#6 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1105): Illuminate\Database\Query\Builder->update(Object(Illuminate\Support\Collection))
+#7 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1218): Illuminate\Database\Eloquent\Builder->update(Array)
+#8 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1135): Illuminate\Database\Eloquent\Model->performUpdate(Object(Illuminate\Database\Eloquent\Builder))
+#9 Command line code(14): Illuminate\Database\Eloquent\Model->save()
+#10 {main}
+
+Next Illuminate\Database\QueryException: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'type' at row 1 (Connection: mysql, SQL: update `automations` set `type` = test, `automations`.`updated_at` = 2026-02-03 10:42:38 where `id` = 2) in /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php:813
+Stack trace:
+#0 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(767): Illuminate\Database\Connection->runQueryCallback('update `automat...', Array, Object(Closure))
+#1 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(584): Illuminate\Database\Connection->run('update `automat...', Array, Object(Closure))
+#2 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php(536): Illuminate\Database\Connection->affectingStatement('update `automat...', Array)
+#3 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Query/Builder.php(3722): Illuminate\Database\Connection->update('update `automat...', Array)
+#4 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Builder.php(1105): Illuminate\Database\Query\Builder->update(Object(Illuminate\Support\Collection))
+#5 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1218): Illuminate\Database\Eloquent\Builder->update(Array)
+#6 /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php(1135): Illuminate\Database\Eloquent\Model->performUpdate(Object(Illuminate\Database\Eloquent\Builder))
+#7 Command line code(14): Illuminate\Database\Eloquent\Model->save()
+#8 {main}
+  thrown in /home/atria/public_html/f1.atria.live/backend/vendor/laravel/framework/src/Illuminate/Database/Connection.php on line 813

@@ -71,7 +71,19 @@ Route::prefix('v2')->middleware('json.api')->group(function () {
         Route::get('registration-requests/{registrationRequest}/document', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'downloadDocument']);
         Route::post('registration-requests/{registrationRequest}/approve', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'approve']);
         Route::post('registration-requests/{registrationRequest}/reject', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'reject']);
+
     });
+});
+
+// MQTT Test endpoints
+Route::prefix('v2')->middleware(['auth:api', 'throttle:api'])->group(function () {
+    Route::get('mqtt-test/status', [App\Http\Controllers\Api\MqttTestController::class, 'getTestStatus']);
+    Route::post('mqtt-test/send', [App\Http\Controllers\Api\MqttTestController::class, 'sendTest']);
+});
+
+// MQTT Test Connection (for tenant configuration)
+Route::prefix('v2')->middleware(['auth:api', 'throttle:api'])->group(function () {
+    Route::post('tenants/{tenant}/test-mqtt', [App\Http\Controllers\Api\MqttTestController::class, 'testTenantConnection']);
 });
 
 JsonApiRoute::server('v2')->prefix('v2')->resources(function (ResourceRegistrar $server) {

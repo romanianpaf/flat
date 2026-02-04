@@ -7,11 +7,32 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Crypt;
 
 class Automation extends Model
 {
     use HasFactory, SoftDeletes;
+
+    /**
+     * Trigger types for automation.
+     */
+    public const TRIGGER_MANUAL = 'manual';
+    public const TRIGGER_SCHEDULED = 'scheduled';
+    public const TRIGGER_MQTT_EVENT = 'mqtt_event';
+
+    /**
+     * Action types for automation.
+     */
+    public const ACTION_MQTT_PUBLISH = 'mqtt_publish';
+    public const ACTION_WEBHOOK = 'webhook';
+    public const ACTION_NOTIFICATION = 'notification';
+
+    /**
+     * Execution status types.
+     */
+    public const STATUS_SUCCESS = 'success';
+    public const STATUS_ERROR = 'error';
+    public const STATUS_TIMEOUT = 'timeout';
+    public const STATUS_PENDING = 'pending';
 
     /**
      * The attributes that are mass assignable.
@@ -22,14 +43,17 @@ class Automation extends Model
         'name',
         'description',
         'type',
-        'mqtt_broker_host',
-        'mqtt_broker_port',
-        'mqtt_broker_username',
-        'mqtt_broker_password',
+        'trigger_type',
+        'action_type',
+        'schedule_cron',
+        'mqtt_subscribe_topic',
+        'mqtt_subscribe_payload_match',
         'mqtt_topic',
         'mqtt_payload_on',
         'mqtt_payload_off',
         'mqtt_qos',
+        'mqtt_retain',
+        'cooldown_ms',
         'is_active',
         'tenant_id',
     ];
@@ -41,17 +65,10 @@ class Automation extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
-        'mqtt_broker_port' => 'integer',
+        'mqtt_retain' => 'boolean',
         'mqtt_qos' => 'integer',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'mqtt_broker_password',
+        'cooldown_ms' => 'integer',
+        'last_run_at' => 'datetime',
     ];
 
     protected static function booted()
@@ -75,24 +92,87 @@ class Automation extends Model
     }
 
     /**
-     * Set the MQTT broker password (encrypt).
-     *
-     * @param  string|null  $value
-     * @return void
+     * Get the MQTT configuration from tenant.
+     * Returns null if tenant has no MQTT configured.
      */
-    public function setMqttBrokerPasswordAttribute($value)
+    public function getMqttConfig(): ?array
     {
-        $this->attributes['mqtt_broker_password'] = $value ? Crypt::encryptString($value) : null;
+        return $this->tenant?->getMqttConfig();
     }
 
     /**
-     * Get the MQTT broker password (decrypt).
-     *
-     * @param  string|null  $value
-     * @return string|null
+     * Check if this automation can be executed (respects cooldown).
      */
-    public function getMqttBrokerPasswordAttribute($value)
+    public function canExecute(): bool
     {
-        return $value ? Crypt::decryptString($value) : null;
+        if (!$this->is_active) {
+            return false;
+        }
+
+        if ($this->cooldown_ms <= 0) {
+            return true;
+        }
+
+        if (!$this->last_run_at) {
+            return true;
+        }
+
+        $cooldownSeconds = $this->cooldown_ms / 1000;
+        return $this->last_run_at->addSeconds($cooldownSeconds)->isPast();
+    }
+
+    /**
+     * Get the full MQTT topic with tenant prefix.
+     */
+    public function getFullMqttTopic(): ?string
+    {
+        $prefix = $this->tenant?->mqtt_topic_prefix ?? $this->tenant?->getSlug();
+        
+        if (!$prefix || !$this->mqtt_topic) {
+            return $this->mqtt_topic;
+        }
+
+        // If topic already starts with prefix, return as-is
+        if (str_starts_with($this->mqtt_topic, $prefix . '/')) {
+            return $this->mqtt_topic;
+        }
+
+        return $this->mqtt_topic;
+    }
+
+    /**
+     * Record an execution attempt.
+     */
+    public function recordExecution(string $status, ?string $error = null): void
+    {
+        $this->update([
+            'last_run_at' => now(),
+            'last_status' => $status,
+            'last_error' => $error,
+        ]);
+    }
+
+    /**
+     * Get available trigger types.
+     */
+    public static function getTriggerTypes(): array
+    {
+        return [
+            self::TRIGGER_MANUAL => 'Manual',
+            self::TRIGGER_SCHEDULED => 'Programat',
+            self::TRIGGER_MQTT_EVENT => 'Event MQTT',
+        ];
+    }
+
+    /**
+     * Get available action types.
+     */
+    public static function getActionTypes(): array
+    {
+        return [
+            self::ACTION_MQTT_PUBLISH => 'Publish MQTT',
+            self::ACTION_WEBHOOK => 'Webhook',
+            self::ACTION_NOTIFICATION => 'Notificare',
+        ];
     }
 }

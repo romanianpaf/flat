@@ -170,6 +170,42 @@
             />
           </div>
         </div>
+
+        <!-- Test MQTT Cards -->
+        <div class="mt-4 row" v-if="mqttTest.configured">
+          <div class="col-md-6">
+            <div class="card">
+              <div class="p-3 card-body text-center">
+                <button 
+                  class="mqtt-test-button mqtt-test-ping"
+                  @click="sendMqttTest('ping')"
+                  :disabled="mqttTest.sending"
+                >
+                  <i class="fas fa-satellite-dish"></i>
+                </button>
+                <h6 class="mt-3 mb-0 font-weight-bolder">PING</h6>
+                <p class="mb-0 text-xs text-secondary">Test MQTT</p>
+                <p class="mb-0 text-xs text-muted mt-1">{{ mqttTest.topic }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 col-md-6 mt-md-0">
+            <div class="card">
+              <div class="p-3 card-body text-center">
+                <button 
+                  class="mqtt-test-button mqtt-test-pong"
+                  @click="sendMqttTest('pong')"
+                  :disabled="mqttTest.sending"
+                >
+                  <i class="fas fa-reply"></i>
+                </button>
+                <h6 class="mt-3 mb-0 font-weight-bolder">PONG</h6>
+                <p class="mb-0 text-xs text-secondary">Test MQTT</p>
+                <p class="mb-0 text-xs text-muted mt-1">{{ mqttTest.topic }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -322,6 +358,8 @@ import setTooltip from "@/assets/js/tooltip.js";
 import WeatherService from "@/services/weather.service.js";
 import PollsService from "@/services/polls.service.js";
 import UserVoicesService from "@/services/user-voices.service.js";
+import MqttTestService from "@/services/mqtt-test.service.js";
+import { hasPermission } from "@/utils/permissions.js";
 
 // Importuri pentru imagini (Vite)
 import bgSmartHome1 from "@/assets/img/bg-smart-home-1.jpg";
@@ -349,6 +387,12 @@ export default {
       latestPoll: null,
       recentUserVoices: [],
       selectedOptions: [], // Pentru multiple votes (checkbox)
+      mqttTest: {
+        configured: false,
+        topic: '',
+        sending: false,
+        lastResult: null,
+      },
     };
   },
   async mounted() {
@@ -360,6 +404,9 @@ export default {
     
     // Încarcă propuneri recente
     await this.loadRecentUserVoices();
+    
+    // Încarcă statusul MQTT test
+    await this.loadMqttTestStatus();
     
     // Reîncarcă vremea la fiecare 10 minute
     this.weatherInterval = setInterval(() => {
@@ -379,6 +426,12 @@ export default {
       }
     },
     async loadLatestPoll() {
+      // Verifică dacă are permisiunea de a vedea sondaje
+      if (!hasPermission('view polls')) {
+        console.log('ℹ️ Nu ai permisiunea de a vedea sondaje');
+        return;
+      }
+      
       try {
         // Încarcă direct prin serviciu, sortate descrescător
         const response = await PollsService.getPolls({
@@ -394,7 +447,12 @@ export default {
           console.log('ℹ️ Nu există sondaje');
         }
       } catch (error) {
-        console.error("❌ Eroare la încărcarea sondajului:", error);
+        // Gestionează eroarea 403 elegant
+        if (error.response?.status === 403) {
+          console.log('ℹ️ Nu ai permisiunea de a vedea sondaje');
+        } else {
+          console.error("❌ Eroare la încărcarea sondajului:", error);
+        }
       }
     },
     async loadRecentUserVoices() {
@@ -531,6 +589,77 @@ export default {
         });
       }
     },
+    
+    async loadMqttTestStatus() {
+      try {
+        const response = await MqttTestService.getStatus();
+        if (response.success && response.configured) {
+          this.mqttTest.configured = true;
+          this.mqttTest.topic = response.data.topic;
+        }
+      } catch (error) {
+        console.log('ℹ️ MQTT test nu este configurat:', error.message);
+      }
+    },
+    
+    async sendMqttTest(payload) {
+      this.mqttTest.sending = true;
+      try {
+        const response = await MqttTestService.send(payload);
+        
+        if (response.success) {
+          this.$swal({
+            icon: 'success',
+            title: payload.toUpperCase() + ' trimis!',
+            text: response.message,
+            timer: 2000,
+            heightAuto: false,
+            backdrop: true,
+          });
+          
+          this.mqttTest.lastResult = {
+            success: true,
+            payload,
+            time: new Date(),
+          };
+        } else {
+          // Backend a răspuns 200 dar cu success=false
+          this.$swal({
+            icon: 'warning',
+            title: 'Nu s-a putut trimite',
+            text: response.message || 'Broker-ul MQTT nu este disponibil.',
+            heightAuto: false,
+            backdrop: true,
+          });
+          
+          this.mqttTest.lastResult = {
+            success: false,
+            payload,
+            time: new Date(),
+            error: response.message,
+          };
+        }
+      } catch (error) {
+        console.error('Eroare MQTT test:', error);
+        
+        this.$swal({
+          icon: 'error',
+          title: 'Eroare!',
+          text: error.response?.data?.message || 'Nu s-a putut trimite mesajul.',
+          heightAuto: false,
+          backdrop: true,
+        });
+        
+        this.mqttTest.lastResult = {
+          success: false,
+          payload,
+          time: new Date(),
+          error: error.response?.data?.message,
+        };
+      } finally {
+        this.mqttTest.sending = false;
+      }
+    },
   },
   beforeUnmount() {
     // Curăță intervalul când componenta este distrusă
@@ -626,5 +755,82 @@ export default {
   .vote-count {
     font-size: 11px;
   }
+}
+
+/* MQTT Test Buttons */
+.mqtt-test-button {
+  width: 70px;
+  height: 70px;
+  border: none;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.mqtt-test-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border-radius: 20px;
+  pointer-events: none;
+}
+
+.mqtt-test-ping {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.mqtt-test-pong {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.mqtt-test-button:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.25);
+}
+
+.mqtt-test-button:active {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.mqtt-test-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.mqtt-test-button i {
+  color: white;
+  font-size: 28px;
+  z-index: 1;
+  position: relative;
+}
+
+.mqtt-test-ping:hover {
+  background: linear-gradient(135deg, #5a6fd6 0%, #6a4190 100%);
+}
+
+.mqtt-test-pong:hover {
+  background: linear-gradient(135deg, #e080e8 0%, #e04458 100%);
+}
+
+/* Animation for sending state */
+.mqtt-test-button:disabled i {
+  animation: pulse-icon 1s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.9); }
 }
 </style>

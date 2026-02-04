@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use LaravelJsonApi\Eloquent\Contracts\Paginator;
 use LaravelJsonApi\Eloquent\Fields\DateTime;
 use LaravelJsonApi\Eloquent\Fields\ID;
+use LaravelJsonApi\Eloquent\Fields\Number;
 use LaravelJsonApi\Eloquent\Fields\Str;
 use LaravelJsonApi\Eloquent\Fields\ArrayHash;
 use LaravelJsonApi\Eloquent\Filters\Scope;
@@ -39,6 +40,15 @@ class TenantSchema extends Schema
             Str::make('fiscal_code')->sortable(),
             Str::make('description'),
             ArrayHash::make('contact_data'),
+            
+            // MQTT mTLS Configuration (sysadmin only)
+            Str::make('mqtt_host'),
+            Number::make('mqtt_port'),
+            Str::make('mqtt_ca_path'),
+            Str::make('mqtt_client_cert_path'),
+            Str::make('mqtt_client_key_path'),
+            Str::make('mqtt_topic_prefix'),
+            
             DateTime::make('created_at')
                 ->serializeUsing(static fn(?Carbon $value) => $value?->format('Y-m-d H:i:s'))
                 ->sortable()

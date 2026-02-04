@@ -7,7 +7,7 @@
             <div class="d-flex align-items-center justify-content-between">
               <div>
                 <h5 class="mb-0">Configurare imobil</h5>
-                <p class="text-sm mb-0">Definește scările și apartamentele pentru tenantul selectat.</p>
+                <p class="text-sm mb-0">Definește scările și apartamentele pentru beneficiarul selectat.</p>
               </div>
               <button class="btn bg-gradient-primary btn-sm mb-0" @click="openAddStaircase">
                 + Adaugă scară

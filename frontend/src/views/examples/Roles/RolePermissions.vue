@@ -77,7 +77,7 @@
               <div v-for="(permissions, module) in groupedPermissions" :key="module" class="mb-4">
                 <h6 class="text-uppercase text-xs font-weight-bolder opacity-7 mb-2">
                   <i :class="moduleIcons[module] || 'fas fa-cog'" class="me-2"></i>
-                  {{ module }}
+                  {{ moduleLabels[module] || module }}
                   <span class="badge bg-gradient-info badge-sm ms-2">
                     {{ permissions.length }} permisiuni
                   </span>
@@ -179,7 +179,33 @@ export default {
         'Polls': 'fas fa-poll',
         'Automations': 'fas fa-robot',
         'User voices': 'fas fa-comments',
+        'Members': 'fas fa-users',
         'General': 'fas fa-cog',
+      };
+    },
+    /**
+     * Traduceri pentru numele modulelor afișate în UI
+     */
+    moduleLabels() {
+      return {
+        'Users': 'Utilizatori',
+        'Roles': 'Roluri',
+        'Categories': 'Categorii',
+        'Tags': 'Etichete',
+        'Items': 'Elemente',
+        'Tenants': 'Beneficiari',
+        'Carte imobil': 'Carte de imobil',
+        'Apartments': 'Apartamente',
+        'Registration requests': 'Cereri de înregistrare',
+        'Service providers': 'Furnizori de servicii',
+        'Service provider ratings': 'Evaluări furnizori',
+        'Polls': 'Sondaje',
+        'Automations': 'Automatizări',
+        'User voices': 'Propuneri',
+        'Members': 'Membri',
+        'General': 'General',
+        'Service categories': 'Categorii servicii',
+        'Service subcategories': 'Subcategorii servicii',
       };
     },
     /**

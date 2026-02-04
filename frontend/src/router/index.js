@@ -74,6 +74,7 @@ import EditTag from "../views/examples/Tags/EditTag.vue";
 import Tenants from "../views/examples/Tenants/Tenants.vue";
 import NewTenant from "../views/examples/Tenants/NewTenant.vue";
 import EditTenant from "../views/examples/Tenants/EditTenant.vue";
+import Members from "../views/examples/Members/Members.vue";
 import Automations from "../views/examples/Automations/Automations.vue";
 import NewAutomation from "../views/examples/Automations/NewAutomation.vue";
 import EditAutomation from "../views/examples/Automations/EditAutomation.vue";
@@ -106,6 +107,7 @@ import RegistrationRequests from "../views/admin/RegistrationRequests.vue";
 import admin from "../middlewares/admin.js";
 import adminCreator from "../middlewares/admin_creator.js";
 import carteImobilAdmin from "../middlewares/carte_imobil_admin.js";
+import viewMembers from "../middlewares/view_members.js";
 import guest from "../middlewares/guest.js";
 import auth from "../middlewares/auth.js";
 
@@ -588,6 +590,14 @@ const routes = [
     component: EditTenant,
     meta: {
       middleware: [auth, adminCreator],
+    },
+  },
+  {
+    path: "/members/list",
+    name: "Members",
+    component: Members,
+    meta: {
+      middleware: [auth, viewMembers],
     },
   },
   {

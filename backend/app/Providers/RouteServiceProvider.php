@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\TenantMqttBroker;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -27,6 +28,9 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
+
+        // Explicit model binding pentru broker -> TenantMqttBroker
+        Route::model('broker', TenantMqttBroker::class);
 
         $this->routes(function () {
             Route::middleware('api')

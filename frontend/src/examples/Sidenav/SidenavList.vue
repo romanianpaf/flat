@@ -28,17 +28,26 @@
         <sidenav-collapse
           collapse-ref="controlPanel"
           nav-text="Panou de control"
-          :class="$route.path.includes('/tenants') || $route.path.includes('/roles') || $route.path.includes('/users') || $route.path.includes('/automations') ? 'active' : ''"
+          :class="$route.path.includes('/tenants') || $route.path.includes('/members') || $route.path.includes('/roles') || $route.path.includes('/users') || $route.path.includes('/automations') ? 'active' : ''"
         >
           <template #icon>
             <Settings />
           </template>
           <template #list>
             <ul class="nav ms-4 ps-3">
+              <!-- Beneficiari - doar pentru cei cu view tenants -->
               <sidenav-item
+                v-if="hasPermission('view tenants')"
                 :to="{ name: 'Tenants' }"
                 mini-icon="B"
                 text="Beneficiari"
+              />
+              <!-- Membri - pentru cei cu view members dar fără view tenants -->
+              <sidenav-item
+                v-if="hasPermission('view members') && !hasPermission('view tenants')"
+                :to="{ name: 'Members' }"
+                mini-icon="👥"
+                text="Membri"
               />
               <sidenav-item
                 v-if="requireCarteImobilConfig"
@@ -53,6 +62,7 @@
                 text="Cereri de cont"
               />
               <sidenav-item
+                v-if="hasPermission('view automations')"
                 :to="{ name: 'Automations' }"
                 mini-icon="🤖"
                 text="Automatizări"
@@ -85,6 +95,7 @@
           <template #list>
             <ul class="nav ms-4 ps-3">
               <sidenav-item
+                v-if="hasPermission('view polls')"
                 :to="{ name: 'Polls' }"
                 mini-icon="📊"
                 text="Sondaje"

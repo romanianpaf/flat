@@ -12,7 +12,8 @@ class UserPolicy
 
     public function viewAny(User $user): Response|bool
     {
-        return $user->can('view users');
+        // Poate vedea utilizatori dacă are "view users" SAU "view members" (pentru același tenant)
+        return $user->can('view users') || $user->can('view members');
     }
 
     public function view(User $user, User $requested): Response|bool
@@ -21,7 +22,11 @@ class UserPolicy
             return true;
         }
 
-        if (!$user->can('view users')) {
+        // Verifică dacă are "view users" sau "view members"
+        $canViewUsers = $user->can('view users');
+        $canViewMembers = $user->can('view members');
+
+        if (!$canViewUsers && !$canViewMembers) {
             return false;
         }
 
@@ -30,13 +35,19 @@ class UserPolicy
             return true;
         }
 
-        // Utilizatorii cu tenant pot vedea doar utilizatorii propriului tenant
+        // Dacă are doar "view members", poate vedea doar utilizatorii din propriul tenant
+        if (!$canViewUsers && $canViewMembers) {
+            return $user->tenant_id && $user->tenant_id === $requested->tenant_id;
+        }
+
+        // Utilizatorii cu "view users" și tenant pot vedea doar utilizatorii propriului tenant
         return $user->tenant_id === $requested->tenant_id;
     }
 
     public function create(User $user): Response|bool
     {
-        return $user->can('create users');
+        // Poate crea utilizatori dacă are "create users" SAU "create members" (în același tenant)
+        return $user->can('create users') || $user->can('create members');
     }
 
     public function update(User $user, User $requested): Response|bool
@@ -45,7 +56,10 @@ class UserPolicy
             return true;
         }
 
-        if (!$user->can('edit users')) {
+        $canEditUsers = $user->can('edit users');
+        $canEditMembers = $user->can('edit members');
+
+        if (!$canEditUsers && !$canEditMembers) {
             return false;
         }
 
@@ -54,7 +68,12 @@ class UserPolicy
             return true;
         }
 
-        // Utilizatorii cu tenant pot edita doar utilizatorii propriului tenant
+        // Dacă are doar "edit members", poate edita doar utilizatorii din propriul tenant
+        if (!$canEditUsers && $canEditMembers) {
+            return $user->tenant_id && $user->tenant_id === $requested->tenant_id;
+        }
+
+        // Utilizatorii cu "edit users" și tenant pot edita doar utilizatorii propriului tenant
         return $user->tenant_id === $requested->tenant_id;
     }
 
@@ -65,7 +84,10 @@ class UserPolicy
             return false;
         }
 
-        if (!$user->can('delete users')) {
+        $canDeleteUsers = $user->can('delete users');
+        $canDeleteMembers = $user->can('delete members');
+
+        if (!$canDeleteUsers && !$canDeleteMembers) {
             return false;
         }
 
@@ -74,7 +96,12 @@ class UserPolicy
             return true;
         }
 
-        // Utilizatorii cu tenant pot șterge doar utilizatorii propriului tenant
+        // Dacă are doar "delete members", poate șterge doar utilizatorii din propriul tenant
+        if (!$canDeleteUsers && $canDeleteMembers) {
+            return $user->tenant_id && $user->tenant_id === $requested->tenant_id;
+        }
+
+        // Utilizatorii cu "delete users" și tenant pot șterge doar utilizatorii propriului tenant
         return $user->tenant_id === $requested->tenant_id;
     }
 
