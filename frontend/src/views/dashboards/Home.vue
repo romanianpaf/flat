@@ -132,7 +132,7 @@
                         Vremea acum
                       </p>
                       <h5 class="mb-0 text-white font-weight-bolder">
-                        {{ weather.location }} - {{ weather.temperature }} °C
+                        {{ weather.location }} · {{ weather.temperature }}°C
                       </h5>
                       <p class="mb-0 text-xs text-white opacity-8">
                         Resimțită: {{ weather.feelsLike }} °C
@@ -278,71 +278,66 @@
         </div>
       </div>
 
-      <!-- Widget User Voice -->
+      <!-- Widget User Voice - Propuneri Recente -->
       <div class="col-lg-6 mt-4 mt-lg-0">
-        <div class="card h-100">
-          <div class="pb-0 card-header">
+        <div class="mb-4 card card-plain">
+          <div class="p-3 card-body">
             <h6 class="mb-0">Propuneri Recente</h6>
           </div>
-          <div class="p-3 card-body">
-            <div v-if="recentUserVoices.length > 0">
-              <div 
-                v-for="voice in recentUserVoices" 
-                :key="voice.id"
-                class="mb-3 pb-3 border-bottom"
-              >
-                <div class="d-flex align-items-start">
-                  <div class="flex-grow-1">
-                    <h6 class="mb-1 text-sm font-weight-bold">{{ voice.title || voice.suggestion }}</h6>
-                    <p class="mb-2 text-xs text-secondary">
-                      {{ truncate(voice.description || voice.suggestion, 100) }}
-                    </p>
-                    <div class="d-flex align-items-center">
-                      <span class="badge badge-sm" :class="getStatusBadgeClass(voice.status)">
-                        {{ getStatusText(voice.status) }}
-                      </span>
-                      <div class="ms-3 d-flex align-items-center gap-3">
-                        <!-- Thumbs Up Button -->
-                        <div class="d-flex flex-column align-items-center">
-                          <button 
-                            class="vote-button vote-button-up"
-                            @click="voteOnUserVoice(voice, 'up')"
-                            :title="'Votează PRO pentru: ' + (voice.title || voice.suggestion)"
-                          >
-                            <i class="fas fa-thumbs-up"></i>
-                          </button>
-                          <span class="vote-count text-success font-weight-bold">
-                            {{ voice.votes_up || 0 }}
-                          </span>
-                        </div>
-                        
-                        <!-- Thumbs Down Button -->
-                        <div class="d-flex flex-column align-items-center">
-                          <button 
-                            class="vote-button vote-button-down"
-                            @click="voteOnUserVoice(voice, 'down')"
-                            :title="'Votează CONTRA pentru: ' + (voice.title || voice.suggestion)"
-                          >
-                            <i class="fas fa-thumbs-down"></i>
-                          </button>
-                          <span class="vote-count text-danger font-weight-bold">
-                            {{ voice.votes_down || 0 }}
-                          </span>
-                        </div>
+        </div>
+        <div v-if="recentUserVoices.length > 0" class="row">
+          <div 
+            v-for="voice in recentUserVoices" 
+            :key="voice.id"
+            class="col-12"
+          >
+            <div class="mb-4 card">
+              <div class="p-3 card-body">
+                <div class="d-flex flex-row-reverse justify-content-between">
+                  <!-- Butoane vot la dreapta ca icon-shape -->
+                  <div class="d-flex align-items-center">
+                    <!-- Thumbs Up - Verde -->
+                    <div class="text-center me-3">
+                      <div
+                        class="shadow icon icon-shape border-radius-md bg-gradient-success cursor-pointer"
+                        @click="voteOnUserVoice(voice, 'up')"
+                        :title="'Votează PRO'"
+                        style="cursor: pointer;"
+                      >
+                        <i class="fas fa-thumbs-up text-lg text-white" aria-hidden="true"></i>
                       </div>
-                      <span class="ms-auto text-xs text-secondary">
-                        <i class="fas fa-calendar me-1"></i>
-                        {{ formatDate(voice.created_at) }}
-                      </span>
+                      <p class="mt-1 mb-0 text-xs font-weight-bold">{{ voice.votes_up || 0 }}</p>
                     </div>
+                    <!-- Thumbs Down - Roșu -->
+                    <div class="text-center">
+                      <div
+                        class="shadow icon icon-shape border-radius-md bg-gradient-danger cursor-pointer"
+                        @click="voteOnUserVoice(voice, 'down')"
+                        :title="'Votează CONTRA'"
+                        style="cursor: pointer;"
+                      >
+                        <i class="fas fa-thumbs-down text-lg text-white" aria-hidden="true"></i>
+                      </div>
+                      <p class="mt-1 mb-0 text-xs font-weight-bold">{{ voice.votes_down || 0 }}</p>
+                    </div>
+                  </div>
+                  <!-- Conținut la stânga: data sus (ca "Today's Money"), titlul jos (ca "$53,000") -->
+                  <div class="numbers">
+                    <p class="mb-0 text-sm text-capitalize font-weight-bold text-secondary">
+                      {{ formatDate(voice.created_at) }}
+                    </p>
+                    <h5 class="mb-0 font-weight-bolder">
+                      {{ truncate(voice.title || voice.suggestion, 45) }}
+                    </h5>
                   </div>
                 </div>
               </div>
             </div>
-            <div v-else class="text-center py-5">
-              <i class="fas fa-lightbulb fa-3x text-secondary opacity-6 mb-3"></i>
-              <p class="text-secondary">Nu există propuneri</p>
-            </div>
+          </div>
+        </div>
+        <div v-else class="card">
+          <div class="card-body text-center py-5">
+            <p class="text-secondary mb-0">Nu există propuneri</p>
           </div>
         </div>
       </div>

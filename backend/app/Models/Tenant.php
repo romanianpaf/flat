@@ -148,4 +148,42 @@ class Tenant extends Model
         $prefix = $this->mqtt_topic_prefix ?? $this->getSlug();
         return "{$prefix}/{$category}/{$device}/{$action}";
     }
+
+    /**
+     * Get the CN (Common Name) from the client certificate.
+     * Useful for debug/audit.
+     */
+    public function getMqttClientCN(): ?string
+    {
+        if (empty($this->mqtt_client_cert_path) || !file_exists($this->mqtt_client_cert_path)) {
+            return null;
+        }
+
+        try {
+            $certContent = file_get_contents($this->mqtt_client_cert_path);
+            $certData = openssl_x509_parse($certContent);
+            
+            return $certData['subject']['CN'] ?? null;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get recommended QoS for a topic category.
+     * 
+     * Convention:
+     * - cmd/   → QoS 1 (at least once) - commands must be delivered
+     * - state/ → QoS 1 (at least once) - state updates are important
+     * - evt/   → QoS 0 (at most once) - events are transient
+     * - telemetry/ → QoS 0 (at most once) - high frequency, loss acceptable
+     */
+    public static function getRecommendedQos(string $category): int
+    {
+        return match ($category) {
+            'cmd', 'state' => 1,
+            'evt', 'event', 'telemetry' => 0,
+            default => 1,
+        };
+    }
 }

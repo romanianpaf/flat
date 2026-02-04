@@ -11,13 +11,13 @@
           :class="$route.path.includes('/acasa') ? 'active' : ''"
         >
           <template #icon>
-            <i class="fas fa-th-large text-primary text-sm opacity-10"></i>
+            <Shop />
           </template>
           <template #list>
             <ul class="nav ms-4 ps-3">
               <sidenav-item
                 :to="{ name: 'Acasă' }"
-                mini-icon="🏠"
+                mini-icon="A"
                 text="Acasă"
               />
             </ul>
@@ -46,25 +46,25 @@
               <sidenav-item
                 v-if="hasPermission('view members') && !hasPermission('view tenants')"
                 :to="{ name: 'Members' }"
-                mini-icon="👥"
+                mini-icon="M"
                 text="Membri"
               />
               <sidenav-item
                 v-if="requireCarteImobilConfig"
                 :to="{ name: 'Configurare imobil' }"
-                mini-icon="🏢"
+                mini-icon="C"
                 text="Configurare imobil"
               />
               <sidenav-item
                 v-if="requireCarteImobilConfig"
                 :to="{ name: 'Cereri de înregistrare' }"
-                mini-icon="📝"
+                mini-icon="C"
                 text="Cereri de cont"
               />
               <sidenav-item
                 v-if="hasPermission('view automations')"
                 :to="{ name: 'Automations' }"
-                mini-icon="🤖"
+                mini-icon="A"
                 text="Automatizări"
               />
               <sidenav-item
@@ -97,12 +97,12 @@
               <sidenav-item
                 v-if="hasPermission('view polls')"
                 :to="{ name: 'Polls' }"
-                mini-icon="📊"
+                mini-icon="S"
                 text="Sondaje"
               />
               <sidenav-item
                 :to="{ name: 'User Voices' }"
-                mini-icon="💡"
+                mini-icon="S"
                 text="Sugestii"
               />
             </ul>
@@ -154,17 +154,17 @@
             <ul class="nav ms-4 ps-3">
               <sidenav-item
                 :to="{ name: 'Profilul Utilizatorului' }"
-                mini-icon="👤"
+                mini-icon="P"
                 text="Profil"
               />
               <sidenav-item
                 :to="{ name: 'Configurări Utilizator' }"
-                mini-icon="⚙️"
+                mini-icon="C"
                 text="Configurări"
               />
               <sidenav-item
                 :to="{ name: 'Carte de imobil' }"
-                mini-icon="📘"
+                mini-icon="C"
                 text="Carte de imobil"
               />
             </ul>

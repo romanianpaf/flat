@@ -61,6 +61,7 @@ class MqttTestController extends Controller
                 'host' => $mqttConfig['host'],
                 'port' => $mqttConfig['port'],
                 'topic_prefix' => $mqttConfig['topic_prefix'],
+                'client_cn' => $tenant->getMqttClientCN(),
                 'tested_at' => now()->toIso8601String(),
                 'method' => $testResult['method'] ?? 'mosquitto_pub',
             ],

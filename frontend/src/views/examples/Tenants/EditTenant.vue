@@ -18,39 +18,44 @@
           </div>
 
           <!-- Tabs Navigation -->
-          <div class="card-header pt-0 pb-0">
-            <ul class="nav nav-tabs" role="tablist">
-              <li class="nav-item">
-                <a 
-                  class="nav-link" 
-                  :class="{ active: activeTab === 'info' }"
-                  @click.prevent="activeTab = 'info'"
-                  href="#"
-                >
-                  <i class="fas fa-info-circle me-2"></i>Informații
-                </a>
-              </li>
-              <li class="nav-item">
-                <a 
-                  class="nav-link" 
-                  :class="{ active: activeTab === 'building' }"
-                  @click.prevent="activeTab = 'building'"
-                  href="#"
-                >
-                  <i class="fas fa-building me-2"></i>Imobil
-                </a>
-              </li>
-              <li v-if="isSysadmin" class="nav-item">
-                <a 
-                  class="nav-link" 
-                  :class="{ active: activeTab === 'technical' }"
-                  @click.prevent="activeTab = 'technical'"
-                  href="#"
-                >
-                  <i class="fas fa-cog me-2"></i>Tehnic
-                </a>
-              </li>
-            </ul>
+          <div class="card-header pt-0 pb-3">
+            <div class="nav-wrapper position-relative">
+              <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                <li class="nav-item">
+                  <a 
+                    class="nav-link mb-0 px-0 py-1" 
+                    :class="{ active: activeTab === 'info' }"
+                    @click.prevent="activeTab = 'info'"
+                    href="#"
+                    role="tab"
+                  >
+                    <i class="ni ni-badge me-2"></i>Informații
+                  </a>
+                </li>
+                <li class="nav-item">
+                  <a 
+                    class="nav-link mb-0 px-0 py-1" 
+                    :class="{ active: activeTab === 'building' }"
+                    @click.prevent="activeTab = 'building'"
+                    href="#"
+                    role="tab"
+                  >
+                    <i class="ni ni-building me-2"></i>Imobil
+                  </a>
+                </li>
+                <li v-if="isSysadmin" class="nav-item">
+                  <a 
+                    class="nav-link mb-0 px-0 py-1" 
+                    :class="{ active: activeTab === 'technical' }"
+                    @click.prevent="activeTab = 'technical'"
+                    href="#"
+                    role="tab"
+                  >
+                    <i class="ni ni-settings-gear-65 me-2"></i>Tehnic
+                  </a>
+                </li>
+              </ul>
+            </div>
           </div>
 
           <!-- Tab Content -->
@@ -291,7 +296,7 @@
 
               <!-- Connection Status -->
               <div class="alert" :class="mqttStatusClass" v-if="mqttConfig.mqtt_host">
-                <div class="d-flex align-items-center">
+                <div class="d-flex align-items-center flex-wrap">
                   <span 
                     class="status-indicator me-2" 
                     :class="mqttConnectionStatus === 'ok' ? 'status-connected' : (mqttConnectionStatus === 'error' ? 'status-error' : 'status-unknown')"
@@ -299,7 +304,10 @@
                   <span class="me-3">
                     <strong>{{ mqttConfig.mqtt_host }}:{{ mqttConfig.mqtt_port || 8883 }}</strong>
                   </span>
-                  <span class="text-sm">{{ mqttStatusMessage }}</span>
+                  <span v-if="mqttClientCN" class="me-3 text-sm">
+                    <i class="fas fa-certificate me-1"></i>Autentificat ca: <strong>{{ mqttClientCN }}</strong>
+                  </span>
+                  <span class="text-sm me-3">{{ mqttStatusMessage }}</span>
                   <button 
                     class="btn btn-sm btn-outline-dark ms-auto mb-0" 
                     @click="testMqttConnection"
@@ -465,7 +473,9 @@ import showSwal from "/src/mixins/showSwal.js";
 import formMixin from "/src/mixins/form-mixin.js";
 import phoneFormatter from "/src/mixins/phoneFormatter.js";
 import carteImobilService from "/src/services/carte-imobil.service.js";
+import setNavPills from "@/assets/js/nav-pills.js";
 import axios from "axios";
+import authHeader from "/src/services/auth-header";
 
 export default {
   name: "EditTenant",
@@ -523,6 +533,7 @@ export default {
       testingMqtt: false,
       mqttConnectionStatus: null, // 'ok', 'error', null
       mqttStatusMessage: "Conexiune netestată",
+      mqttClientCN: null, // CN din certificatul client (pentru audit/debug)
     };
   },
 
@@ -548,6 +559,10 @@ export default {
 
   async created() {
     await this.loadTenant();
+  },
+
+  mounted() {
+    setNavPills();
   },
 
   methods: {
@@ -764,15 +779,19 @@ export default {
       this.mqttStatusMessage = "Se testează conexiunea...";
 
       try {
-        const res = await axios.post(`/api/v2/tenants/${this.tenant.id}/test-mqtt`);
+        const res = await axios.post(`/api/v2/tenants/${this.tenant.id}/test-mqtt`, {}, {
+          headers: authHeader(),
+        });
         
         if (res.data?.success) {
           this.mqttConnectionStatus = 'ok';
           this.mqttStatusMessage = res.data.message || "Conexiune mTLS reușită!";
+          this.mqttClientCN = res.data?.data?.client_cn || null;
           showSwal.methods.showSwal({ type: "success", message: this.mqttStatusMessage });
         } else {
           this.mqttConnectionStatus = 'error';
           this.mqttStatusMessage = res.data?.message || "Eroare la conexiune";
+          this.mqttClientCN = null;
           showSwal.methods.showSwal({ type: "error", message: this.mqttStatusMessage });
         }
       } catch (e) {
