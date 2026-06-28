@@ -99,27 +99,31 @@ class UserSchema extends Schema
             return $query;
         }
 
-        // Admin global și sysadmin văd toți utilizatorii
-        if ($user->hasRole(['admin', 'sysadmin'])) {
-            return $query;
+        // Operatorul de platformă (sysadmin): vede tot, sau doar tenantul în
+        // care a "intrat" prin context switch (header X-Tenant-Id).
+        // NOTĂ: modelul User nu are global scope, deci filtrarea e explicită aici.
+        if ($user->isSystemAdmin()) {
+            $resolver = app(\App\Support\Tenancy\TenantResolver::class);
+
+            if ($resolver->isUnscoped()) {
+                return $query;
+            }
+
+            return $query->where('tenant_id', $resolver->activeTenantId());
         }
 
-        // Verifică permisiunile
-        $canViewUsers = $user->can('view users');
-        $canViewMembers = $user->can('view members');
-
-        // Utilizatorii cu tenant văd doar utilizatorii propriului tenant
+        // Utilizatorii cu tenant văd DOAR utilizatorii propriului tenant.
+        // (Un admin de tenant NU mai vede userii altor tenanți.)
         if ($user->tenant_id) {
             return $query->where('tenant_id', $user->tenant_id);
         }
 
-        // Utilizatorii cu "view users" fără tenant pot vedea toți utilizatorii fără tenant
-        if ($canViewUsers) {
+        // Utilizatorii fără tenant cu "view users" văd userii fără tenant.
+        if ($user->can('view users')) {
             return $query->whereNull('tenant_id');
         }
 
-        // Utilizatorii cu doar "view members" fără tenant nu pot vedea pe nimeni
-        // (trebuie să aibă un tenant pentru a vedea membri)
+        // Restul nu văd pe nimeni.
         return $query->whereRaw('1 = 0');
     }
 

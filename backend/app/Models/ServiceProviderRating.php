@@ -29,7 +29,7 @@ class ServiceProviderRating extends Model
 
         static::creating(function (ServiceProviderRating $rating): void {
             if (auth()->check() && !$rating->tenant_id) {
-                $rating->tenant_id = auth()->user()->tenant_id;
+                $rating->tenant_id = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
             }
         });
     }

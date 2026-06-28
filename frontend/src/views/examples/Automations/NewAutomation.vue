@@ -44,11 +44,11 @@
               <div class="col-md-6">
                 <label class="form-label">Tip dispozitiv *</label>
                 <select v-model="automation.device_type" class="form-control">
-                  <option value="switch">🔘 Comutator</option>
-                  <option value="sensor">📡 Senzor</option>
-                  <option value="actuator">⚙️ Actuator</option>
-                  <option value="light">💡 Lumină</option>
-                  <option value="lock">🔒 Zăvor</option>
+                  <option value="switch">Comutator</option>
+                  <option value="sensor">Senzor</option>
+                  <option value="actuator">Actuator</option>
+                  <option value="light">Lumină</option>
+                  <option value="lock">Zăvor</option>
                   <option value="test">🧪 Test/Ping</option>
                 </select>
                 <validation-error :errors="apiValidationErrors.device_type" />
@@ -68,14 +68,14 @@
               </div>
             </div>
 
-            <h6 class="mt-4 mb-3">⚡ Trigger & Acțiune</h6>
+            <h6 class="mt-4 mb-3"><i class="ni ni-button-play text-primary me-2"></i>Trigger & Acțiune</h6>
             
             <div class="row mt-3">
               <div class="col-md-6">
                 <label class="form-label">Tip Declanșare *</label>
                 <select v-model="automation.trigger_type" class="form-control">
-                  <option value="manual">👆 Manual (din UI)</option>
-                  <option value="scheduled">⏰ Programat (cron)</option>
+                  <option value="manual">Manual (din UI)</option>
+                  <option value="scheduled">Programat (cron)</option>
                   <option value="mqtt_event">📨 Event MQTT</option>
                 </select>
                 <validation-error :errors="apiValidationErrors.trigger_type" />
@@ -83,9 +83,9 @@
               <div class="col-md-6">
                 <label class="form-label">Tip Acțiune *</label>
                 <select v-model="automation.action_type" class="form-control">
-                  <option value="mqtt_publish">📤 Publish MQTT</option>
-                  <option value="webhook">🌐 Webhook</option>
-                  <option value="notification">🔔 Notificare</option>
+                  <option value="mqtt_publish">Publish MQTT</option>
+                  <option value="webhook">Webhook</option>
+                  <option value="notification">Notificare</option>
                 </select>
                 <validation-error :errors="apiValidationErrors.action_type" />
               </div>
@@ -129,7 +129,7 @@
 
             <!-- MQTT Publish Action Config -->
             <div v-if="automation.action_type === 'mqtt_publish'">
-              <h6 class="mt-4 mb-3">🔌 Configurare Publish MQTT</h6>
+              <h6 class="mt-4 mb-3"><i class="ni ni-send text-info me-2"></i>Configurare Publish MQTT</h6>
 
               <div class="row mt-3">
                 <div class="col-md-7">
@@ -190,7 +190,7 @@
               </div>
             </div>
 
-            <h6 class="mt-4 mb-3">⚙️ Opțiuni</h6>
+            <h6 class="mt-4 mb-3"><i class="ni ni-settings-gear-65 text-secondary me-2"></i>Opțiuni</h6>
 
             <div class="row mt-3">
               <div class="col-md-4">

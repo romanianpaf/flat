@@ -26,7 +26,7 @@ class ServiceCategory extends Model
 
         static::creating(function (ServiceCategory $category): void {
             if (auth()->check() && !$category->tenant_id) {
-                $category->tenant_id = auth()->user()->tenant_id;
+                $category->tenant_id = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
             }
         });
     }

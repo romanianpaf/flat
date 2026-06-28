@@ -43,7 +43,7 @@ class ServiceProvider extends Model
             if (auth()->check()) {
                 $user = auth()->user();
                 $provider->created_by ??= $user->id;
-                $provider->tenant_id ??= $user->tenant_id;
+                $provider->tenant_id ??= app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
             }
         });
 

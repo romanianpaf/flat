@@ -49,6 +49,22 @@ export function hasAllPermissions(permissions) {
 }
 
 /**
+ * Verifică dacă utilizatorul este operator de platformă (sysadmin), adică
+ * are acces deasupra tuturor tenanților. Sursa de adevăr vine din backend
+ * (câmpul is_system_admin returnat de /me), nu din inspectarea rolurilor.
+ * @returns {boolean}
+ */
+export function isSystemAdmin() {
+  try {
+    const user = JSON.parse(localStorage.getItem("user"));
+    return user?.is_system_admin === true;
+  } catch (error) {
+    console.error("Error checking system admin:", error);
+    return false;
+  }
+}
+
+/**
  * Verifică dacă utilizatorul are un rol specific
  * DEPRECATED: Folosește hasPermission() în loc de verificări de roluri
  * @param {string} roleName
@@ -85,6 +101,7 @@ export default {
   hasPermission,
   hasAnyPermission,
   hasAllPermissions,
+  isSystemAdmin,
   hasRole,
   hasAnyRole,
   getUserPermissions,

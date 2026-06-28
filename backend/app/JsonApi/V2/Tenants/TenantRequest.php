@@ -16,7 +16,7 @@ class TenantRequest extends ResourceRequest
     {
         $tenantId = $this->route('tenant');
         $user = $this->user();
-        $isSysadmin = $user && $user->hasRole('sysadmin');
+        $isSysadmin = $user && $user->isSystemAdmin();
 
         $rules = [
             'name' => ['required', 'string', 'max:255'],

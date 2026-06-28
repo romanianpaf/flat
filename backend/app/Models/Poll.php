@@ -37,7 +37,7 @@ class Poll extends Model
         // Setează automat tenant_id la creare
         static::creating(function ($poll) {
             if (auth()->check() && !$poll->tenant_id) {
-                $poll->tenant_id = auth()->user()->tenant_id;
+                $poll->tenant_id = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
             }
         });
     }

@@ -24,7 +24,6 @@
                   <tr>
                     <th title="name">Nume</th>
                     <th title="type">Tip</th>
-                    <th data-sortable="false">Broker MQTT</th>
                     <th data-sortable="false">Topic</th>
                     <th title="is_active">Status</th>
                     <th title="created_at">Creat la</th>
@@ -36,7 +35,6 @@
                   <tr>
                     <th>Nume</th>
                     <th>Tip</th>
-                    <th>Broker MQTT</th>
                     <th>Topic</th>
                     <th>Status</th>
                     <th>Creat la</th>
@@ -217,11 +215,12 @@ export default {
       if (this.automationsList?.length > 0) {
         this.automationsList.forEach((row) => {
           const typeLabels = {
-            switch: '🔘 Comutator',
-            sensor: '📡 Senzor',
-            actuator: '⚙️ Actuator',
-            light: '💡 Lumină',
-            lock: '🔒 Zăvor'
+            switch: 'Comutator',
+            sensor: 'Senzor',
+            actuator: 'Actuator',
+            light: 'Lumină',
+            lock: 'Zăvor',
+            test: 'Test/Ping'
           };
           const statusBadge = row.is_active 
             ? '<span class="badge badge-sm bg-gradient-primary">Activ</span>'
@@ -230,7 +229,6 @@ export default {
           this.automationsAux.push([
             `<h6 class="my-auto">${row.name}</h6>`,
             typeLabels[row.device_type || row.type] || row.device_type || row.type,
-            `${row.mqtt_broker_host}:${row.mqtt_broker_port}`,
             row.mqtt_topic,
             statusBadge,
             row.created_at,

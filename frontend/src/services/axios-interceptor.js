@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_BASE_URL + '/';
+
 // Interceptor pentru răspunsuri
 axios.interceptors.response.use(
   (response) => {
@@ -25,10 +27,38 @@ axios.interceptors.response.use(
 
           const { access_token, refresh_token: newRefreshToken } = response.data;
           
-          // Salvează noile token-uri
-          localStorage.setItem('user', JSON.stringify(access_token));
+          // Salvează noul token
+          localStorage.setItem('token', access_token);
           if (newRefreshToken) {
             localStorage.setItem('refresh_token', newRefreshToken);
+          }
+
+          // Reîncarcă profilul userului pentru a păstra roles/permissions
+          try {
+            const profileResponse = await axios.get(API_URL + 'me', {
+              headers: {
+                Authorization: `Bearer ${access_token}`,
+                Accept: 'application/vnd.api+json',
+              },
+            });
+            
+            const profileData = profileResponse.data.data;
+            const userData = {
+              id: profileData.id,
+              first_name: profileData.first_name,
+              last_name: profileData.last_name,
+              name: `${profileData.first_name || ''} ${profileData.last_name || ''}`.trim(),
+              email: profileData.email,
+              tenant_id: profileData.tenant_id,
+              tenant: profileData.tenant,
+              is_system_admin: profileData.is_system_admin || false,
+              active_tenant_id: profileData.active_tenant_id ?? null,
+              roles: profileData.roles || [],
+              permissions: profileData.permissions || [],
+            };
+            localStorage.setItem('user', JSON.stringify(userData));
+          } catch (profileError) {
+            console.error('Failed to refresh user profile:', profileError);
           }
 
           // Reîncearcă request-ul original cu noul token
@@ -39,6 +69,7 @@ axios.interceptors.response.use(
         // Dacă refresh-ul eșuează, șterge token-urile și redirectează
         console.error('Token refresh failed:', refreshError);
         localStorage.removeItem('user');
+        localStorage.removeItem('token');
         localStorage.removeItem('refresh_token');
         window.location.href = '/login';
         return Promise.reject(refreshError);

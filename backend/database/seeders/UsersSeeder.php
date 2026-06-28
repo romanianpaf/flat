@@ -20,16 +20,16 @@ class UsersSeeder extends Seeder
         DB::table('users')->truncate();
         Schema::enableForeignKeyConstraints();
 
-        // Sysadmin - asignat la tenantul System (id=1)
+        // Sysadmin - operator de platformă, FĂRĂ tenant (tenant_id = NULL)
         User::create([
             'name' => 'Alexandru Popescu',
             'email' => 'alexandru@popescu.vip',
             'password' => 'password',
-            'tenant_id' => 1,
+            'tenant_id' => null,
         ])->assignRole('sysadmin');
 
         // Tenanții
-        $tenants = \App\Models\Tenant::where('id', '>', 1)->get();
+        $tenants = \App\Models\Tenant::all();
 
         foreach ($tenants as $tenant) {
             // Admin pentru fiecare tenant

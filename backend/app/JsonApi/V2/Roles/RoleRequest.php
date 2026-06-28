@@ -14,7 +14,8 @@ class RoleRequest extends ResourceRequest
     public function rules(): array
     {
         $roleId = $this->route('role');
-        $tenantId = session('current_tenant_id');
+        // Contextul de tenant vine din resolver (stateless), nu din session.
+        $tenantId = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
 
         if ($this->model()) {
             return [

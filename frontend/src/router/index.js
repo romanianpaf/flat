@@ -107,6 +107,7 @@ import RegistrationRequests from "../views/admin/RegistrationRequests.vue";
 import admin from "../middlewares/admin.js";
 import adminCreator from "../middlewares/admin_creator.js";
 import carteImobilAdmin from "../middlewares/carte_imobil_admin.js";
+import sysadmin from "../middlewares/sysadmin.js";
 import viewMembers from "../middlewares/view_members.js";
 import guest from "../middlewares/guest.js";
 import auth from "../middlewares/auth.js";
@@ -573,7 +574,7 @@ const routes = [
     name: "Tenants",
     component: Tenants,
     meta: {
-      middleware: [auth, adminCreator],
+      middleware: [auth, sysadmin],
     },
   },
   {
@@ -581,7 +582,7 @@ const routes = [
     name: "New Tenant",
     component: NewTenant,
     meta: {
-      middleware: [auth, adminCreator],
+      middleware: [auth, sysadmin],
     },
   },
   {
@@ -589,7 +590,7 @@ const routes = [
     name: "Edit Tenant",
     component: EditTenant,
     meta: {
-      middleware: [auth, adminCreator],
+      middleware: [auth, sysadmin],
     },
   },
   {

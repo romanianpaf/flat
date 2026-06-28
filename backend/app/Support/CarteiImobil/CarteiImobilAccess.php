@@ -9,12 +9,8 @@ class CarteiImobilAccess
 {
     public static function isGlobalAdmin(User $user): bool
     {
-        // sysadmin are acces cross-tenant
-        if ($user->hasRole('sysadmin')) {
-            return true;
-        }
-
-        return !$user->tenant_id && $user->hasRole('admin');
+        // Acces cross-tenant = operator de platformă (sysadmin).
+        return $user->isSystemAdmin();
     }
 
     public static function isApprover(User $user): bool

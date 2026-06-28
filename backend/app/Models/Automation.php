@@ -78,7 +78,7 @@ class Automation extends Model
         // Setează automat tenant_id la creare
         static::creating(function ($automation) {
             if (auth()->check() && !$automation->tenant_id) {
-                $automation->tenant_id = auth()->user()->tenant_id;
+                $automation->tenant_id = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
             }
         });
     }

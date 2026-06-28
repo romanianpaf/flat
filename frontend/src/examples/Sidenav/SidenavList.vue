@@ -35,16 +35,16 @@
           </template>
           <template #list>
             <ul class="nav ms-4 ps-3">
-              <!-- Beneficiari - doar pentru cei cu view tenants -->
+              <!-- Beneficiari (management tenanți) - doar operatorul de platformă -->
               <sidenav-item
-                v-if="hasPermission('view tenants')"
+                v-if="isSystemAdmin()"
                 :to="{ name: 'Tenants' }"
                 mini-icon="B"
                 text="Beneficiari"
               />
-              <!-- Membri - pentru cei cu view members dar fără view tenants -->
+              <!-- Membri - utilizatorii din propriul tenant (nu sysadmin) -->
               <sidenav-item
-                v-if="hasPermission('view members') && !hasPermission('view tenants')"
+                v-if="hasPermission('view members') && !isSystemAdmin()"
                 :to="{ name: 'Members' }"
                 mini-icon="M"
                 text="Membri"
@@ -1090,6 +1090,14 @@ export default {
       try {
         const user = JSON.parse(localStorage.getItem("user"));
         return user?.permissions?.includes(permission) || false;
+      } catch (error) {
+        return false;
+      }
+    },
+    isSystemAdmin() {
+      try {
+        const user = JSON.parse(localStorage.getItem("user"));
+        return user?.is_system_admin === true;
       } catch (error) {
         return false;
       }

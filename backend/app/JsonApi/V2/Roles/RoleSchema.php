@@ -70,12 +70,24 @@ class RoleSchema extends Schema
             return $query;
         }
 
-        // Sysadmin și admini văd toate rolurile
-        if ($user->hasRole(['admin', 'sysadmin'])) {
-            return $query;
+        // Operatorul de platformă (sysadmin): vede toate rolurile, sau rolurile
+        // globale + ale tenantului în care a "intrat" (context switch).
+        if ($user->isSystemAdmin()) {
+            $resolver = app(\App\Support\Tenancy\TenantResolver::class);
+
+            if ($resolver->isUnscoped()) {
+                return $query;
+            }
+
+            $tenantId = $resolver->activeTenantId();
+
+            return $query->where(function ($q) use ($tenantId) {
+                $q->whereNull('tenant_id')
+                  ->orWhere('tenant_id', $tenantId);
+            });
         }
 
-        // Utilizatorii cu tenant văd rolurile globale + ale propriului tenant
+        // Utilizatorii cu tenant văd rolurile globale + ale propriului tenant.
         if ($user->tenant_id) {
             return $query->where(function ($q) use ($user) {
                 $q->whereNull('tenant_id')
@@ -83,7 +95,7 @@ class RoleSchema extends Schema
             });
         }
 
-        // Utilizatorii globali văd doar rolurile globale
+        // Utilizatorii fără tenant văd doar rolurile globale.
         return $query->whereNull('tenant_id');
     }
 

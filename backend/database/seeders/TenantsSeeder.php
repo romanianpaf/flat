@@ -14,19 +14,8 @@ class TenantsSeeder extends Seeder
      */
     public function run()
     {
-        // Tenant System (pentru sysadmini)
-        Tenant::create([
-            'id' => 1,
-            'name' => 'System',
-            'address' => 'System',
-            'fiscal_code' => 'SYSTEM',
-            'description' => 'Tenant-ul system pentru administratori',
-            'contact_data' => [
-                'phone' => '',
-                'email' => '',
-                'person' => 'System',
-            ],
-        ]);
+        // NOTĂ: nu mai există un tenant "System". Operatorul de platformă
+        // (sysadmin) este tenant-less (tenant_id = NULL) — vezi UsersSeeder.
 
         Tenant::create([
             'name' => 'Pensiunea Poiana',

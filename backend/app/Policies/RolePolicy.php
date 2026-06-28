@@ -29,7 +29,7 @@ class RolePolicy
         }
 
         // Sysadmin poate vedea toate rolurile
-        if ($user->hasRole('sysadmin')) {
+        if ($user->isSystemAdmin()) {
             return true;
         }
 
@@ -54,13 +54,14 @@ class RolePolicy
             return false;
         }
 
-        // Sysadmin (tenant_id = 1 pentru "System") poate edita toate rolurile
-        if ($user->tenant_id === 1 && $user->can('delete roles')) {
+        // Sysadmin (operator de platformă) poate edita toate rolurile
+        if ($user->isSystemAdmin()) {
             return true;
         }
 
         // Ceilalți utilizatori pot edita doar rolurile propriului tenant
-        return $user->tenant_id === $role->tenant_id;
+        // (niciodată rolurile globale, tenant_id = NULL)
+        return $user->tenant_id !== null && $user->tenant_id === $role->tenant_id;
     }
 
     public function delete(User $user, Role $role): Response|bool
@@ -70,12 +71,13 @@ class RolePolicy
             return false;
         }
 
-        // Sysadmin (tenant_id = 1 pentru "System") poate șterge toate rolurile
-        if ($user->tenant_id === 1) {
+        // Sysadmin (operator de platformă) poate șterge toate rolurile
+        if ($user->isSystemAdmin()) {
             return true;
         }
 
         // Ceilalți utilizatori pot șterge doar rolurile propriului tenant
-        return $user->tenant_id === $role->tenant_id;
+        // (niciodată rolurile globale, tenant_id = NULL)
+        return $user->tenant_id !== null && $user->tenant_id === $role->tenant_id;
     }
 }

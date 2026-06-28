@@ -38,7 +38,7 @@ class UserVoice extends Model
                     $userVoice->user_id = auth()->id();
                 }
                 if (!$userVoice->tenant_id) {
-                    $userVoice->tenant_id = auth()->user()->tenant_id;
+                    $userVoice->tenant_id = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
                 }
             }
         });

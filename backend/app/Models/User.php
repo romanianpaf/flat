@@ -57,6 +57,18 @@ class User extends Authenticatable
     // Nu aplicăm TenantScope pe User pentru că interferează cu autentificarea
     // Filtrarea se face explicit în UserPolicy și controller-e
 
+    /**
+     * Operatorul de platformă (deasupra tuturor tenanților).
+     *
+     * Sursa UNICĂ de adevăr pentru accesul "system". Un sysadmin este, prin
+     * contract, fără tenant (tenant_id = NULL) — vezi UsersSeeder și migrarea
+     * de date. Toate policy-urile și schemele se bazează pe acest helper.
+     */
+    public function isSystemAdmin(): bool
+    {
+        return $this->hasRole('sysadmin');
+    }
+
     public function items(): HasMany
     {
         return $this->hasMany(Item::class);

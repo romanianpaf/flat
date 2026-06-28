@@ -106,20 +106,11 @@ class UserPolicy
     }
 
     /**
-     * Check if user is a global admin (admin or sysadmin without tenant)
+     * Operatorul de platformă (deasupra tenanților).
+     * Sursa unică de adevăr: User::isSystemAdmin().
      */
     private function isGlobalAdmin(User $user): bool
     {
-        // Sysadmin are acces global indiferent de tenant
-        if ($user->hasRole('sysadmin')) {
-            return true;
-        }
-
-        // Admin fără tenant are acces global
-        if (!$user->tenant_id && $user->hasRole('admin')) {
-            return true;
-        }
-
-        return false;
+        return $user->isSystemAdmin();
     }
 }

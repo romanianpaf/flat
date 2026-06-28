@@ -24,14 +24,29 @@ class MeController extends Controller
         $user = auth()->user();
         
         if (!$user) {
+            \Log::warning('MeController: No authenticated user');
             return response()->json(['error' => 'Unauthorized'], 401);
         }
+
+        \Log::info('MeController: User found', [
+            'user_id' => $user->id,
+            'email' => $user->email,
+        ]);
 
         // Load roles, tenant, and permissions
         $user->load('roles', 'tenant');
 
+        \Log::info('MeController: After load', [
+            'roles_count' => $user->roles->count(),
+            'roles' => $user->roles->pluck('name')->toArray(),
+        ]);
+
         // Get all permissions (direct + inherited from roles)
         $permissions = $user->getAllPermissions()->pluck('name')->toArray();
+        
+        \Log::info('MeController: Permissions', [
+            'count' => count($permissions),
+        ]);
 
         // Returnez user-ul cu roles, tenant și permissions ca JSON:API simplificat
         return response()->json([
@@ -47,6 +62,12 @@ class MeController extends Controller
                 'floor' => $user->floor,
                 'profile_image' => $user->profile_image,
                 'tenant_id' => $user->tenant_id,
+                // Statutul de operator de platformă, calculat o singură dată în
+                // backend ca frontend-ul să nu-l mai deducă din roluri.
+                'is_system_admin' => $user->isSystemAdmin(),
+                // Tenantul în care lucrează request-ul curent (pentru sysadmin
+                // poate fi null = vedere globală, sau cel din context switch).
+                'active_tenant_id' => app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId(),
                 'tenant' => $user->tenant ? [
                     'id' => $user->tenant->id,
                     'name' => $user->tenant->name,

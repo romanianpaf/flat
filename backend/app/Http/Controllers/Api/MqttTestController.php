@@ -18,7 +18,7 @@ class MqttTestController extends Controller
         $user = auth()->user();
         
         // Verifică dacă utilizatorul are permisiune (sysadmin)
-        if (!$user || !$user->hasRole('sysadmin')) {
+        if (!$user || !$user->isSystemAdmin()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Nu ai permisiunea să testezi conexiunea MQTT.',

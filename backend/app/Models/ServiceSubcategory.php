@@ -27,7 +27,7 @@ class ServiceSubcategory extends Model
 
         static::creating(function (ServiceSubcategory $subcategory): void {
             if (auth()->check() && !$subcategory->tenant_id) {
-                $subcategory->tenant_id = auth()->user()->tenant_id;
+                $subcategory->tenant_id = app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId();
             }
         });
     }
