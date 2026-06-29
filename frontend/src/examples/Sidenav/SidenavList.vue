@@ -42,6 +42,13 @@
                 mini-icon="B"
                 text="Beneficiari"
               />
+              <!-- Impersonare utilizatori - doar operatorul de platformă -->
+              <sidenav-item
+                v-if="isSystemAdmin()"
+                :to="{ name: 'Impersonare' }"
+                mini-icon="I"
+                text="Impersonare"
+              />
               <!-- Membri - utilizatorii din propriul tenant (nu sysadmin) -->
               <sidenav-item
                 v-if="hasPermission('view members') && !isSystemAdmin()"

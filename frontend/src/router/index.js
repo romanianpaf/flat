@@ -102,6 +102,7 @@ import EditServiceProvider from "../views/examples/Services/EditServiceProvider.
 import CarteImobil from "../views/carte-imobil/CarteImobil.vue";
 import CarteImobilAdmin from "../views/carte-imobil/CarteImobilAdmin.vue";
 import TenantBuilding from "../views/carte-imobil/TenantBuilding.vue";
+import Impersonare from "../views/admin/Impersonare.vue";
 import RegistrationRequest from "../views/auth/registration-request/RegistrationRequest.vue";
 import RegistrationRequests from "../views/admin/RegistrationRequests.vue";
 import admin from "../middlewares/admin.js";
@@ -148,6 +149,14 @@ const routes = [
     component: TenantBuilding,
     meta: {
       middleware: [auth, carteImobilAdmin],
+    },
+  },
+  {
+    path: "/admin/impersonare",
+    name: "Impersonare",
+    component: Impersonare,
+    meta: {
+      middleware: [auth, sysadmin],
     },
   },
   {

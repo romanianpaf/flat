@@ -3,6 +3,33 @@ import authHeader from "./auth-header";
 
 const API_URL = import.meta.env.VITE_API_BASE_URL + '/';
 
+// Fetch /me cu un token dat și salvează userul în localStorage. Reutilizat la
+// login, refresh de token și impersonare.
+async function fetchAndStoreProfile(token) {
+  const profileResponse = await axios.get(API_URL + "me", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/vnd.api+json",
+    },
+  });
+  const profileData = profileResponse.data.data;
+  const userData = {
+    id: profileData.id,
+    first_name: profileData.first_name,
+    last_name: profileData.last_name,
+    name: `${profileData.first_name || ''} ${profileData.last_name || ''}`.trim(),
+    email: profileData.email,
+    tenant_id: profileData.tenant_id,
+    tenant: profileData.tenant,
+    is_system_admin: profileData.is_system_admin || false,
+    active_tenant_id: profileData.active_tenant_id ?? null,
+    roles: profileData.roles || [],
+    permissions: profileData.permissions || [],
+  };
+  localStorage.setItem("user", JSON.stringify(userData));
+  return userData;
+}
+
 export default {
   async login(user) {
     const response = await axios.post(API_URL + "login", user);
@@ -16,33 +43,60 @@ export default {
 
       // Fetch user profile cu roles și permissions
       // Folosesc token-ul direct pentru a evita timing issues cu authHeader()
-      const profileResponse = await axios.get(API_URL + "me", {
-        headers: {
-          Authorization: `Bearer ${response.data.access_token}`,
-          Accept: "application/vnd.api+json",
-        },
-      });
-      console.log("Profile response:", profileResponse.data);
-      
-      const profileData = profileResponse.data.data;
-      const userData = {
-        id: profileData.id,
-        first_name: profileData.first_name,
-        last_name: profileData.last_name,
-        name: `${profileData.first_name || ''} ${profileData.last_name || ''}`.trim(),
-        email: profileData.email,
-        tenant_id: profileData.tenant_id,
-        tenant: profileData.tenant,
-        is_system_admin: profileData.is_system_admin || false,
-        active_tenant_id: profileData.active_tenant_id ?? null,
-        roles: profileData.roles || [],
-        permissions: profileData.permissions || [],
-      };
-      console.log("Saving user to localStorage:", userData);
-      console.log("Roles:", userData.roles);
-      console.log("Permissions count:", userData.permissions.length);
-      localStorage.setItem("user", JSON.stringify(userData));
+      await fetchAndStoreProfile(response.data.access_token);
     }
+  },
+
+  /**
+   * Pornește impersonarea unui user (doar sysadmin). Păstrează identitatea
+   * curentă pentru revenire, comută pe token-ul de impersonare și reîncarcă /me.
+   */
+  async impersonate(userId) {
+    const currentToken = localStorage.getItem("token");
+    const res = await axios.post(
+      API_URL + `impersonate/${userId}`,
+      {},
+      { headers: { Authorization: `Bearer ${currentToken}`, Accept: "application/vnd.api+json" } }
+    );
+
+    const newToken = res.data?.data?.access_token;
+    if (!newToken) throw new Error("Nu am primit token de impersonare.");
+
+    // Păstrează identitatea sysadminului pentru "Revino la contul meu".
+    localStorage.setItem("impersonator_token", currentToken);
+    localStorage.setItem("impersonator_user", localStorage.getItem("user") || "");
+
+    // Comută pe token-ul de impersonare și încarcă profilul userului impersonat.
+    localStorage.setItem("token", newToken);
+    await fetchAndStoreProfile(newToken);
+  },
+
+  /**
+   * Oprește impersonarea: revocă token-ul de impersonare (best-effort) și
+   * restaurează identitatea sysadminului.
+   */
+  async leaveImpersonation() {
+    const impToken = localStorage.getItem("token");
+    try {
+      await axios.post(
+        API_URL + "impersonate-leave",
+        {},
+        { headers: { Authorization: `Bearer ${impToken}`, Accept: "application/vnd.api+json" } }
+      );
+    } catch (e) {
+      console.warn("Impersonate-leave call failed (continuăm cu restaurarea locală):", e);
+    }
+
+    const origToken = localStorage.getItem("impersonator_token");
+    const origUser = localStorage.getItem("impersonator_user");
+    if (origToken) localStorage.setItem("token", origToken);
+    if (origUser) localStorage.setItem("user", origUser);
+    localStorage.removeItem("impersonator_token");
+    localStorage.removeItem("impersonator_user");
+  },
+
+  isImpersonating() {
+    return !!localStorage.getItem("impersonator_token");
   },
 
   async logout() {

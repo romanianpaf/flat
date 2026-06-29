@@ -65,6 +65,11 @@ Route::prefix('v2')->middleware('json.api')->group(function () {
         Route::put('occupants/{occupant}', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantController::class, 'update']);
         Route::delete('occupants/{occupant}', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantController::class, 'destroy']);
 
+        // Impersonare (sysadmin) — "login ca user"
+        Route::get('impersonate/candidates', [App\Http\Controllers\Api\V2\ImpersonationController::class, 'candidates']);
+        Route::post('impersonate-leave', [App\Http\Controllers\Api\V2\ImpersonationController::class, 'stop']);
+        Route::post('impersonate/{user}', [App\Http\Controllers\Api\V2\ImpersonationController::class, 'start']);
+
         // Registration requests management (admin/cex)
         Route::get('registration-requests', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'index']);
         Route::get('registration-requests/{registrationRequest}', [App\Http\Controllers\Api\V2\RegistrationRequestController::class, 'show']);
