@@ -17,6 +17,8 @@ class UpsertStaircaseRequest extends ApiFormRequest
             'code' => ['required', 'string', 'max:20'],
             'name' => ['nullable', 'string', 'max:255'],
             'sort_order' => ['nullable', 'integer', 'min:0', 'max:100000'],
+            'floors' => ['nullable', 'array'],
+            'floors.*' => ['string', 'max:20'],
         ];
     }
 
@@ -26,6 +28,7 @@ class UpsertStaircaseRequest extends ApiFormRequest
             'code' => 'cod scară',
             'name' => 'nume scară',
             'sort_order' => 'ordine',
+            'floors' => 'etaje disponibile',
         ];
     }
 }

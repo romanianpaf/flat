@@ -81,6 +81,7 @@ class TenantBuildingController extends ApiController
                 'code' => $s->code,
                 'name' => $s->name,
                 'sort_order' => $s->sort_order,
+                'floors' => $s->floors ?? [],
             ])->values();
 
         $apartments = Apartment::query()
@@ -117,6 +118,7 @@ class TenantBuildingController extends ApiController
             'code' => trim($data['code']),
             'name' => $data['name'] ?? null,
             'sort_order' => $data['sort_order'] ?? 0,
+            'floors' => $this->normalizeFloors($data['floors'] ?? []),
         ]);
 
         return $this->success(['staircase' => [
@@ -125,6 +127,7 @@ class TenantBuildingController extends ApiController
             'code' => $s->code,
             'name' => $s->name,
             'sort_order' => $s->sort_order,
+            'floors' => $s->floors ?? [],
         ]], 201);
     }
 
@@ -139,6 +142,10 @@ class TenantBuildingController extends ApiController
         $staircase->code = trim($data['code']);
         $staircase->name = $data['name'] ?? null;
         $staircase->sort_order = $data['sort_order'] ?? $staircase->sort_order;
+        // Actualizăm etajele doar dacă au fost trimise (modalul de editare nu le trimite).
+        if (array_key_exists('floors', $data)) {
+            $staircase->floors = $this->normalizeFloors($data['floors'] ?? []);
+        }
         $staircase->save();
 
         return $this->success(['staircase' => [
@@ -147,7 +154,21 @@ class TenantBuildingController extends ApiController
             'code' => $staircase->code,
             'name' => $staircase->name,
             'sort_order' => $staircase->sort_order,
+            'floors' => $staircase->floors ?? [],
         ]]);
+    }
+
+    /**
+     * Normalizează lista de etaje: trim, fără goluri, fără duplicate, reindexat.
+     */
+    private function normalizeFloors($floors): array
+    {
+        return collect(is_array($floors) ? $floors : [])
+            ->map(fn($f) => trim((string) $f))
+            ->filter(fn($f) => $f !== '')
+            ->unique()
+            ->values()
+            ->all();
     }
 
     public function destroyStaircase(Request $request, Staircase $staircase)

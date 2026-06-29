@@ -15,6 +15,11 @@ class Staircase extends Model
         'code',
         'name',
         'sort_order',
+        'floors',
+    ];
+
+    protected $casts = [
+        'floors' => 'array',
     ];
 
     public function tenant(): BelongsTo

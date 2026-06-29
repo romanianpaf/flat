@@ -56,6 +56,16 @@
                         <button class="btn btn-outline-danger btn-sm mb-0" @click="onDeleteStaircase(s)">Șterge scara</button>
                       </div>
 
+                      <!-- Etaje disponibile pentru ACEASTĂ scară -->
+                      <label class="form-label">Etaje disponibile (separate prin virgulă)</label>
+                      <input
+                        class="form-control"
+                        v-model="s.floorsInput"
+                        placeholder="ex: P, 1, 2, 3, 4, 5, 6"
+                        @input="parseFloorsFor(s)"
+                      />
+                      <small class="text-muted d-block mb-3">Etajele pentru scara {{ s.code }} (P = parter)</small>
+
                       <label class="form-label">Apartamente (numere, separate prin virgulă)</label>
                       <textarea class="form-control" rows="2" v-model="apartmentsByStaircase[s.code]" />
                       <div class="d-flex gap-2 mt-2">
@@ -85,7 +95,7 @@
                                     @change="onFloorChange(apt, $event.target.value)"
                                   >
                                     <option value="">-</option>
-                                    <option v-for="f in floorOptions" :key="f" :value="f">{{ f }}</option>
+                                    <option v-for="f in (s.floors || [])" :key="f" :value="f">{{ f }}</option>
                                   </select>
                                 </td>
                               </tr>
@@ -102,18 +112,12 @@
                 </div>
               </div>
 
-              <!-- Configurare etaje disponibile -->
-              <div class="mt-4">
-                <label class="form-label">Etaje disponibile (separate prin virgulă)</label>
-                <div class="d-flex gap-2">
-                  <input 
-                    class="form-control" 
-                    v-model="floorsInput" 
-                    placeholder="ex: P, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10"
-                    @blur="parseFloors"
-                  />
-                </div>
-                <small class="text-muted">Introdu etajele disponibile în imobil (P = parter)</small>
+              <!-- Salvează configurarea etajelor pentru toate scările -->
+              <div class="mt-4 d-flex justify-content-end" v-if="staircases.length">
+                <button class="btn bg-gradient-primary mb-0" @click="onSaveAll" :disabled="savingAll">
+                  <span v-if="savingAll">Se salvează...</span>
+                  <span v-else>Salvează modificările</span>
+                </button>
               </div>
 
               <hr class="horizontal dark my-4" />
@@ -183,8 +187,7 @@ export default {
       editing: null,
       form: { code: "", name: "", sort_order: 0 },
       saving: false,
-      floorsInput: "P, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10",
-      floorOptions: ["P", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+      savingAll: false,
       tenants: [],
       selectedTenantId: null,
     };
@@ -225,7 +228,11 @@ export default {
           carteImobilService.getApartmentsList(tenantParam).catch(() => ({ data: { apartments: [] } })),
         ]);
         
-        this.staircases = buildingRes?.data?.staircases || [];
+        // Fiecare scară primește etajele proprii + un câmp text editabil.
+        this.staircases = (buildingRes?.data?.staircases || []).map((s) => {
+          const floors = Array.isArray(s.floors) ? s.floors : [];
+          return { ...s, floors, floorsInput: floors.join(", ") };
+        });
         this.apartmentsGroups = buildingRes?.data?.apartments || [];
         this.apartmentsList = apartmentsRes?.data?.apartments || [];
 
@@ -253,11 +260,41 @@ export default {
     getApartmentsForStaircase(staircaseCode) {
       return this.apartmentsList.filter((a) => a.staircase === staircaseCode);
     },
-    parseFloors() {
-      this.floorOptions = (this.floorsInput || "")
+    parseFloorsFor(s) {
+      s.floors = (s.floorsInput || "")
         .split(",")
         .map((f) => f.trim())
         .filter((f) => f.length > 0);
+    },
+    async onSaveAll() {
+      this.savingAll = true;
+      try {
+        // Asigură că etajele tastate sunt parsate înainte de salvare.
+        this.staircases.forEach((s) => this.parseFloorsFor(s));
+
+        await Promise.all(
+          this.staircases.map((s) =>
+            carteImobilService.updateStaircase(s.id, {
+              code: s.code,
+              name: s.name || null,
+              sort_order: s.sort_order || 0,
+              floors: s.floors || [],
+            })
+          )
+        );
+
+        showSwal.methods.showSwal({ type: "success", message: "Modificările au fost salvate." });
+        await this.load();
+      } catch (e) {
+        console.error("Save all error:", e);
+        const msg = e?.response?.data?.errors?.[0]?.message
+          || e?.response?.data?.message
+          || e?.message
+          || "Nu am putut salva modificările.";
+        showSwal.methods.showSwal({ type: "error", message: msg });
+      } finally {
+        this.savingAll = false;
+      }
     },
     async onFloorChange(apt, newFloor) {
       try {
