@@ -7,9 +7,11 @@ use App\Models\Apartment;
 use App\Models\RegistrationRequest;
 use App\Models\Tenant;
 use App\Models\User;
+use App\Notifications\RegistrationRequestSubmitted;
 use App\Support\CarteiImobil\CarteiImobilAccess;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -80,10 +82,32 @@ class RegistrationRequestController extends ApiController
             'status' => RegistrationRequest::STATUS_PENDING,
         ]);
 
+        $this->notifyManagers($registrationRequest);
+
         return $this->success([
             'message' => 'Cererea a fost trimisă cu succes. Vei primi un email când va fi procesată.',
             'request_id' => $registrationRequest->id,
         ], 201);
+    }
+
+    /**
+     * Notifică adminii și cex din tenant (in-app + email) despre cererea nouă.
+     * Best-effort, per destinatar: notificarea in-app (database) se scrie chiar
+     * dacă emailul eșuează (ex. SMTP indisponibil).
+     */
+    private function notifyManagers(RegistrationRequest $reg): void
+    {
+        $recipients = User::where('tenant_id', $reg->tenant_id)
+            ->whereHas('roles', fn($q) => $q->whereIn('name', ['admin', 'cex']))
+            ->get();
+
+        foreach ($recipients as $recipient) {
+            try {
+                $recipient->notify(new RegistrationRequestSubmitted($reg));
+            } catch (\Throwable $e) {
+                Log::warning('Notificare cerere cont eșuată pentru user ' . $recipient->id . ': ' . $e->getMessage());
+            }
+        }
     }
 
     /**

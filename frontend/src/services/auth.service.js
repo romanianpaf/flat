@@ -23,6 +23,7 @@ async function fetchAndStoreProfile(token) {
     tenant: profileData.tenant,
     is_system_admin: profileData.is_system_admin || false,
     active_tenant_id: profileData.active_tenant_id ?? null,
+    needs_carte_imobil: profileData.needs_carte_imobil || false,
     roles: profileData.roles || [],
     permissions: profileData.permissions || [],
   };

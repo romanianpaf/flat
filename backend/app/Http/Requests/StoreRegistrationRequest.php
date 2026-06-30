@@ -34,7 +34,8 @@ class StoreRegistrationRequest extends ApiFormRequest
                 },
             ],
             'phone' => 'nullable|string|max:50',
-            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
+            // Dovada de proprietar (poza contractului) este obligatorie.
+            'document' => 'required|file|mimes:pdf,jpg,jpeg,png|max:5120', // 5MB max
             'notes' => 'nullable|string|max:1000',
         ];
     }
@@ -53,6 +54,7 @@ class StoreRegistrationRequest extends ApiFormRequest
             'email.email' => 'Te rog introdu un email valid.',
             'email.unique' => 'Acest email este deja utilizat sau există o cerere în așteptare.',
             'phone.max' => 'Telefonul nu poate avea mai mult de 50 caractere.',
+            'document.required' => 'Te rog atașează poza contractului de vânzare-cumpărare.',
             'document.file' => 'Documentul trebuie să fie un fișier.',
             'document.mimes' => 'Documentul trebuie să fie PDF sau imagine (JPG, PNG).',
             'document.max' => 'Documentul nu poate depăși 5MB.',

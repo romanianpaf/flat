@@ -65,6 +65,9 @@ class MeController extends Controller
                 // Statutul de operator de platformă, calculat o singură dată în
                 // backend ca frontend-ul să nu-l mai deducă din roluri.
                 'is_system_admin' => $user->isSystemAdmin(),
+                // Onboarding: locatar nou care încă nu și-a completat cartea de
+                // imobil (are apartament, dar zero locatari adăugați).
+                'needs_carte_imobil' => $this->needsCarteImobil($user),
                 // Tenantul în care lucrează request-ul curent (pentru sysadmin
                 // poate fi null = vedere globală, sau cel din context switch).
                 'active_tenant_id' => app(\App\Support\Tenancy\TenantResolver::class)->activeTenantId(),
@@ -83,6 +86,24 @@ class MeController extends Controller
                 'permissions' => $permissions,
             ],
         ]);
+    }
+
+    /**
+     * Un locatar trebuie să-și completeze cartea de imobil dacă are cel puțin un
+     * apartament asignat, dar pe niciunul nu există încă vreun locatar adăugat.
+     */
+    private function needsCarteImobil($user): bool
+    {
+        if ($user->isSystemAdmin() || !$user->hasRole('locatar')) {
+            return false;
+        }
+
+        $apartmentIds = $user->apartments()->pluck('apartments.id');
+        if ($apartmentIds->isEmpty()) {
+            return false;
+        }
+
+        return !\App\Models\Occupant::whereIn('apartment_id', $apartmentIds)->exists();
     }
 
      /**

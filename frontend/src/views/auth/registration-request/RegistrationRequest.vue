@@ -137,17 +137,18 @@
                       />
                     </div>
 
-                    <!-- Document upload -->
+                    <!-- Document upload (dovadă proprietar) -->
                     <div class="mb-3">
-                      <label class="form-label">Document (opțional)</label>
+                      <label class="form-label">Poza contractului de vânzare-cumpărare *</label>
                       <input
                         type="file"
                         class="form-control"
                         @change="onFileChange"
                         accept=".pdf,.jpg,.jpeg,.png"
+                        required
                       />
                       <small class="text-muted">
-                        PDF sau imagine (max 5MB). Ex: prima pagină din contract.
+                        Dovadă că ești proprietar — poza paginii din contract (PDF sau imagine, max 5MB).
                       </small>
                     </div>
 
@@ -311,6 +312,12 @@ export default {
     },
     async handleSubmit() {
       this.error = null;
+
+      if (!this.document) {
+        this.error = "Te rog atașează poza contractului de vânzare-cumpărare.";
+        return;
+      }
+
       this.loading = true;
 
       try {

@@ -65,6 +65,11 @@ Route::prefix('v2')->middleware('json.api')->group(function () {
         Route::put('occupants/{occupant}', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantController::class, 'update']);
         Route::delete('occupants/{occupant}', [App\Http\Controllers\Api\V2\CarteiImobil\OccupantController::class, 'destroy']);
 
+        // Notificări in-app (clopoțel)
+        Route::get('notifications', [App\Http\Controllers\Api\V2\NotificationController::class, 'index']);
+        Route::post('notifications/read-all', [App\Http\Controllers\Api\V2\NotificationController::class, 'markAllRead']);
+        Route::post('notifications/{id}/read', [App\Http\Controllers\Api\V2\NotificationController::class, 'markRead']);
+
         // Impersonare (sysadmin) — "login ca user"
         Route::get('impersonate/candidates', [App\Http\Controllers\Api\V2\ImpersonationController::class, 'candidates']);
         Route::post('impersonate-leave', [App\Http\Controllers\Api\V2\ImpersonationController::class, 'stop']);
