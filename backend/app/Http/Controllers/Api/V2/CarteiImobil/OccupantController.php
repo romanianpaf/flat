@@ -24,8 +24,14 @@ class OccupantController extends ApiController
 
             $occupant->fill($request->validated());
 
-            // Dacă e locatar și era respins, la prima editare revine în draft
-            if (!CarteiImobilAccess::isApprover($user) && $occupant->status === 'rejected') {
+            if (CarteiImobilAccess::isTenantManager($user, $occupant->apartment)) {
+                // Comitetul (CEX/admin): modificarea e direct finală (aprobată).
+                $occupant->status = 'approved';
+                $occupant->approved_at = now();
+                $occupant->approved_by = $user->id;
+                $occupant->reject_reason = null;
+            } elseif (!CarteiImobilAccess::isApprover($user) && $occupant->status === 'rejected') {
+                // Locatar: dacă era respins, la prima editare revine în draft.
                 $occupant->status = 'draft';
                 $occupant->reject_reason = null;
                 $occupant->submitted_at = null;

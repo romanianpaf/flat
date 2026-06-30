@@ -55,18 +55,29 @@ class ApartmentOccupantsController extends ApiController
         }
 
         $user = $request->user();
+        // Comitetul (CEX/admin) finalizează direct, fără pasul de validare.
+        $isManager = CarteiImobilAccess::isTenantManager($user, $apartment);
 
-        $occupant = DB::transaction(function () use ($request, $apartment, $user, $audit) {
+        $occupant = DB::transaction(function () use ($request, $apartment, $user, $audit, $isManager) {
             $occupant = new Occupant();
             $occupant->fill($request->validated());
             $occupant->apartment_id = $apartment->id;
-            $occupant->status = 'draft';
             $occupant->created_by = $user->id;
             $occupant->updated_by = $user->id;
             $occupant->reject_reason = null;
-            $occupant->submitted_at = null;
-            $occupant->approved_at = null;
-            $occupant->approved_by = null;
+
+            if ($isManager) {
+                $occupant->status = 'approved';
+                $occupant->submitted_at = now();
+                $occupant->approved_at = now();
+                $occupant->approved_by = $user->id;
+            } else {
+                $occupant->status = 'draft';
+                $occupant->submitted_at = null;
+                $occupant->approved_at = null;
+                $occupant->approved_by = null;
+            }
+
             $occupant->save();
 
             $audit->log(
@@ -134,28 +145,27 @@ class ApartmentOccupantsController extends ApiController
             return $this->error('Nu există persoane în acest apartament.', 404);
         }
 
-        if ($occupants->contains(fn(Occupant $o) => in_array($o->status, ['draft', 'rejected'], true))) {
-            return $this->error('Nu poți aproba cât timp există persoane în draft/rejected. Trimiteți lista completă spre validare.', 409);
+        // Aprobă tot ce nu e deja aprobat (draft/submitted/rejected -> approved).
+        // Comitetul finalizează lista dintr-un singur pas.
+        $toApprove = $occupants->filter(fn(Occupant $o) => $o->status !== 'approved');
+        if ($toApprove->isEmpty()) {
+            return $this->error('Toate persoanele sunt deja aprobate.', 409);
         }
 
-        $submitted = $occupants->filter(fn(Occupant $o) => $o->status === 'submitted');
-        if ($submitted->isEmpty()) {
-            return $this->error('Nu există o cerere submitted pentru acest apartament.', 409);
-        }
-
-        DB::transaction(function () use ($submitted, $user, $request, $audit) {
-            foreach ($submitted as $o) {
+        DB::transaction(function () use ($toApprove, $user, $request, $audit) {
+            foreach ($toApprove as $o) {
                 $before = $o->toArray();
                 $o->status = 'approved';
                 $o->approved_at = now();
                 $o->approved_by = $user->id;
                 $o->updated_by = $user->id;
+                $o->reject_reason = null;
                 $o->save();
                 $audit->log($o, 'approved', $request, $before, $o->fresh()->toArray());
             }
         });
 
-        return $this->success(['message' => 'Cererea a fost aprobată.']);
+        return $this->success(['message' => 'Persoanele au fost aprobate.']);
     }
 
     public function reject(RejectOccupantsRequest $request, Apartment $apartment, OccupantAuditService $audit)

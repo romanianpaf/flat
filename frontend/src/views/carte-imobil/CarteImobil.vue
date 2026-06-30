@@ -15,7 +15,26 @@
               <button class="btn bg-gradient-primary btn-sm mb-0" :disabled="!selectedApartmentId || isLocked" @click="openCreate">
                 + Adaugă persoană
               </button>
+              <!-- Manager (CEX/admin): aprobă/respinge direct, fără validare externă -->
+              <template v-if="isManager">
+                <button
+                  class="btn bg-gradient-success btn-sm mb-0"
+                  :disabled="!selectedApartmentId || !hasPending"
+                  @click="onApproveAll"
+                >
+                  Aprobă tot
+                </button>
+                <button
+                  class="btn bg-gradient-warning btn-sm mb-0"
+                  :disabled="!hasSubmitted"
+                  @click="onRejectAll"
+                >
+                  Respinge tot
+                </button>
+              </template>
+              <!-- Locatar: trimite lista spre validarea comitetului -->
               <button
+                v-else
                 class="btn bg-gradient-success btn-sm mb-0"
                 :disabled="!canSubmit"
                 @click="onSubmit"
@@ -246,6 +265,14 @@ export default {
       const okStatuses = this.occupants.every((o) => ["draft", "rejected"].includes(o.status));
       return okStatuses && Object.keys(this.errors).length === 0;
     },
+    // Există persoane neaprobate (pentru butonul „Aprobă tot")
+    hasPending() {
+      return this.occupants.some((o) => o.status !== "approved");
+    },
+    // Există o cerere trimisă de locatari (pentru „Respinge tot")
+    hasSubmitted() {
+      return this.occupants.some((o) => o.status === "submitted");
+    },
   },
   async mounted() {
     await this.loadApartments();
@@ -448,6 +475,40 @@ export default {
         }
       } catch (e) {
         const msg = e?.response?.data?.errors?.[0]?.message || "Nu am putut trimite spre validare.";
+        showSwal.methods.showSwal({ type: "error", message: msg });
+      }
+    },
+    async onApproveAll() {
+      try {
+        const res = await carteImobilService.approve(this.selectedApartmentId);
+        if (res?.success) {
+          showSwal.methods.showSwal({ type: "success", message: "Persoanele au fost aprobate." });
+          await this.loadOccupants();
+        } else {
+          showSwal.methods.showSwal({ type: "error", message: "Nu am putut aproba." });
+        }
+      } catch (e) {
+        const msg = e?.response?.data?.errors?.[0]?.message || "Nu am putut aproba.";
+        showSwal.methods.showSwal({ type: "error", message: msg });
+      }
+    },
+    async onRejectAll() {
+      const reason = window.prompt("Motivul respingerii (min. 5 caractere):", "");
+      if (reason === null) return;
+      if (!reason || reason.trim().length < 5) {
+        showSwal.methods.showSwal({ type: "error", message: "Motivul trebuie să aibă cel puțin 5 caractere." });
+        return;
+      }
+      try {
+        const res = await carteImobilService.reject(this.selectedApartmentId, reason.trim());
+        if (res?.success) {
+          showSwal.methods.showSwal({ type: "success", message: "Cererea a fost respinsă." });
+          await this.loadOccupants();
+        } else {
+          showSwal.methods.showSwal({ type: "error", message: "Nu am putut respinge." });
+        }
+      } catch (e) {
+        const msg = e?.response?.data?.errors?.[0]?.message || "Nu am putut respinge.";
         showSwal.methods.showSwal({ type: "error", message: msg });
       }
     },
