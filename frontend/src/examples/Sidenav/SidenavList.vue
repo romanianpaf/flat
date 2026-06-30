@@ -178,6 +178,58 @@
           </template>
         </sidenav-collapse>
       </li>
+      <!-- Examples (API) — păstrat în meniul principal -->
+      <li class="nav-item">
+        <sidenav-collapse
+          collapse-ref="apiExamples"
+          nav-text="Examples (API)"
+          :class="getRoute() === 'examples' && !$route.path.includes('/tenants') && !$route.path.includes('/roles') && !$route.path.includes('/users') && !$route.path.includes('/automations') && !$route.path.includes('/polls') && !$route.path.includes('/user-voices') ? 'active' : ''"
+        >
+          <template #icon>
+            <Vue />
+          </template>
+          <template #list>
+            <ul class="nav ms-4 ps-3">
+              <sidenav-item
+                :to="{ name: 'Profile' }"
+                mini-icon="P"
+                text="User Profile"
+              />
+              <sidenav-item
+                v-if="requireCreator"
+                :to="{ name: 'Categories' }"
+                mini-icon="C"
+                text="Category Management"
+              />
+              <sidenav-item
+                v-if="requireCreator"
+                :to="{ name: 'Tags' }"
+                mini-icon="T"
+                text="Tag Management"
+              />
+              <sidenav-item
+                v-if="requireCreator"
+                :to="{ name: 'Items' }"
+                mini-icon="I"
+                text="Item Management"
+              />
+            </ul>
+          </template>
+        </sidenav-collapse>
+      </li>
+
+      <!-- OLD (boilerplate Soft UI) — vizibil doar pentru superadmin -->
+      <li v-if="isSystemAdmin()" class="nav-item">
+        <sidenav-collapse
+          collapse-ref="oldBoilerplate"
+          nav-text="Old (boilerplate)"
+        >
+          <template #icon>
+            <Box3d />
+          </template>
+          <template #list>
+            <ul class="nav ms-4 ps-3">
+
       <li class="nav-item">
         <sidenav-collapse
           collapse-ref="dashboardsExamples"
@@ -228,53 +280,6 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li class="mt-3 nav-item">
-        <h6
-          class="text-xs ps-4 text-uppercase font-weight-bolder opacity-6"
-          :class="isRTL ? 'me-4' : 'ms-2'"
-        >
-          PAGES
-        </h6>
-      </li>
-      <li class="nav-item">
-        <sidenav-collapse
-          collapse-ref="apiExamples"
-          nav-text="Examples (API)"
-          :class="getRoute() === 'examples' && !$route.path.includes('/tenants') && !$route.path.includes('/roles') && !$route.path.includes('/users') && !$route.path.includes('/automations') && !$route.path.includes('/polls') && !$route.path.includes('/user-voices') ? 'active' : ''"
-        >
-          <template #icon>
-            <Vue />
-          </template>
-          <template #list>
-            <ul class="nav ms-4 ps-3">
-              <sidenav-item
-                :to="{ name: 'Profile' }"
-                mini-icon="P"
-                text="User Profile"
-              />
-              <sidenav-item
-                v-if="requireCreator"
-                :to="{ name: 'Categories' }"
-                mini-icon="C"
-                text="Category Management"
-              />
-              <sidenav-item
-                v-if="requireCreator"
-                :to="{ name: 'Tags' }"
-                mini-icon="T"
-                text="Tag Management"
-              />
-              <sidenav-item
-                v-if="requireCreator"
-                :to="{ name: 'Items' }"
-                mini-icon="I"
-                text="Item Management"
-              />
-            </ul>
-          </template>
-        </sidenav-collapse>
-      </li>
-
       <li class="nav-item">
         <sidenav-collapse
           collapse-ref="pagesExamples"
@@ -1007,9 +1012,13 @@
           </template>
         </sidenav-collapse>
       </li>
+            </ul>
+          </template>
+        </sidenav-collapse>
+      </li>
     </ul>
   </div>
-  <div class="pt-3 mx-3 mt-3 sidenav-footer">
+  <div v-if="isSystemAdmin()" class="pt-3 mx-3 mt-3 sidenav-footer">
     <sidenav-card
       :class="cardBg"
       text-primary="Need Help?"
