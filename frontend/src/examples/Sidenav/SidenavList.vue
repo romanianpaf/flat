@@ -178,7 +178,19 @@
           </template>
         </sidenav-collapse>
       </li>
-      <!-- Examples (API) — păstrat în meniul principal -->
+      <!-- OLD (boilerplate Soft UI) — vizibil doar pentru superadmin -->
+      <li v-if="isSystemAdmin()" class="nav-item">
+        <sidenav-collapse
+          collapse-ref="oldBoilerplate"
+          nav-text="Old (boilerplate)"
+        >
+          <template #icon>
+            <Box3d />
+          </template>
+          <template #list>
+            <ul class="nav ms-4 ps-3">
+
+      <!-- Examples (API) -->
       <li class="nav-item">
         <sidenav-collapse
           collapse-ref="apiExamples"
@@ -217,18 +229,6 @@
           </template>
         </sidenav-collapse>
       </li>
-
-      <!-- OLD (boilerplate Soft UI) — vizibil doar pentru superadmin -->
-      <li v-if="isSystemAdmin()" class="nav-item">
-        <sidenav-collapse
-          collapse-ref="oldBoilerplate"
-          nav-text="Old (boilerplate)"
-        >
-          <template #icon>
-            <Box3d />
-          </template>
-          <template #list>
-            <ul class="nav ms-4 ps-3">
 
       <li class="nav-item">
         <sidenav-collapse
