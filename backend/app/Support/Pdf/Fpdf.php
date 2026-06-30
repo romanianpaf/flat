@@ -190,8 +190,10 @@ class Fpdf
         $pageObjs = [];
         $contentObjs = [];
 
+        // Obiectele paginilor încep DUPĂ catalog (obj 1) și Pages (obj 2),
+        // deci de la obj 3. (Bug anterior: $n + 1 trimitea /Kids către Pages.)
         foreach ($this->pages as $p => $_) {
-            $pageObjs[$p] = $n + 1 + ($p - 1) * 2;
+            $pageObjs[$p] = $n + 2 + ($p - 1) * 2;
             $contentObjs[$p] = $pageObjs[$p] + 1;
             $kids[] = $pageObjs[$p] . " 0 R";
         }

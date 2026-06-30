@@ -82,7 +82,8 @@
                     <tr v-if="occupants.length === 0">
                       <td colspan="5" class="text-center text-muted">Nu există persoane.</td>
                     </tr>
-                    <tr v-for="o in occupants" :key="o.id">
+                    <template v-for="o in occupants" :key="o.id">
+                    <tr>
                       <td>
                         <div class="d-flex flex-column">
                           <strong>{{ o.last_name }} {{ o.first_name }}</strong>
@@ -102,6 +103,9 @@
                         </div>
                       </td>
                       <td>
+                        <button class="btn btn-outline-secondary btn-sm mb-0 me-2" @click="toggleDetails(o.id)">
+                          {{ expanded[o.id] ? "Ascunde" : "Detalii" }}
+                        </button>
                         <button class="btn btn-outline-dark btn-sm mb-0 me-2" :disabled="!canEdit(o)" @click="openEdit(o)">
                           Editează
                         </button>
@@ -110,6 +114,27 @@
                         </button>
                       </td>
                     </tr>
+                    <tr v-if="expanded[o.id]" class="bg-light">
+                      <td colspan="5">
+                        <div class="row g-2 text-sm p-2">
+                          <div class="col-md-4"><strong>CNP:</strong> {{ o.cnp || o.cnp_masked || "—" }}</div>
+                          <div class="col-md-4"><strong>CI:</strong> {{ ciDisplay(o) }}</div>
+                          <div class="col-md-4"><strong>Domiciliu:</strong> {{ o.domicile_address || "—" }}</div>
+                          <div class="col-md-4"><strong>Calitate:</strong> {{ o.role_in_unit === "other" ? (o.other_role_text || "altul") : mapRole(o.role_in_unit) }}</div>
+                          <div class="col-md-4"><strong>Data sosire:</strong> {{ o.move_in_date || "—" }}</div>
+                          <div class="col-md-4"><strong>Data plecare:</strong> {{ o.move_out_date || "—" }}</div>
+                          <div class="col-md-4"><strong>Minor:</strong> {{ o.is_minor ? "Da" : "Nu" }}</div>
+                          <div class="col-md-4" v-if="o.is_minor"><strong>Reprezentant legal:</strong> {{ o.legal_guardian_name || "—" }}</div>
+                          <div class="col-md-4"><strong>Telefon:</strong> {{ o.phone || "—" }}</div>
+                          <div class="col-md-4"><strong>Email:</strong> {{ o.email || "—" }}</div>
+                          <div class="col-md-8"><strong>Notițe:</strong> {{ o.notes || "—" }}</div>
+                          <div class="col-12" v-if="o.reject_reason"><strong>Motiv respingere:</strong> {{ o.reject_reason }}</div>
+                          <div class="col-md-6 text-muted"><small>Creat: {{ o.created_at || "—" }}</small></div>
+                          <div class="col-md-6 text-muted"><small>Actualizat: {{ o.updated_at || "—" }}</small></div>
+                        </div>
+                      </td>
+                    </tr>
+                    </template>
                   </tbody>
                 </table>
               </div>
@@ -250,6 +275,7 @@ export default {
       editing: null,
       form: this.emptyForm(),
       errors: {},
+      expanded: {},
     };
   },
   computed: {
@@ -326,6 +352,14 @@ export default {
       if (this.isManager) return true;
       return ["draft", "rejected"].includes(o.status);
     },
+    toggleDetails(id) {
+      this.expanded[id] = !this.expanded[id];
+    },
+    ciDisplay(o) {
+      const s = o.id_series || o.id_series_masked || "";
+      const n = o.id_number || o.id_number_masked || "";
+      return `${s} ${n}`.trim() || "—";
+    },
     async loadApartments() {
       this.loading = true;
       try {
@@ -349,6 +383,7 @@ export default {
     async loadOccupants() {
       if (!this.selectedApartmentId) return;
       this.loading = true;
+      this.expanded = {};
       try {
         const res = await carteImobilService.getOccupants(this.selectedApartmentId);
         this.occupants = res?.data?.occupants || [];
