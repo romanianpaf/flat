@@ -46,12 +46,13 @@ class OccupantPolicy
             return false;
         }
 
-        // admin/cex: nu edităm direct cereri submitted/approved (doar approve/reject)
-        if ($user->can('approve carte imobil')) {
-            return false;
+        // Manager de tenant (admin/cex/administrație): poate edita orice locatar
+        // din tenantul lui, indiferent de status.
+        if (CarteiImobilAccess::isTenantManager($user, $occupant->apartment)) {
+            return true;
         }
 
-        // locatar
+        // Locatar: doar pe apartamentul lui și doar în draft/rejected.
         if (!CarteiImobilAccess::userBelongsToApartment($user, $occupant->apartment)) {
             return false;
         }
@@ -69,6 +70,12 @@ class OccupantPolicy
             return false;
         }
 
+        // Manager de tenant: poate șterge orice locatar din tenantul lui.
+        if (CarteiImobilAccess::isTenantManager($user, $occupant->apartment)) {
+            return true;
+        }
+
+        // Locatar: doar pe apartamentul lui și doar în draft/rejected.
         if (!CarteiImobilAccess::userBelongsToApartment($user, $occupant->apartment)) {
             return false;
         }

@@ -31,7 +31,7 @@
             <div v-else>
               <div class="row mb-3">
                 <div class="col-md-4">
-                  <label class="form-label">Apartamentul meu</label>
+                  <label class="form-label">{{ isManager ? "Apartament" : "Apartamentul meu" }}</label>
                   <select class="form-select" v-model="selectedApartmentId" @change="loadOccupants">
                     <option value="" disabled>Alege apartamentul</option>
                     <option v-for="a in apartments" :key="a.id" :value="a.id">
@@ -41,7 +41,8 @@
                 </div>
                 <div class="col-md-8 d-flex align-items-end">
                   <div class="text-sm">
-                    <span v-if="isLocked" class="badge bg-gradient-info">Editare înghețată (submitted/approved)</span>
+                    <span v-if="isManager" class="badge bg-gradient-primary">Administrare comitet (toate apartamentele)</span>
+                    <span v-else-if="isLocked" class="badge bg-gradient-info">Editare înghețată (submitted/approved)</span>
                     <span v-else class="badge bg-gradient-secondary">Draft</span>
                   </div>
                 </div>
@@ -215,12 +216,14 @@
 <script>
 import showSwal from "/src/mixins/showSwal.js";
 import carteImobilService from "/src/services/carte-imobil.service.js";
+import { hasAnyPermission } from "@/utils/permissions";
 
 export default {
   name: "CarteImobil",
   data() {
     return {
       loading: true,
+      isManager: false,
       apartments: [],
       selectedApartmentId: "",
       occupants: [],
@@ -232,6 +235,8 @@ export default {
   },
   computed: {
     isLocked() {
+      // Managerii de tenant (admin/cex) pot adăuga oricând, indiferent de status.
+      if (this.isManager) return false;
       return this.occupants.some((o) => ["submitted", "approved"].includes(o.status));
     },
     canSubmit() {
@@ -290,12 +295,19 @@ export default {
       }[status] || "bg-gradient-secondary";
     },
     canEdit(o) {
+      // Managerii de tenant pot edita/șterge orice locatar, indiferent de status.
+      if (this.isManager) return true;
       return ["draft", "rejected"].includes(o.status);
     },
     async loadApartments() {
       this.loading = true;
       try {
-        const res = await carteImobilService.myApartments();
+        // Manager de tenant (admin/cex): vede TOATE apartamentele tenantului.
+        // Locatar: doar apartamentele proprii.
+        this.isManager = hasAnyPermission(["configure apartments", "approve carte imobil"]);
+        const res = this.isManager
+          ? await carteImobilService.getApartmentsList()
+          : await carteImobilService.myApartments();
         this.apartments = res?.data?.apartments || [];
         this.selectedApartmentId = this.apartments[0]?.id || "";
         if (this.selectedApartmentId) {

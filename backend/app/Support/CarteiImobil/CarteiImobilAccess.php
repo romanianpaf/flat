@@ -13,6 +13,18 @@ class CarteiImobilAccess
         return $user->isSystemAdmin();
     }
 
+    /**
+     * Manager de carte imobil la nivel de TENANT: poate gestiona locatarii pe
+     * ORICE apartament din tenantul lui (nu doar pe al lui). Tipic: admin, cex,
+     * administrație — semnalul e permisiunea de comitet/configurare.
+     */
+    public static function isTenantManager(User $user, Apartment $apartment): bool
+    {
+        return $user->tenant_id
+            && $user->tenant_id === $apartment->tenant_id
+            && ($user->can('approve carte imobil') || $user->can('configure apartments'));
+    }
+
     public static function isApprover(User $user): bool
     {
         // bazat pe permisiuni (nu pe rol)
