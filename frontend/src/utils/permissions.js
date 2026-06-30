@@ -57,7 +57,9 @@ export function hasAllPermissions(permissions) {
 export function isSystemAdmin() {
   try {
     const user = JSON.parse(localStorage.getItem("user"));
-    return user?.is_system_admin === true;
+    if (user?.is_system_admin === true) return true;
+    // Fallback pentru sesiuni mai vechi care nu au flag-ul, dar au rolul.
+    return (user?.roles || []).some((r) => r.name === "sysadmin");
   } catch (error) {
     console.error("Error checking system admin:", error);
     return false;
