@@ -11,7 +11,9 @@ BACKEND=$APP/backend
 FRONTEND=$APP/frontend
 DOMAIN=f1.atria.live
 PORT=6002
-PHP_BIN=/usr/local/bin/php
+# Binarul CLI direct (nu wrapper-ul cPanel, care sub sudo/systemd poate alege
+# un SAPI non-CLI și strică composer/reverb).
+PHP_BIN=/opt/cpanel/ea-php82/root/usr/bin/php
 
 echo "== [1/8] Extensia PHP sodium =="
 if ! $PHP_BIN -m | grep -qi sodium; then
@@ -22,8 +24,12 @@ else
 fi
 
 echo "== [2/8] laravel/reverb (composer, ca atria) =="
-sudo -u atria -H bash -c "cd $BACKEND && /usr/local/bin/composer require laravel/reverb pusher/pusher-php-server --no-interaction" \
-  || { echo "EROARE composer"; exit 1; }
+if [ -d "$BACKEND/vendor/laravel/reverb" ]; then
+  echo "laravel/reverb deja instalat — sar peste"
+else
+  sudo -u atria -H bash -c "cd $BACKEND && $PHP_BIN /usr/local/bin/composer require laravel/reverb pusher/pusher-php-server --no-interaction" \
+    || { echo "EROARE composer"; exit 1; }
+fi
 
 echo "== [3/8] Chei Reverb în backend/.env =="
 set_env() { # set_env FILE KEY VALUE
