@@ -3,7 +3,7 @@
     id="sidenav-collapse-main"
     class="w-auto h-auto collapse navbar-collapse max-height-vh-100 h-100"
   >
-    <ul class="navbar-nav">
+    <ul class="navbar-nav" :class="{ 'onboarding-locked': onboardingLocked }">
       <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
         <sidenav-collapse
           collapse-ref="dashboards"
@@ -148,7 +148,7 @@
           </template>
         </sidenav-collapse>
       </li>
-      <li v-if="$store.getters['auth/loggedIn']" class="nav-item">
+      <li v-if="$store.getters['auth/loggedIn']" class="nav-item onboarding-group-exempt">
         <sidenav-collapse
           collapse-ref="administrative"
           nav-text="Administrativ"
@@ -170,6 +170,7 @@
                 text="Configurări"
               />
               <sidenav-item
+                class="onboarding-exempt"
                 :to="{ name: 'Carte de imobil' }"
                 mini-icon="C"
                 text="Carte de imobil"
@@ -1086,6 +1087,12 @@ export default {
     requireCarteImobilConfig() {
       return this.hasPermission('configure apartments') || this.hasPermission('approve carte imobil');
     },
+    // Onboarding: locatar nou care nu și-a completat cartea de imobil —
+    // tot meniul e blocat (gri) în afară de „Carte de imobil".
+    // Profilul vine din store și e reîmprospătat la fiecare navigare (auth middleware).
+    onboardingLocked() {
+      return this.profile?.needs_carte_imobil === true;
+    },
   },
   async created() {
     if (this.$store.getters["auth/loggedIn"]) {
@@ -1127,3 +1134,28 @@ export default {
   },
 };
 </script>
+<style>
+/* Onboarding: până la completarea cărții de imobil, tot meniul e estompat și
+   neclickabil, cu excepția grupului Administrativ (toggle) și a intrării
+   „Carte de imobil". */
+.onboarding-locked .nav-link {
+  pointer-events: none;
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.onboarding-locked .onboarding-group-exempt > a.nav-link {
+  pointer-events: auto;
+  opacity: 1;
+  filter: none;
+}
+/* ținem grupul Administrativ deschis cât timp onboarding-ul e activ */
+.onboarding-locked .onboarding-group-exempt .collapse {
+  display: block;
+}
+.onboarding-locked li.onboarding-exempt > a.nav-link {
+  pointer-events: auto;
+  opacity: 1;
+  filter: none;
+  font-weight: 700;
+}
+</style>

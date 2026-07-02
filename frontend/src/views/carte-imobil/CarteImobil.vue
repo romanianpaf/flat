@@ -45,6 +45,14 @@
           </div>
 
           <div class="card-body">
+            <!-- Banner onboarding: cont nou, carte de imobil necompletată -->
+            <div v-if="needsOnboarding" class="alert alert-info text-white">
+              <strong>Bun venit!</strong> Pentru a folosi aplicația, te rugăm să
+              completezi întâi cartea de imobil: adaugă persoanele care locuiesc
+              în apartamentul tău, apoi apasă „Trimite spre validare". Restul
+              meniului se deblochează după ce adaugi cel puțin o persoană.
+            </div>
+
             <div v-if="loading" class="text-sm">Se încarcă...</div>
 
             <div v-else>
@@ -299,6 +307,10 @@ export default {
     hasSubmitted() {
       return this.occupants.some((o) => o.status === "submitted");
     },
+    // Onboarding activ: cont nou care nu a adăugat încă nicio persoană
+    needsOnboarding() {
+      return this.$store.getters["profile/profile"]?.needs_carte_imobil === true;
+    },
   },
   async mounted() {
     await this.loadApartments();
@@ -378,6 +390,15 @@ export default {
         showSwal.methods.showSwal({ type: "error", message: "Nu am putut încărca apartamentele." });
       } finally {
         this.loading = false;
+      }
+    },
+    // Reîmprospătează profilul (flag-ul needs_carte_imobil) după modificări,
+    // ca meniul blocat de onboarding să se deblocheze imediat.
+    async refreshOnboardingState() {
+      try {
+        await this.$store.dispatch("profile/getProfile");
+      } catch (e) {
+        // non-critic
       }
     },
     async loadOccupants() {
@@ -474,6 +495,7 @@ export default {
             showSwal.methods.showSwal({ type: "success", message: "Persoana a fost adăugată." });
             this.closeModal();
             await this.loadOccupants();
+            await this.refreshOnboardingState();
           } else {
             showSwal.methods.showSwal({ type: "error", message: "Nu am putut adăuga persoana." });
           }
@@ -492,6 +514,7 @@ export default {
         if (res?.success) {
           showSwal.methods.showSwal({ type: "success", message: "Persoana a fost ștearsă." });
           await this.loadOccupants();
+          await this.refreshOnboardingState();
         } else {
           showSwal.methods.showSwal({ type: "error", message: "Nu am putut șterge persoana." });
         }
