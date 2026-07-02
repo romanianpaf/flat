@@ -10,7 +10,7 @@ APP=/home/atria/public_html/f1.atria.live
 BACKEND=$APP/backend
 FRONTEND=$APP/frontend
 DOMAIN=f1.atria.live
-PORT=6001
+PORT=6002
 PHP_BIN=/usr/local/bin/php
 
 echo "== [1/8] Extensia PHP sodium =="

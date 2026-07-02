@@ -23,7 +23,7 @@ return [
 
         'reverb' => [
             'host' => env('REVERB_SERVER_HOST', '0.0.0.0'),
-            'port' => env('REVERB_SERVER_PORT', 6001),
+            'port' => env('REVERB_SERVER_PORT', 6002),
             'hostname' => env('REVERB_SERVER_HOSTNAME', 'f1.atria.live'),
             'options' => [
                 'tls' => array_filter([
@@ -59,7 +59,7 @@ return [
                 'app_id' => env('REVERB_APP_ID'),
                 'options' => [
                     'host' => env('REVERB_HOST', '127.0.0.1'),
-                    'port' => env('REVERB_PORT', 6001),
+                    'port' => env('REVERB_PORT', 6002),
                     'scheme' => env('REVERB_SCHEME', 'https'),
                     'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
                 ],
