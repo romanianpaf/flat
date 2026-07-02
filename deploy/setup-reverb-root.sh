@@ -54,7 +54,7 @@ set_env "$BACKEND/.env" REVERB_SCHEME https
 set_env "$BACKEND/.env" REVERB_SERVER_HOST 0.0.0.0
 set_env "$BACKEND/.env" REVERB_SERVER_PORT $PORT
 set_env "$BACKEND/.env" REVERB_SERVER_HOSTNAME $DOMAIN
-set_env "$BACKEND/.env" REVERB_ALLOWED_ORIGIN "https://$DOMAIN"
+set_env "$BACKEND/.env" REVERB_ALLOWED_ORIGIN "$DOMAIN"  # DOAR hostname! Reverb compară parse_url(...,PHP_URL_HOST)
 set_env "$BACKEND/.env" REVERB_TLS_CERT /etc/reverb/$DOMAIN.pem
 echo "chei setate (app id: $APP_ID)"
 
