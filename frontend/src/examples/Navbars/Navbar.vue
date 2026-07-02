@@ -292,6 +292,16 @@ export default {
         echo
           .private(`App.Models.User.${user.id}`)
           .notification(() => this.loadNotifications());
+
+        // Mobilul suspendă websocket-ul când browserul trece în fundal.
+        // La reconectare resincronizăm, ca notificările sosite între timp
+        // să apară fără refresh.
+        echo.connector.pusher.connection.bind("connected", () =>
+          this.loadNotifications()
+        );
+        document.addEventListener("visibilitychange", () => {
+          if (document.visibilityState === "visible") this.loadNotifications();
+        });
       } catch (e) {
         // fără live updates; clopoțelul funcționează în continuare
       }
