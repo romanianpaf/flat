@@ -4,12 +4,13 @@ namespace App\Notifications;
 
 use App\Models\RegistrationRequest;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 /**
  * Notificare către adminii/cex ai unui tenant când cineva cere un cont nou.
- * Canale: database (clopoțel in-app) + mail.
+ * Canale: database (clopoțel in-app) + mail + broadcast (websocket, live).
  */
 class RegistrationRequestSubmitted extends Notification
 {
@@ -22,7 +23,14 @@ class RegistrationRequestSubmitted extends Notification
     /** @return array<int,string> */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database', 'mail', 'broadcast'];
+    }
+
+    public function toBroadcast(object $notifiable): BroadcastMessage
+    {
+        // Același payload ca notificarea din baza de date, livrat live pe
+        // canalul privat al userului (App.Models.User.{id}).
+        return new BroadcastMessage($this->toArray($notifiable));
     }
 
     public function toMail(object $notifiable): MailMessage

@@ -210,6 +210,7 @@ import Breadcrumbs from "../Breadcrumbs.vue";
 import { mapMutations, mapActions, mapState, mapGetters } from "vuex";
 import defaultAvatarImg from "@/assets/img/bruce-mars.jpg";
 import notificationService from "@/services/notification.service.js";
+import { getEcho, disconnectEcho } from "@/services/echo.js";
 
 export default {
   name: "Navbar",
@@ -265,6 +266,7 @@ export default {
     if (this.loggedIn) {
       this.$store.dispatch("profile/getProfile");
       this.loadNotifications();
+      this.initLiveNotifications();
     }
   },
   methods: {
@@ -278,6 +280,20 @@ export default {
         this.unreadCount = res?.data?.unread_count || 0;
       } catch (e) {
         // notificările sunt opționale; nu blocăm navbar-ul
+      }
+    },
+    initLiveNotifications() {
+      // Websocket (Reverb): actualizează clopoțelul instant la notificări noi.
+      // Dacă nu e disponibil, rămâne fallback-ul pe fetch (load la click).
+      try {
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+        const echo = getEcho();
+        if (!echo || !user?.id) return;
+        echo
+          .private(`App.Models.User.${user.id}`)
+          .notification(() => this.loadNotifications());
+      } catch (e) {
+        // fără live updates; clopoțelul funcționează în continuare
       }
     },
     onBellClick() {
@@ -313,6 +329,7 @@ export default {
 
     async logoutUser() {
       this.showProfileMenu = false;
+      disconnectEcho();
       try {
         await this.$store.dispatch("auth/logout");
       } finally {

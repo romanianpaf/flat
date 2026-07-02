@@ -14,7 +14,9 @@ class BroadcastServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Broadcast::routes();
+        // Autorizarea canalelor private se face cu tokenul Passport (Bearer),
+        // pe /api/broadcasting/auth — folosit de Laravel Echo din frontend.
+        Broadcast::routes(['prefix' => 'api', 'middleware' => ['auth:api']]);
 
         require base_path('routes/channels.php');
     }
