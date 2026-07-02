@@ -22,7 +22,7 @@ else
 fi
 
 echo "== [2/8] laravel/reverb (composer, ca atria) =="
-sudo -u atria -H bash -c "cd $BACKEND && composer require laravel/reverb pusher/pusher-php-server --no-interaction" \
+sudo -u atria -H bash -c "cd $BACKEND && /usr/local/bin/composer require laravel/reverb pusher/pusher-php-server --no-interaction" \
   || { echo "EROARE composer"; exit 1; }
 
 echo "== [3/8] Chei Reverb în backend/.env =="
@@ -113,7 +113,8 @@ set_env "$FRONTEND/.env" VITE_REVERB_PORT $PORT
 set_env "$FRONTEND/.env" VITE_REVERB_SCHEME https
 chown atria:atria "$FRONTEND/.env"
 sudo -u atria -H bash -c "cd $BACKEND && $PHP_BIN artisan config:clear && $PHP_BIN artisan optimize:clear" >/dev/null
-sudo -u atria -H bash -c "cd $APP && bash rebuild.sh" | tail -3
+# login shell (-l) ca să se încarce nvm (npm/node sunt în ~/.nvm)
+sudo -u atria -H bash -lc "cd $APP && bash rebuild.sh" | tail -3
 
 echo "== [8/8] Pornire serviciu + verificare =="
 systemctl enable --now reverb
