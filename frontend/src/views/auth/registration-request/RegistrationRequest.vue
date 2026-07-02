@@ -201,12 +201,7 @@
               >
                 <div
                   class="bg-cover oblique-image position-absolute fixed-top ms-auto h-100 z-index-0 ms-n6"
-                  :style="{
-                    backgroundImage:
-                      'url(' +
-                      require('@/assets/img/curved-images/curved6.jpg') +
-                      ')',
-                  }"
+                  :style="{ backgroundImage: 'url(' + curvedImg + ')' }"
                 ></div>
               </div>
             </div>
@@ -222,6 +217,8 @@
 import Navbar from "@/examples/PageLayout/Navbar.vue";
 import AppFooter from "@/examples/PageLayout/Footer.vue";
 import registrationRequestService from "@/services/registration-request.service.js";
+// Vite nu suportă require() în browser — import static (ca în Login.vue)
+import curvedImg from "@/assets/img/curved-images/curved6.jpg";
 
 export default {
   name: "RegistrationRequest",
@@ -231,6 +228,7 @@ export default {
   },
   data() {
     return {
+      curvedImg, // expunem imaginea în template
       tenants: [],
       apartments: [],
       loadingApartments: false,
