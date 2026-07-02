@@ -23,10 +23,12 @@ echo "== [1/6] Include Apache/LiteSpeed: proxy websocket /app -> 127.0.0.1:$PORT
 INC_DIR=/etc/apache2/conf.d/userdata/ssl/2_4/$CPUSER/$DOMAIN
 mkdir -p "$INC_DIR"
 cat > "$INC_DIR/websocket.conf" <<EOF
-# Proxy websocket Reverb prin 443 (LiteSpeed suportă [P] către ws://)
+# Proxy websocket Laravel Reverb prin 443 (doar vhost-ul $DOMAIN).
+# /app/* e folosit EXCLUSIV de websocket în aplicația Atria (SPA: /acasa etc.,
+# API: /api/*), deci proxy necondiționat e sigur. ATENȚIE: LSWS nu evaluează
+# %{HTTP:Upgrade} în context de vhost — NU adăuga RewriteCond pe el.
 RewriteEngine On
-RewriteCond %{HTTP:Upgrade} =websocket [NC]
-RewriteRule ^/app/(.*)\$ ws://127.0.0.1:$PORT/app/\$1 [P,NE,L]
+RewriteRule ^/app/(.*)\$ ws://127.0.0.1:$PORT/app/\$1 [P,L]
 EOF
 /scripts/ensure_vhost_includes --user=$CPUSER 2>&1 | tail -2 || true
 /scripts/rebuildhttpdconf >/dev/null
