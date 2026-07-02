@@ -28,10 +28,15 @@ RewriteEngine On
 RewriteCond %{HTTP:Upgrade} =websocket [NC]
 RewriteRule ^/app/(.*)\$ ws://127.0.0.1:$PORT/app/\$1 [P,NE,L]
 EOF
-/scripts/ensure_vhost_includes --user=$CPUSER >/dev/null 2>&1 || true
+/scripts/ensure_vhost_includes --user=$CPUSER 2>&1 | tail -2 || true
 /scripts/rebuildhttpdconf >/dev/null
+if grep -q "userdata/ssl/2_4/$CPUSER/$DOMAIN" /etc/apache2/conf/httpd.conf; then
+  echo "include prezent în httpd.conf ✓"
+else
+  echo "ATENȚIE: include-ul NU apare în httpd.conf — verifică output-ul ensure_vhost_includes de mai sus"
+fi
 /scripts/restartsrv_httpd >/dev/null 2>&1 || systemctl restart lsws
-echo "include scris în $INC_DIR/websocket.conf + webserver restartat"
+echo "webserver restartat"
 
 echo "== [2/6] Reverb: fără TLS, doar pe loopback =="
 set_env "$BACKEND/.env" REVERB_SCHEME http
@@ -52,9 +57,11 @@ sudo -u $CPUSER -H bash -lc "cd $APP && bash rebuild.sh" | tail -2
 echo "== [4/6] Închid portul $PORT din firewall (nu mai e nevoie) =="
 if [ -f /etc/csf/csf.conf ]; then
   sed -i "s/^TCP_IN = \"$PORT,/TCP_IN = \"/; s/,$PORT,/,/; s/,$PORT\"/\"/" /etc/csf/csf.conf
-  csf -r >/dev/null 2>&1 && echo "csf: $PORT scos din TCP_IN"
+  csf -r >/dev/null 2>&1 || true
+  echo "csf: $PORT scos din TCP_IN"
 elif command -v firewall-cmd >/dev/null; then
-  firewall-cmd --permanent --remove-port=$PORT/tcp >/dev/null 2>&1; firewall-cmd --reload >/dev/null
+  firewall-cmd --permanent --remove-port=$PORT/tcp >/dev/null 2>&1 || true
+  firewall-cmd --reload >/dev/null 2>&1 || true
   echo "firewalld: $PORT închis"
 fi
 
